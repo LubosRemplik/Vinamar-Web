@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { fetchAvailability, type Block } from '@/lib/api';
 import MonthCard from '@/components/MonthCard';
+import BookingForm from '@/components/BookingForm';
 
 const MS_DAY = 86_400_000;
 const MIN_NIGHTS = 7;
@@ -183,22 +183,22 @@ export default function CalendarWall() {
         </div>
       )}
 
-      {(arrival || hint) && (
+      {status === 'success' && ready && arrival && departure && (
+        <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+      )}
+
+      {!ready && (arrival || hint) && (
         <div className="sticky bottom-4 z-10 mt-6">
           <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
             <div className="text-sm">
-              {ready ? (
-                <span className="font-medium text-ink">
-                  {arrival} <span className="text-ink/30">→</span> {departure} · {nights} nocí
-                </span>
-              ) : arrival ? (
+              {arrival && (
                 <span className="text-ink/70">
-                  Příjezd <span className="font-medium text-ink">{arrival}</span> — vyberte odjezd
+                  Příjezd <span className="font-medium text-ink">{arrival}</span> — vyberte den odjezdu
                 </span>
-              ) : null}
+              )}
               {hint && <span className={arrival ? 'ml-2 text-terracotta' : 'text-terracotta'}>{hint}</span>}
             </div>
-            <div className="flex items-center gap-2">
+            {arrival && (
               <button
                 type="button"
                 onClick={reset}
@@ -206,19 +206,7 @@ export default function CalendarWall() {
               >
                 Zrušit
               </button>
-              <Link
-                href={ready ? `/rezervace?arrival=${arrival}&departure=${departure}` : '#'}
-                aria-disabled={!ready}
-                tabIndex={ready ? undefined : -1}
-                className={`rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-colors ${
-                  ready
-                    ? 'bg-terracotta hover:bg-terracotta/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/50 focus-visible:ring-offset-2'
-                    : 'pointer-events-none bg-ink/20'
-                }`}
-              >
-                Rezervovat termín
-              </Link>
-            </div>
+            )}
           </div>
         </div>
       )}
