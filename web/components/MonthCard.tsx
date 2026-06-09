@@ -67,8 +67,10 @@ export default function MonthCard({
           const date = `${year}-${pad(month)}-${pad(day)}`;
           const past = date < today;
           const blocked = isBlocked(date, blocks);
-          const selected =
-            !!arrival && (date === arrival || (!!departure && date >= arrival && date < departure));
+          const isArrival = date === arrival;
+          const isDeparture = date === departure;
+          const isMiddle = !!arrival && !!departure && date > arrival && date < departure;
+          const selected = isArrival || isDeparture || isMiddle;
 
           const base = 'flex aspect-square items-center justify-center rounded-lg text-sm';
           if (blocked) {
@@ -91,6 +93,19 @@ export default function MonthCard({
               </div>
             );
           }
+          // Hotel-style half days: check-in fills the lower-right triangle,
+          // check-out the upper-left triangle; full nights in between are solid.
+          let tone = 'cursor-pointer bg-sea/10 font-medium text-sea hover:bg-sea/20';
+          let style: { backgroundImage: string } | undefined;
+          if (isMiddle) {
+            tone = 'cursor-pointer bg-terracotta font-semibold text-white';
+          } else if (isArrival) {
+            tone = 'cursor-pointer font-semibold text-ink';
+            style = { backgroundImage: 'linear-gradient(to bottom right, transparent 49.5%, #d9743f 50.5%)' };
+          } else if (isDeparture) {
+            tone = 'cursor-pointer font-semibold text-ink';
+            style = { backgroundImage: 'linear-gradient(to bottom right, #d9743f 49.5%, transparent 50.5%)' };
+          }
           return (
             <button
               key={day}
@@ -99,11 +114,8 @@ export default function MonthCard({
               data-state={selected ? 'selected' : 'free'}
               onClick={() => onPick(date)}
               aria-pressed={selected}
-              className={`${base} focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40 ${
-                selected
-                  ? 'bg-terracotta font-semibold text-white'
-                  : 'cursor-pointer bg-sea/10 font-medium text-sea hover:bg-sea/20'
-              }`}
+              style={style}
+              className={`${base} focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40 ${tone}`}
             >
               {day}
             </button>
