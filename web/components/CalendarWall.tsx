@@ -183,29 +183,31 @@ export default function CalendarWall() {
         </div>
       )}
 
-      {status === 'success' && ready && arrival && departure && (
-        <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
-      )}
-
-      {!ready && (arrival || hint) && (
+      {(arrival || hint) && (
         <div className="sticky bottom-4 z-10 mt-6">
-          <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
-            <div className="text-sm">
-              {arrival && (
-                <span className="text-ink/70">
-                  Příjezd <span className="font-medium text-ink">{arrival}</span> — vyberte den odjezdu
-                </span>
-              )}
-              {hint && <span className={arrival ? 'ml-2 text-terracotta' : 'text-terracotta'}>{hint}</span>}
-            </div>
-            {arrival && (
-              <button
-                type="button"
-                onClick={reset}
-                className="rounded-xl px-3 py-2 text-sm text-ink/60 transition-colors hover:text-ink"
-              >
-                Zrušit
-              </button>
+          <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
+            {ready && arrival && departure ? (
+              <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+            ) : (
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm">
+                  {arrival && (
+                    <span className="text-ink/70">
+                      Příjezd <span className="font-medium text-ink">{arrival}</span> — vyberte den odjezdu
+                    </span>
+                  )}
+                  {hint && <span className={arrival ? 'ml-2 text-terracotta' : 'text-terracotta'}>{hint}</span>}
+                </div>
+                {arrival && (
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className="rounded-xl px-3 py-2 text-sm text-ink/60 transition-colors hover:text-ink"
+                  >
+                    Zrušit
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
