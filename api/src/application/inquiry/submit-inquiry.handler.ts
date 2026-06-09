@@ -1,4 +1,4 @@
-import { Inject, Optional } from '@nestjs/common';
+import { Inject, Logger, Optional } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { randomUUID } from 'node:crypto';
 import { SubmitInquiryCommand } from './submit-inquiry.command';
@@ -22,6 +22,8 @@ import { DatesUnavailableError } from '../../domain/availability/dates-unavailab
 
 @CommandHandler(SubmitInquiryCommand)
 export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryCommand> {
+  private readonly logger = new Logger(SubmitInquiryHandler.name);
+
   constructor(
     @Inject(INQUIRY_REPOSITORY) private readonly inquiries: InquiryRepository,
     @Inject(AVAILABILITY_REPOSITORY) private readonly availability: AvailabilityRepository,
@@ -44,7 +46,13 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
       throw new DatesUnavailableError();
     }
     await this.inquiries.save(inquiry);
-    await this.notifier.inquiryReceived(inquiry);
+    // Email is best-effort: a notifier failure must not fail the guest's
+    // inquiry (it is persisted and visible in the admin dashboard regardless).
+    try {
+      await this.notifier.inquiryReceived(inquiry);
+    } catch (err) {
+      this.logger.warn(`owner notification failed for inquiry ${inquiry.id}: ${String(err)}`);
+    }
     return { id: inquiry.id };
   }
 }
