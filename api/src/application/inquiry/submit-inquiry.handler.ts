@@ -19,10 +19,14 @@ import {
 } from '../../domain/inquiry/owner-notifier.port';
 import { CLOCK, Clock } from '../../domain/shared/clock.port';
 import { DatesUnavailableError } from '../../domain/availability/dates-unavailable.error';
+import { OrphanGapError } from '../../domain/availability/orphan-gap.error';
+import { BookingGapPolicy } from '../../domain/availability/booking-gap-policy';
+import { MINIMUM_NIGHTS } from '../../domain/inquiry/inquiry';
 
 @CommandHandler(SubmitInquiryCommand)
 export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryCommand> {
   private readonly logger = new Logger(SubmitInquiryHandler.name);
+  private readonly gapPolicy = new BookingGapPolicy();
 
   constructor(
     @Inject(INQUIRY_REPOSITORY) private readonly inquiries: InquiryRepository,
@@ -44,6 +48,14 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
     });
     if (await this.availability.findOverlapping(range)) {
       throw new DatesUnavailableError();
+    }
+    const windowStart = new Date(range.arrival);
+    windowStart.setDate(windowStart.getDate() - MINIMUM_NIGHTS);
+    const windowEnd = new Date(range.departure);
+    windowEnd.setDate(windowEnd.getDate() + MINIMUM_NIGHTS);
+    const neighbours = await this.availability.listBetween(windowStart, windowEnd);
+    if (this.gapPolicy.wouldCreateOrphanGap(range, neighbours, MINIMUM_NIGHTS)) {
+      throw new OrphanGapError();
     }
     await this.inquiries.save(inquiry);
     // Email is best-effort: a notifier failure must not fail the guest's

@@ -7,6 +7,7 @@ import MonthCard from '@/components/MonthCard';
 
 const MS_DAY = 86_400_000;
 const MIN_NIGHTS = 7;
+const MAX_TURNOVER_GAP = 2;
 const HORIZON_MONTHS = 12;
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
@@ -25,6 +26,24 @@ const nightsBetween = (a: string, b: string) => Math.round((Date.parse(b) - Date
 
 function rangeOverlapsBlock(a: string, b: string, blocks: Block[]): boolean {
   return blocks.some((blk) => a < blk.end && blk.start < b);
+}
+
+// A leftover gap of 3..MIN_NIGHTS-1 nights next to an existing booking can never be
+// re-booked (too short for the minimum stay) yet is too long for turnover — forbid it.
+function createsOrphanGap(a: string, b: string, blocks: Block[]): boolean {
+  const arrival = Date.parse(a);
+  const departure = Date.parse(b);
+  const prevEnds = blocks.map((blk) => Date.parse(blk.end)).filter((t) => t <= arrival);
+  if (prevEnds.length) {
+    const gap = Math.round((arrival - Math.max(...prevEnds)) / MS_DAY);
+    if (gap > MAX_TURNOVER_GAP && gap < MIN_NIGHTS) return true;
+  }
+  const nextStarts = blocks.map((blk) => Date.parse(blk.start)).filter((t) => t >= departure);
+  if (nextStarts.length) {
+    const gap = Math.round((Math.min(...nextStarts) - departure) / MS_DAY);
+    if (gap > MAX_TURNOVER_GAP && gap < MIN_NIGHTS) return true;
+  }
+  return false;
 }
 
 export default function CalendarWall() {
@@ -78,6 +97,13 @@ export default function CalendarWall() {
     }
     if (rangeOverlapsBlock(arrival, date, blocks)) {
       setHint('Vybraný úsek zasahuje do obsazeného termínu — zvolte jiný příjezd nebo odjezd.');
+      return;
+    }
+    if (createsOrphanGap(arrival, date, blocks)) {
+      setHint(
+        `Termín by vedle obsazeného období nechal mezeru 3–6 nocí, kterou už nelze obsadit. ` +
+          `Zvolte ho tak, aby mezera byla nejvýše ${MAX_TURNOVER_GAP} noci, nebo aspoň ${MIN_NIGHTS} nocí.`,
+      );
       return;
     }
     setDeparture(date);
