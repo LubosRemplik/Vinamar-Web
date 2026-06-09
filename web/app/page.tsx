@@ -21,7 +21,7 @@ export default function Home() {
         <SectionTeaser
           href="/volne-terminy"
           title="Volné termíny"
-          text="Podívejte se, kdy je volno a jak se levně dostat"
+          text="Podívejte se, kdy je apartmán volný, a rezervujte termín"
         />
         <SectionTeaser href="/apartman" title="Apartmán" text="Prohlédněte si fotky a vybavení" />
         <SectionTeaser href="/okoli" title="Okolí" text="La Mata, solná jezera, Torrevieja" />
