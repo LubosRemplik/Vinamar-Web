@@ -6,10 +6,13 @@ const url = process.env.DATABASE_URL ?? 'postgres://vinamar:vinamar@localhost:54
 const pool = new pg.Pool({ connectionString: url });
 
 // [arrival, departure) — checkout-exclusive, same convention as calendar_blocks.
+// Gaps between terms are 9 nights so a standard 7-night stay can be booked between
+// them (check in on the previous term's checkout day, leaving a <=2 night turnover
+// before the next term) without ever creating an unbookable 3-6 night orphan gap.
 const SUMMER_2026 = [
   ['2026-07-06', '2026-07-13'],
-  ['2026-07-20', '2026-07-27'],
-  ['2026-08-10', '2026-08-17'],
+  ['2026-07-22', '2026-07-29'],
+  ['2026-08-07', '2026-08-14'],
 ];
 
 async function main() {
