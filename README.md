@@ -72,3 +72,4 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] C — Flight Prices (Travelpayouts)
 - [x] D — Cheapest-Dates Optimizer
 - [x] E — CI/CD (GitHub Actions)
+- [x] F — Availability-first reframe (calendar wall, retire flight-first pages)
