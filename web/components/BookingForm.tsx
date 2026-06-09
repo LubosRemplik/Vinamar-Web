@@ -61,7 +61,11 @@ export default function BookingForm({
           {formatCzDate(arrival)} <span className="text-ink/30">→</span> {formatCzDate(departure)}{' '}
           <span className="font-normal text-ink/50">· {nights} nocí</span>
         </p>
-        <button type="button" onClick={onReset} className="text-sm text-ink/55 transition-colors hover:text-ink">
+        <button
+          type="button"
+          onClick={onReset}
+          className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-1.5 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
+        >
           Zrušit
         </button>
       </div>
@@ -103,7 +107,7 @@ export default function BookingForm({
         className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
       />
 
-      {state === 'error' && <p className="mt-2 text-sm font-medium text-terracotta">{error}</p>}
+      {state === 'error' && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
 
       <button
         type="submit"

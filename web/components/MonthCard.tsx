@@ -125,10 +125,10 @@ export default function MonthCard({
             tone = isArrival ? 'font-semibold text-ink' : 'font-medium text-sea';
           } else if (isArrival) {
             layers.push(afternoon(SELECTED));
-            tone = 'font-semibold text-ink';
+            tone = 'bg-sea/10 font-semibold text-ink';
           } else if (isDeparture) {
             layers.push(morning(SELECTED));
-            tone = 'font-semibold text-ink';
+            tone = 'bg-sea/10 font-semibold text-ink';
           } else {
             tone = 'bg-sea/10 font-medium text-sea hover:bg-sea/20';
           }

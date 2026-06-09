@@ -198,13 +198,17 @@ export default function CalendarWall() {
                       odjezdu
                     </span>
                   )}
-                  {hint && <span className={arrival ? 'ml-2 text-terracotta' : 'text-terracotta'}>{hint}</span>}
+                  {hint && (
+                    <span className={arrival ? 'ml-2 font-medium text-red-600' : 'font-medium text-red-600'}>
+                      {hint}
+                    </span>
+                  )}
                 </div>
                 {arrival && (
                   <button
                     type="button"
                     onClick={reset}
-                    className="rounded-xl px-3 py-2 text-sm text-ink/60 transition-colors hover:text-ink"
+                    className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
                   >
                     Zrušit
                   </button>
