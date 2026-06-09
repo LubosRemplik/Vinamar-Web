@@ -12,8 +12,16 @@ const config: Config = {
         ink: '#3d3a35',
       },
       fontFamily: {
-        display: ['Georgia', 'Cambria', 'serif'],
-        body: ['system-ui', 'Helvetica', 'Arial', 'sans-serif'],
+        display: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
+      borderRadius: {
+        xl: '0.875rem',
+        '2xl': '1.25rem',
+      },
+      boxShadow: {
+        card: '0 1px 2px rgba(61, 58, 53, 0.04), 0 4px 16px rgba(61, 58, 53, 0.06)',
+        cardHover: '0 2px 4px rgba(61, 58, 53, 0.06), 0 12px 32px rgba(61, 58, 53, 0.12)',
       },
     },
   },

@@ -2,9 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-sand text-ink font-body;
+:root {
+  --canvas: #fbf9f5;
 }
-h1, h2, h3 {
-  @apply font-display;
+
+body {
+  @apply text-ink font-body antialiased;
+  background-color: var(--canvas);
+}
+
+h1,
+h2,
+h3 {
+  @apply font-display tracking-tight text-ink;
+}
+
+h1 {
+  @apply text-4xl font-semibold leading-tight sm:text-5xl;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  @apply text-2xl font-semibold leading-snug sm:text-3xl;
+  letter-spacing: -0.015em;
+}
+
+h3 {
+  @apply text-lg font-semibold leading-snug;
+  letter-spacing: -0.01em;
 }
