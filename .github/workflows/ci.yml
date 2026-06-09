@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: vinamar
+          POSTGRES_PASSWORD: vinamar
+          POSTGRES_DB: vinamar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U vinamar"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://vinamar:vinamar@localhost:5432/vinamar
+      ADMIN_USERNAME: owner
+      ADMIN_PASSWORD: ci-secret
+      JWT_SECRET: ci-secret
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - run: npm ci
+      - run: npm run migrate up
+      - run: npm run lint
+      - run: npm test
+      - run: npm run test:e2e
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start the stack
+        run: |
+          cp .env.example .env
+          docker compose up -d --build
+      - name: Wait for the API
+        run: |
+          for i in $(seq 1 40); do
+            if curl -sf http://localhost:3001/api/health; then echo ready; break; fi
+            sleep 3
+          done
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install Playwright + run e2e
+        working-directory: web
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          E2E_BASE_URL=http://localhost:3000 npm run e2e
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
