@@ -5,6 +5,7 @@ const links = [
   { href: '/okoli', label: 'Okolí' },
   { href: '/tipy-na-vylety', label: 'Tipy na výlety' },
   { href: '/letenky', label: 'Letenky' },
+  { href: '/najit-terminy', label: 'Najít termíny' },
 ];
 
 export default function Nav() {

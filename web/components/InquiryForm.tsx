@@ -2,8 +2,20 @@
 import { useState } from 'react';
 import { submitInquiry } from '@/lib/api';
 
-export default function InquiryForm() {
-  const [form, setForm] = useState({ guestName: '', email: '', arrival: '', departure: '', message: '' });
+export default function InquiryForm({
+  initialArrival = '',
+  initialDeparture = '',
+}: {
+  initialArrival?: string;
+  initialDeparture?: string;
+}) {
+  const [form, setForm] = useState({
+    guestName: '',
+    email: '',
+    arrival: initialArrival,
+    departure: initialDeparture,
+    message: '',
+  });
   const [result, setResult] = useState<string | null>(null);
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>

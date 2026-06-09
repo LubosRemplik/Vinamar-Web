@@ -45,3 +45,22 @@ export async function fetchCheapestFlights(): Promise<CheapestFlight[]> {
   if (!res.ok) throw new Error('flights failed');
   return res.json();
 }
+
+export interface CheapestWindow {
+  origin: string;
+  arrival: string;
+  departure: string;
+  nights: number;
+  indicativePrice: number;
+  currency: string;
+  flightDeepLink: string;
+}
+
+export async function fetchCheapestWindows(
+  origin: string,
+  nights: number,
+): Promise<CheapestWindow[]> {
+  const res = await fetch(`${BASE}/optimizer/cheapest-windows?origin=${origin}&nights=${nights}`);
+  if (!res.ok) throw new Error('optimizer failed');
+  return res.json();
+}

@@ -70,4 +70,4 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] A — Foundation & Showcase
 - [x] B — Availability & Inquiries
 - [x] C — Flight Prices (Travelpayouts)
-- [ ] D — Cheapest-Dates Optimizer
+- [x] D — Cheapest-Dates Optimizer
