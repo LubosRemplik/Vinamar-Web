@@ -1,8 +1,7 @@
 # Letové spojení do Alicante — vyhledávání podle termínu (návrh)
 
-> Stav: **research + návrh k odsouhlasení**. Připraveno autonomně přes noc 2026‑06‑09.
-> Implementace ještě nezačala (čeká na schválení návrhu). Hotový je ověřený průzkum
-> zdrojů dat a funkční proof‑of‑concept (`docs/research/flight-schedules-poc.mjs`).
+> Stav: **návrh schválen a implementován** (2026‑06‑09). Ověřeno end‑to‑end proti
+> běžícímu stacku. Hotový je i proof‑of‑concept (`docs/research/flight-schedules-poc.mjs`).
 
 ## 1. Co je cílem
 
@@ -139,18 +138,31 @@ a přidáme paralelní, rozvrhově orientovanou část — stejné DDD/CQRS vrst
 - POZOR (CLAUDE.md): nespouštět api DB testy proti živé DB (mažou `calendar_blocks`).
   Tato slice je read‑only a bez DB, takže riziko nehrozí, dokud nepřidáme persistenci.
 
-## 6. Otevřené otázky k rozhodnutí (ráno)
+## 6. Rozhodnutí (potvrzeno majitelem 2026‑06‑09)
 
-1. **Praha**: stačí v první verzi poznámka „přímo Smartwings/Eurowings" + odkaz, nebo
-   chceš rovnou i druhý zdroj (Amadeus/AeroDataBox), aby Praha měla reálné časy?
-2. **Umístění ve webu**: samostatná stránka `/letecke-spojeni`, nebo to napojit pod
-   kalendář „Volné termíny" (předvyplnit zvoleným termínem)?
-3. **Zpáteční lety**: chceš jen směr DO Alicante, nebo i ZPĚT (ALC→origin) ve stejném
-   rozsahu? (Ryanair API to umí stejně.)
-4. **Cache/persistence**: stačí in‑memory TTL, nebo rovnou tabulka + denní cron jako
-   u cen?
-5. **Odkaz na rezervaci letenky**: přidat deep‑link na ryanair.com pro daný let/datum
-   (umíme složit), nebo nechat jen informativní rozvrh?
+1. **Praha**: jen poznámka „přímo Smartwings/Eurowings" — bez druhého zdroje. ✅
+2. **Umístění**: napojeno pod „Volné termíny", pod poptávkový formulář
+   (`web/components/FlightSchedules.tsx` na konci stránky `/volne-terminy`). ✅
+3. **Zpáteční lety**: ano, oba směry (tam i ALC→letiště). ✅
+4. **Persistence**: tabulka `flight_schedules` + denní cron (4:00) + refresh při
+   startu. ✅
+5. Deep‑link na rezervaci zatím neřešen (jen informativní rozvrh) — možné doplnit
+   později.
+
+### Implementované soubory
+- Doména: `origin.ts` (7 letišť + `allByPreference`), `flight-schedule.ts`,
+  `flight-schedule-provider.port.ts`, `flight-schedule.repository.port.ts`.
+- Infra: `ryanair-schedule-provider.ts`, `pg-flight-schedule.repository.ts`,
+  `flight-schedule.cron.ts`, migrace `1700000004000_flight-schedules.sql`.
+- Aplikace: `refresh-flight-schedules.{command,handler}.ts`,
+  `find-schedules.{query,handler}.ts`.
+- Interface: `GET /api/flights/schedules?from=&to=` ve `flight.controller.ts`,
+  zapojení ve `flight.module.ts`.
+- Frontend: `FlightSchedules.tsx`, `fetchFlightSchedules` v `lib/api.ts`, vloženo do
+  `app/volne-terminy/page.tsx`.
+- Testy: `test/domain/flight.spec.ts` (rozšířeno),
+  `test/infrastructure/ryanair-schedule-provider.spec.ts`,
+  `test/application/find-schedules.handler.spec.ts`, fake repo v `test/fakes/flight.ts`.
 
 ## 7. Proof of concept
 

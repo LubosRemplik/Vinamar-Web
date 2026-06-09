@@ -3,6 +3,8 @@ import { Money } from '../../src/domain/flight/money';
 import { FlightQuote } from '../../src/domain/flight/flight-quote';
 import { FlightPriceProvider } from '../../src/domain/flight/flight-price-provider.port';
 import { FlightQuoteRepository } from '../../src/domain/flight/flight-quote.repository.port';
+import { FlightSchedule } from '../../src/domain/flight/flight-schedule';
+import { FlightScheduleRepository } from '../../src/domain/flight/flight-schedule.repository.port';
 
 export function quote(origin: Origin, amount: number): FlightQuote {
   return new FlightQuote(
@@ -41,5 +43,17 @@ export class InMemoryFlightQuotes implements FlightQuoteRepository {
   }
   async listForOrigin(origin: Origin): Promise<FlightQuote[]> {
     return this.store.get(origin.code) ?? [];
+  }
+}
+
+export class InMemoryFlightSchedules implements FlightScheduleRepository {
+  store = new Map<string, FlightSchedule[]>();
+  async replaceForOrigin(origin: Origin, schedules: FlightSchedule[]): Promise<void> {
+    this.store.set(origin.code, schedules);
+  }
+  async listInRange(from: string, to: string): Promise<FlightSchedule[]> {
+    return [...this.store.values()]
+      .flat()
+      .filter((s) => s.date >= from && s.date <= to);
   }
 }

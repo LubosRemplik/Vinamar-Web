@@ -9,6 +9,20 @@ describe('Origin', () => {
   it('rejects an unknown origin', () => {
     expect(() => Origin.fromCode('XXX')).toThrow();
   });
+
+  it('lists all seven schedule origins in preference order', () => {
+    expect(Origin.allByPreference().map((o) => o.code)).toEqual([
+      'PED',
+      'PRG',
+      'WRO',
+      'LNZ',
+      'BTS',
+      'VIE',
+      'KTW',
+    ]);
+    expect(Origin.fromCode('VIE').name).toBe('Vídeň');
+    expect(Origin.fromCode('PED').order).toBe(1);
+  });
 });
 
 describe('Money', () => {

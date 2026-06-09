@@ -58,3 +58,25 @@ export async function fetchAvailabilityCalendar(
   if (!res.ok) throw new Error('calendar failed');
   return res.json();
 }
+
+export interface ScheduledFlight {
+  date: string;
+  departureTime: string;
+  arrivalTime: string;
+  carrier: string;
+  flightNumber: string;
+}
+export interface AirportSchedule {
+  origin: string;
+  originName: string;
+  order: number;
+  directRyanair: boolean;
+  note: string | null;
+  outbound: ScheduledFlight[];
+  return: ScheduledFlight[];
+}
+export async function fetchFlightSchedules(from: string, to: string): Promise<AirportSchedule[]> {
+  const res = await fetch(`${BASE}/flights/schedules?from=${from}&to=${to}`);
+  if (!res.ok) throw new Error('flight schedules failed');
+  return res.json();
+}
