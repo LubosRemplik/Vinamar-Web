@@ -1,5 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Vinamar — apartmán u moře, La Mata',
@@ -9,7 +11,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="cs">
-      <body>{children}</body>
+      <body>
+        <Nav />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

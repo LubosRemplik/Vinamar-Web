@@ -1,0 +1,31 @@
+import Link from 'next/link';
+
+const links = [
+  { href: '/apartman', label: 'Apartmán' },
+  { href: '/okoli', label: 'Okolí' },
+  { href: '/tipy-na-vylety', label: 'Tipy na výlety' },
+];
+
+export default function Nav() {
+  return (
+    <header className="flex items-center justify-between px-6 py-4 bg-sand border-b border-ochre/40">
+      <Link href="/" className="text-2xl font-display text-terracotta">
+        Vinamar
+      </Link>
+      <nav className="flex gap-5 items-center">
+        {links.map((l) => (
+          <Link key={l.href} href={l.href} className="hover:text-terracotta">
+            {l.label}
+          </Link>
+        ))}
+        <span
+          className="text-ink/40 cursor-not-allowed"
+          title="Připravujeme"
+          aria-disabled="true"
+        >
+          Rezervace
+        </span>
+      </nav>
+    </header>
+  );
+}
