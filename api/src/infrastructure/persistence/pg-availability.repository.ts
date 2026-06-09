@@ -5,11 +5,19 @@ import { DateRange } from '../../domain/shared/date-range';
 import { CalendarBlock, BlockReason } from '../../domain/availability/calendar-block';
 import { AvailabilityRepository } from '../../domain/availability/availability.repository.port';
 
+interface BlockRow {
+  id: string;
+  start_date: string | Date;
+  end_date: string | Date;
+  reason: string;
+  created_at: string | Date;
+}
+
 @Injectable()
 export class PgAvailabilityRepository implements AvailabilityRepository {
   constructor(@Inject(PG_POOL) private readonly pool: Pool) {}
 
-  private toBlock(row: any): CalendarBlock {
+  private toBlock(row: BlockRow): CalendarBlock {
     return new CalendarBlock(
       row.id,
       new DateRange(new Date(row.start_date), new Date(row.end_date)),

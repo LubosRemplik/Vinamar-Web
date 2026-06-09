@@ -6,11 +6,22 @@ import { EmailAddress } from '../../domain/shared/email-address';
 import { Inquiry, InquiryStatus } from '../../domain/inquiry/inquiry';
 import { InquiryRepository } from '../../domain/inquiry/inquiry.repository.port';
 
+interface InquiryRow {
+  id: string;
+  guest_name: string;
+  email: string;
+  arrival: string | Date;
+  departure: string | Date;
+  message: string;
+  status: string;
+  created_at: string | Date;
+}
+
 @Injectable()
 export class PgInquiryRepository implements InquiryRepository {
   constructor(@Inject(PG_POOL) private readonly pool: Pool) {}
 
-  private toInquiry(row: any): Inquiry {
+  private toInquiry(row: InquiryRow): Inquiry {
     return new Inquiry(
       row.id,
       row.guest_name,

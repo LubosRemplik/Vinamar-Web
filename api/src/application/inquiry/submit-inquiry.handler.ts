@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Optional } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { randomUUID } from 'node:crypto';
 import { SubmitInquiryCommand } from './submit-inquiry.command';
@@ -27,7 +27,7 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
     @Inject(AVAILABILITY_REPOSITORY) private readonly availability: AvailabilityRepository,
     @Inject(OWNER_NOTIFIER) private readonly notifier: OwnerNotifier,
     @Inject(CLOCK) private readonly clock: Clock,
-    private readonly idFactory: () => string = randomUUID,
+    @Optional() private readonly idFactory: () => string = randomUUID,
   ) {}
 
   async execute(cmd: SubmitInquiryCommand): Promise<{ id: string }> {
