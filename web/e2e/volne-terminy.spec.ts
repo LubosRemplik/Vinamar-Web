@@ -11,8 +11,8 @@ test('volné termíny: pick a range and book via the inline form', async ({ page
   await page.click('[data-date="2026-06-15"]'); // arrival
   await page.click('[data-date="2026-06-22"]'); // departure (7 nights, no blocks nearby)
 
-  // The inline booking form appears below the calendar — no navigation.
-  await expect(page.getByText(/Rezervace termínu 2026-06-15/)).toBeVisible();
+  // The inline booking form appears in the bottom bar — no navigation.
+  await expect(page.getByPlaceholder('Jméno')).toBeVisible();
   await page.getByPlaceholder('Jméno').fill('Test Host');
   await page.getByPlaceholder('E-mail').fill('test@example.cz');
   await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
