@@ -125,7 +125,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vinamar}
       POSTGRES_DB: ${POSTGRES_DB:-vinamar}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"   # loopback-only: not exposed on the network (dev DB)
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
