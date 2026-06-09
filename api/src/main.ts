@@ -6,6 +6,7 @@ import { ProblemDetailFilter } from './interface/http/problem-detail.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(new ProblemDetailFilter());
