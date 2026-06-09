@@ -21,7 +21,8 @@ const WEEKDAYS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-const OCCUPIED = 'rgba(61,58,53,0.20)';
+const OCCUPIED = 'rgba(61,58,53,0.10)'; // matches the fully-booked days (bg-ink/10)
+const FREE = 'rgba(44,122,158,0.10)'; // matches the available days (bg-sea/10)
 const SELECTED = '#d9743f';
 // Diagonal half-fills: morning is the upper-left triangle, afternoon the lower-right.
 const afternoon = (color: string) => `linear-gradient(to bottom right, transparent 49.5%, ${color} 50.5%)`;
@@ -108,17 +109,29 @@ export default function MonthCard({
           const isMiddle = !!arrival && !!departure && date > arrival && date < departure;
           const selected = isArrival || isDeparture || isMiddle;
 
+          // Turnover days read as available (free half in the same blue + dark-blue text as
+          // free days) with the booked half in the same grey as fully-booked days.
           const layers: string[] = [];
-          if (isArrival) layers.push(afternoon(SELECTED));
-          else if (isDeparture) layers.push(morning(SELECTED));
-          if (isCheckout) layers.push(afternoon(OCCUPIED));
-          else if (isCheckin) layers.push(morning(OCCUPIED));
-
           let tone: string;
-          if (isMiddle) tone = 'bg-terracotta font-semibold text-white';
-          else if (selected) tone = 'font-semibold text-ink';
-          else if (isCheckout || isCheckin) tone = 'font-medium text-ink/70 hover:bg-ink/5';
-          else tone = 'bg-sea/10 font-medium text-sea hover:bg-sea/20';
+          if (isMiddle) {
+            tone = 'bg-terracotta font-semibold text-white';
+          } else if (isCheckout) {
+            layers.push(morning(isDeparture ? SELECTED : FREE));
+            layers.push(afternoon(OCCUPIED));
+            tone = isDeparture ? 'font-semibold text-ink' : 'font-medium text-sea';
+          } else if (isCheckin) {
+            layers.push(afternoon(isArrival ? SELECTED : FREE));
+            layers.push(morning(OCCUPIED));
+            tone = isArrival ? 'font-semibold text-ink' : 'font-medium text-sea';
+          } else if (isArrival) {
+            layers.push(afternoon(SELECTED));
+            tone = 'font-semibold text-ink';
+          } else if (isDeparture) {
+            layers.push(morning(SELECTED));
+            tone = 'font-semibold text-ink';
+          } else {
+            tone = 'bg-sea/10 font-medium text-sea hover:bg-sea/20';
+          }
 
           return (
             <button
