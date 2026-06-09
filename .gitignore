@@ -11,3 +11,4 @@ docker-compose.override.yml
 coverage/
 playwright-report/
 test-results/
+.worktree/

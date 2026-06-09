@@ -29,38 +29,31 @@ export async function submitInquiry(input: {
   return { ok: false, error: problem.detail ?? 'Odeslání se nezdařilo' };
 }
 
-export interface CheapestFlight {
-  origin: string;
-  originName: string;
-  price: number;
-  currency: string;
-  departureDate: string;
-  returnDate: string;
-  airline: string;
-  deepLink: string;
-}
-
-export async function fetchCheapestFlights(): Promise<CheapestFlight[]> {
-  const res = await fetch(`${BASE}/flights/cheapest`);
-  if (!res.ok) throw new Error('flights failed');
-  return res.json();
-}
-
-export interface CheapestWindow {
-  origin: string;
+export interface CalendarWindow {
   arrival: string;
   departure: string;
   nights: number;
   indicativePrice: number;
   currency: string;
   flightDeepLink: string;
+  hasOrphanGap: boolean;
 }
-
-export async function fetchCheapestWindows(
+export interface CalendarMonth {
+  year: number;
+  month: number;
+  freeRanges: { start: string; end: string }[];
+  cheapest: CalendarWindow | null;
+}
+export interface AvailabilityCalendar {
+  origin: string;
+  nights: number;
+  months: CalendarMonth[];
+}
+export async function fetchAvailabilityCalendar(
   origin: string,
   nights: number,
-): Promise<CheapestWindow[]> {
-  const res = await fetch(`${BASE}/optimizer/cheapest-windows?origin=${origin}&nights=${nights}`);
-  if (!res.ok) throw new Error('optimizer failed');
+): Promise<AvailabilityCalendar> {
+  const res = await fetch(`${BASE}/calendar?origin=${origin}&nights=${nights}`);
+  if (!res.ok) throw new Error('calendar failed');
   return res.json();
 }

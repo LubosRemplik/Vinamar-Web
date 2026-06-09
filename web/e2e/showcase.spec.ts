@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('home renders hero and CTA', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Apartmán');
-  await expect(page.getByRole('link', { name: /nejlevnější termíny/i })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Zobrazit volné termíny/i })).toBeVisible();
 });
 
 test('nav reaches all showcase pages', async ({ page }) => {

@@ -17,10 +17,10 @@ export default function Hero({
         <h1 className="text-4xl md:text-5xl mb-3">{title}</h1>
         <p className="text-lg mb-6">{subtitle}</p>
         <Link
-          href="/najit-terminy"
+          href="/volne-terminy"
           className="inline-block bg-terracotta px-6 py-3 rounded-full font-semibold"
         >
-          Zjistit nejlevnější termíny →
+          Zobrazit volné termíny →
         </Link>
       </div>
     </section>

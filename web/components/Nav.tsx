@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
 const links = [
+  { href: '/volne-terminy', label: 'Volné termíny' },
   { href: '/apartman', label: 'Apartmán' },
   { href: '/okoli', label: 'Okolí' },
   { href: '/tipy-na-vylety', label: 'Tipy na výlety' },
-  { href: '/letenky', label: 'Letenky' },
-  { href: '/najit-terminy', label: 'Najít termíny' },
 ];
 
 export default function Nav() {
