@@ -22,6 +22,7 @@ export default function VolneTerminyPage() {
           <span className="font-medium text-ink">Cena za noc:</span>
           <span>{SEASON_RATE} € v sezóně (červen–září),</span>
           <span>{OFF_SEASON_RATE} € mimo sezónu.</span>
+          <span className="text-ink/60">Závěrečný úklid je v ceně.</span>
         </p>
       </header>
       <CalendarWall />

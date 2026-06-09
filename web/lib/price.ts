@@ -1,6 +1,6 @@
 // Nightly rates: high season is June–September, off-season the rest of the year.
-export const SEASON_RATE = 100; // € / noc, červen–září
-export const OFF_SEASON_RATE = 75; // € / noc, zbytek roku
+export const SEASON_RATE = 110; // € / noc, červen–září (závěrečný úklid v ceně)
+export const OFF_SEASON_RATE = 80; // € / noc, zbytek roku (závěrečný úklid v ceně)
 
 const SEASON_MONTHS = new Set([6, 7, 8, 9]);
 
