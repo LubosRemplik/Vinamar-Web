@@ -58,8 +58,7 @@ export class FindAvailabilityCalendarHandler
   async execute(q: FindAvailabilityCalendarQuery): Promise<AvailabilityCalendarDto> {
     const origin = Origin.fromCode(q.origin);
     const now = this.clock.now();
-    const horizonEnd = new Date(now);
-    horizonEnd.setMonth(horizonEnd.getMonth() + q.months);
+    const horizonEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + q.months, 1));
 
     const quotes = await this.quotes.listForOrigin(origin);
     const blocks = await this.availability.listBetween(now, horizonEnd);

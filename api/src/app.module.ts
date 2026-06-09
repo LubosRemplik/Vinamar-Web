@@ -6,6 +6,7 @@ import { InquiryModule } from './interface/inquiry.module';
 import { AdminModule } from './interface/admin.module';
 import { FlightModule } from './interface/flight.module';
 import { OptimizerModule } from './interface/optimizer.module';
+import { CalendarModule } from './interface/calendar.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OptimizerModule } from './interface/optimizer.module';
     AdminModule,
     FlightModule,
     OptimizerModule,
+    CalendarModule,
   ],
 })
 export class AppModule {}
