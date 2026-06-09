@@ -181,7 +181,7 @@ Run:
 cd api
 npm init -y
 npm install @nestjs/common@^11 @nestjs/core@^11 @nestjs/platform-express@^11 @nestjs/cqrs@^11 @nestjs/config@^3 reflect-metadata rxjs pg
-npm install -D typescript @types/node @types/pg ts-node tsconfig-paths @nestjs/cli @nestjs/testing jest ts-jest @types/jest supertest @types/supertest eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-import node-pg-migrate
+npm install -D typescript @types/node @types/pg ts-node tsconfig-paths @nestjs/cli @nestjs/testing jest ts-jest @types/jest supertest @types/supertest eslint@^8 @typescript-eslint/parser@^7 @typescript-eslint/eslint-plugin@^7 eslint-plugin-import node-pg-migrate
 ```
 
 - [ ] **Step 2: Create `api/tsconfig.json`**
@@ -888,7 +888,7 @@ Run:
 cd web
 npm init -y
 npm install next@^15 react@^18 react-dom@^18 gray-matter remark remark-html
-npm install -D typescript @types/node @types/react @types/react-dom tailwindcss postcss autoprefixer vitest @vitejs/plugin-react @playwright/test
+npm install -D typescript @types/node @types/react @types/react-dom tailwindcss@^3 postcss autoprefixer vitest @vitejs/plugin-react @playwright/test
 ```
 
 - [ ] **Step 2: Set `web/package.json` scripts**

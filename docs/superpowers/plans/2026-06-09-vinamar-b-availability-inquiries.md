@@ -1386,36 +1386,21 @@ import { AdminAuthController } from './http/admin-auth.controller';
 import { AdminInquiryController } from './http/admin-inquiry.controller';
 import { AdminBlockController } from './http/admin-block.controller';
 import { AdminGuard } from './admin.guard';
-import { ConfirmInquiryHandler } from '../application/inquiry/confirm-inquiry.handler';
-import { DeclineInquiryHandler } from '../application/inquiry/decline-inquiry.handler';
-import { ListInquiriesHandler } from '../application/inquiry/list-inquiries.handler';
-import { BlockDatesHandler } from '../application/availability/block-dates.handler';
-import { UnblockDatesHandler } from '../application/availability/unblock-dates.handler';
-import { GetAvailabilityHandler } from '../application/availability/get-availability.handler';
-import { pgPoolProvider } from '../infrastructure/persistence/pg-connection';
-import { PgInquiryRepository } from '../infrastructure/persistence/pg-inquiry.repository';
-import { PgAvailabilityRepository } from '../infrastructure/persistence/pg-availability.repository';
-import { INQUIRY_REPOSITORY } from '../domain/inquiry/inquiry.repository.port';
-import { AVAILABILITY_REPOSITORY } from '../domain/availability/availability.repository.port';
 
+// NOTE: Do NOT re-register the CQRS handlers or repositories here. They are
+// already provided by InquiryModule and AvailabilityModule and are bound to the
+// app-global CommandBus/QueryBus. Re-providing the same handler class in a second
+// module makes @nestjs/cqrs throw on duplicate registration. AdminModule only owns
+// its controllers, the JWT guard, and JwtModule for token verification.
 @Module({
   imports: [CqrsModule, JwtModule.register({})],
   controllers: [AdminAuthController, AdminInquiryController, AdminBlockController],
-  providers: [
-    AdminGuard,
-    ConfirmInquiryHandler,
-    DeclineInquiryHandler,
-    ListInquiriesHandler,
-    BlockDatesHandler,
-    UnblockDatesHandler,
-    GetAvailabilityHandler,
-    pgPoolProvider,
-    { provide: INQUIRY_REPOSITORY, useClass: PgInquiryRepository },
-    { provide: AVAILABILITY_REPOSITORY, useClass: PgAvailabilityRepository },
-  ],
+  providers: [AdminGuard],
 })
 export class AdminModule {}
 ```
+
+> AppModule must import `AvailabilityModule`, `InquiryModule`, and `AdminModule` (Task 9 Step 6). Because the handlers live in the first two and the bus is global, the admin controllers dispatch successfully without re-registering anything.
 
 - [ ] **Step 6: Register modules in `api/src/app.module.ts`**
 
