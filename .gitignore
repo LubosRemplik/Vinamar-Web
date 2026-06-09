@@ -1,7 +1,12 @@
 node_modules/
 dist/
 .next/
+out/
 *.log
 .env
 .env.local
 .superpowers/
+# test artifacts
+coverage/
+playwright-report/
+test-results/

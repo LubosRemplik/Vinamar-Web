@@ -1,0 +1,12 @@
+# Copy to docker-compose.override.yml in a worktree and bump ports to run
+# isolated from the main environment.
+services:
+  db:
+    ports:
+      - "5532:5432"
+  api:
+    ports:
+      - "3101:3001"
+  web:
+    ports:
+      - "3100:3000"
