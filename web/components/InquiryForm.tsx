@@ -29,11 +29,11 @@ export default function InquiryForm({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3 max-w-md">
-      <input required placeholder="Jméno" value={form.guestName} onChange={set('guestName')} className="border p-2 rounded" />
-      <input required type="email" placeholder="E-mail" value={form.email} onChange={set('email')} className="border p-2 rounded" />
-      <label className="text-sm">Příjezd<input required type="date" value={form.arrival} onChange={set('arrival')} className="border p-2 rounded w-full" /></label>
-      <label className="text-sm">Odjezd<input required type="date" value={form.departure} onChange={set('departure')} className="border p-2 rounded w-full" /></label>
-      <textarea placeholder="Zpráva" value={form.message} onChange={set('message')} className="border p-2 rounded" />
+      <input required suppressHydrationWarning placeholder="Jméno" value={form.guestName} onChange={set('guestName')} className="border p-2 rounded" />
+      <input required suppressHydrationWarning type="email" placeholder="E-mail" value={form.email} onChange={set('email')} className="border p-2 rounded" />
+      <label className="text-sm">Příjezd<input required suppressHydrationWarning type="date" value={form.arrival} onChange={set('arrival')} className="border p-2 rounded w-full" /></label>
+      <label className="text-sm">Odjezd<input required suppressHydrationWarning type="date" value={form.departure} onChange={set('departure')} className="border p-2 rounded w-full" /></label>
+      <textarea placeholder="Zpráva" suppressHydrationWarning value={form.message} onChange={set('message')} className="border p-2 rounded" />
       <button type="submit" className="bg-terracotta text-white py-2 rounded">Odeslat poptávku</button>
       {result && <p className="text-sm">{result}</p>}
     </form>

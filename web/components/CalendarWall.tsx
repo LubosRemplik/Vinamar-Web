@@ -42,6 +42,7 @@ export default function CalendarWall() {
           <select
             value={origin}
             onChange={(e) => setOrigin(e.target.value)}
+            suppressHydrationWarning
             className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm font-medium text-ink transition-colors focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
           >
             {ORIGINS.map((o) => (
@@ -58,6 +59,7 @@ export default function CalendarWall() {
             min={7}
             value={nights}
             onChange={(e) => setNights(Number(e.target.value))}
+            suppressHydrationWarning
             className="w-28 rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm font-medium text-ink transition-colors focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
           />
         </label>

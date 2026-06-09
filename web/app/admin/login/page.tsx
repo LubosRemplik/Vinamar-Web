@@ -25,8 +25,8 @@ export default function AdminLogin() {
     <main className="max-w-sm mx-auto px-6 py-16">
       <h1 className="text-2xl mb-4">Administrace</h1>
       <form onSubmit={login} className="flex flex-col gap-3">
-        <input placeholder="Uživatel" value={u} onChange={(e) => setU(e.target.value)} className="border p-2 rounded" />
-        <input type="password" placeholder="Heslo" value={p} onChange={(e) => setP(e.target.value)} className="border p-2 rounded" />
+        <input suppressHydrationWarning placeholder="Uživatel" value={u} onChange={(e) => setU(e.target.value)} className="border p-2 rounded" />
+        <input suppressHydrationWarning type="password" placeholder="Heslo" value={p} onChange={(e) => setP(e.target.value)} className="border p-2 rounded" />
         <button className="bg-terracotta text-white py-2 rounded">Přihlásit</button>
         {err && <p className="text-sm text-red-600">{err}</p>}
       </form>
