@@ -6,6 +6,7 @@ out/
 .env
 .env.local
 .superpowers/
+docker-compose.override.yml
 # test artifacts
 coverage/
 playwright-report/
