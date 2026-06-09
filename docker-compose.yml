@@ -29,5 +29,18 @@ services:
       - ./api:/app
       - /app/node_modules
 
+  web:
+    build: ./web
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001/api}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+      - /app/.next
+
 volumes:
   db_data:
