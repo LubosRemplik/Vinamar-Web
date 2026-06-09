@@ -9,6 +9,7 @@ class CreateInquiryDto {
   @IsISO8601() arrival!: string;
   @IsISO8601() departure!: string;
   @IsOptional() @IsString() message = '';
+  @IsOptional() @IsString() phone = '';
 }
 
 @Controller('inquiries')
@@ -19,7 +20,14 @@ export class InquiryController {
   @HttpCode(201)
   async create(@Body() dto: CreateInquiryDto) {
     return this.commandBus.execute(
-      new SubmitInquiryCommand(dto.guestName, dto.email, dto.arrival, dto.departure, dto.message),
+      new SubmitInquiryCommand(
+        dto.guestName,
+        dto.email,
+        dto.arrival,
+        dto.departure,
+        dto.message,
+        dto.phone,
+      ),
     );
   }
 }

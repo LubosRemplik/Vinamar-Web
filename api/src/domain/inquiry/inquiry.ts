@@ -12,6 +12,7 @@ export class Inquiry {
     public readonly id: string,
     public readonly guestName: string,
     public readonly email: EmailAddress,
+    public readonly phone: string,
     public readonly range: DateRange,
     public readonly message: string,
     public readonly status: InquiryStatus,
@@ -22,6 +23,7 @@ export class Inquiry {
     id: string;
     guestName: string;
     email: EmailAddress;
+    phone: string;
     range: DateRange;
     message: string;
     now: Date;
@@ -36,6 +38,7 @@ export class Inquiry {
       params.id,
       params.guestName,
       params.email,
+      params.phone,
       params.range,
       params.message,
       'pending',

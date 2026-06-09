@@ -18,6 +18,7 @@ export class ListInquiriesHandler implements IQueryHandler<ListInquiriesQuery> {
         id: i.id,
         guestName: i.guestName,
         email: i.email.value,
+        phone: i.phone,
         arrival: i.range.arrival.toISOString().slice(0, 10),
         departure: i.range.departure.toISOString().slice(0, 10),
         message: i.message,

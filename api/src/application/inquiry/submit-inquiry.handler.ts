@@ -42,6 +42,7 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
       id: this.idFactory(),
       guestName: cmd.guestName,
       email: new EmailAddress(cmd.email),
+      phone: cmd.phone,
       range,
       message: cmd.message,
       now: this.clock.now(),

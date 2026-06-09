@@ -5,5 +5,6 @@ export class SubmitInquiryCommand {
     public readonly arrival: string,
     public readonly departure: string,
     public readonly message: string,
+    public readonly phone: string = '',
   ) {}
 }

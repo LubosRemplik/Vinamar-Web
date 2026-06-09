@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { fetchAvailability, type Block } from '@/lib/api';
+import { formatCzDate } from '@/lib/date';
 import MonthCard from '@/components/MonthCard';
 import BookingForm from '@/components/BookingForm';
 
@@ -193,7 +194,8 @@ export default function CalendarWall() {
                 <div className="text-sm">
                   {arrival && (
                     <span className="text-ink/70">
-                      Příjezd <span className="font-medium text-ink">{arrival}</span> — vyberte den odjezdu
+                      Příjezd <span className="font-medium text-ink">{formatCzDate(arrival)}</span> — vyberte den
+                      odjezdu
                     </span>
                   )}
                   {hint && <span className={arrival ? 'ml-2 text-terracotta' : 'text-terracotta'}>{hint}</span>}

@@ -7,6 +7,7 @@ interface Row {
   id: string;
   guestName: string;
   email: string;
+  phone: string;
   arrival: string;
   departure: string;
   status: string;
@@ -56,7 +57,12 @@ export default function AdminDashboard() {
         <tbody>
           {rows.map((r) => (
             <tr key={r.id} className="border-b">
-              <td className="py-2">{r.guestName}<br /><span className="text-ink/60">{r.email}</span></td>
+              <td className="py-2">
+                {r.guestName}
+                <br />
+                <span className="text-ink/60">{r.email}</span>
+                {r.phone && <><br /><span className="text-ink/60">{r.phone}</span></>}
+              </td>
               <td>{r.arrival} → {r.departure}</td>
               <td>{r.status}</td>
               <td className="text-right">
