@@ -56,7 +56,7 @@ function departureProblem(arrival: string, departure: string, blocks: Block[]): 
     return 'Vybraný úsek zasahuje do obsazeného termínu, vyberte jiný termín.';
   }
   if (createsOrphanGap(arrival, departure, blocks)) {
-    return 'Termín by vedle obsazeného období nechal mezeru, kterou už nelze obsadit, vyberte jiný termín.';
+    return 'Termín by vedle obsazeného období nechal příliš mnoho nevyužitých dní, vyberte jiný termín.';
   }
   return null;
 }
