@@ -27,6 +27,10 @@ services:
       SMTP_HOST: ${SMTP_HOST:-mailhog}
       SMTP_PORT: ${SMTP_PORT:-1025}
       SMTP_FROM: ${SMTP_FROM:-vinamar@example.com}
+      TRAVELPAYOUTS_TOKEN: ${TRAVELPAYOUTS_TOKEN:-}
+      TRAVELPAYOUTS_MARKER: ${TRAVELPAYOUTS_MARKER:-}
+      FLIGHTS_HORIZON_MONTHS: ${FLIGHTS_HORIZON_MONTHS:-9}
+      FLIGHTS_REFRESH_TOKEN: ${FLIGHTS_REFRESH_TOKEN:-change-me}
     ports:
       - "${API_PORT:-3001}:3001"
     depends_on:
