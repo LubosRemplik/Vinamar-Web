@@ -30,7 +30,10 @@ services:
       TRAVELPAYOUTS_TOKEN: ${TRAVELPAYOUTS_TOKEN:-}
       TRAVELPAYOUTS_MARKER: ${TRAVELPAYOUTS_MARKER:-}
       FLIGHTS_HORIZON_MONTHS: ${FLIGHTS_HORIZON_MONTHS:-9}
-      FLIGHTS_REFRESH_TOKEN: ${FLIGHTS_REFRESH_TOKEN:-change-me}
+      # Empty by default → the manual POST /api/admin/flights/refresh endpoint is
+      # disabled until an operator sets a high-entropy token (openssl rand -hex 32).
+      # The daily cron refresh runs regardless.
+      FLIGHTS_REFRESH_TOKEN: ${FLIGHTS_REFRESH_TOKEN:-}
     ports:
       - "${API_PORT:-3001}:3001"
     depends_on:
