@@ -14,8 +14,8 @@ export default function VolneTerminyPage() {
         </p>
         <h1>Volné termíny</h1>
         <p className="mt-4 text-lg leading-relaxed text-ink/60">
-          Podívejte se, kdy je apartmán v La Mata volný, a rovnou uvidíte i orientační cenu letenky
-          z vašeho letiště. Vyberte si měsíc a termín, který vám sedí.
+          Podívejte se, kdy je apartmán v La Mata volný. Vyberte si termín přímo v kalendáři
+          a pošlete nám nezávaznou poptávku.
         </p>
       </header>
       <CalendarWall />

@@ -1,113 +1,172 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { fetchAvailabilityCalendar, type CalendarMonth } from '@/lib/api';
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { fetchAvailability, type Block } from '@/lib/api';
 import MonthCard from '@/components/MonthCard';
 
-const ORIGINS = [
-  { code: 'WRO', label: 'Vratislav' },
-  { code: 'PED', label: 'Pardubice' },
-  { code: 'PRG', label: 'Praha' },
-];
+const MS_DAY = 86_400_000;
+const MIN_NIGHTS = 7;
+const HORIZON_MONTHS = 12;
+
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+
+function buildMonths(today: string): { year: number; month: number }[] {
+  const [y, m] = today.split('-').map(Number);
+  const out: { year: number; month: number }[] = [];
+  for (let i = 0; i < HORIZON_MONTHS; i++) {
+    const idx = m - 1 + i;
+    out.push({ year: y + Math.floor(idx / 12), month: (idx % 12) + 1 });
+  }
+  return out;
+}
+
+const nightsBetween = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / MS_DAY);
+
+function rangeOverlapsBlock(a: string, b: string, blocks: Block[]): boolean {
+  return blocks.some((blk) => a < blk.end && blk.start < b);
+}
 
 export default function CalendarWall() {
-  const [origin, setOrigin] = useState('WRO');
-  const [nights, setNights] = useState(7);
-  const [months, setMonths] = useState<CalendarMonth[]>([]);
+  const [blocks, setBlocks] = useState<Block[]>([]);
   const [status, setStatus] = useState<'loading' | 'error' | 'success'>('loading');
+  const [today, setToday] = useState('');
+  const [arrival, setArrival] = useState<string | null>(null);
+  const [departure, setDeparture] = useState<string | null>(null);
+  const [hint, setHint] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
+    const now = new Date();
+    const from = iso(now);
+    const end = new Date(now);
+    end.setMonth(end.getMonth() + HORIZON_MONTHS);
+    setToday(from);
     setStatus('loading');
-    fetchAvailabilityCalendar(origin, Math.max(7, nights))
-      .then((data) => {
+    fetchAvailability(from, iso(end))
+      .then((b) => {
         if (!active) return;
-        setMonths(data.months);
+        setBlocks(b);
         setStatus('success');
       })
       .catch(() => {
-        if (!active) return;
-        setStatus('error');
+        if (active) setStatus('error');
       });
     return () => {
       active = false;
     };
-  }, [origin, nights]);
+  }, []);
+
+  const months = useMemo(() => (today ? buildMonths(today) : []), [today]);
+  const nights = arrival && departure ? nightsBetween(arrival, departure) : 0;
+
+  function pick(date: string) {
+    setHint(null);
+    if (!arrival || departure) {
+      setArrival(date);
+      setDeparture(null);
+      return;
+    }
+    if (date <= arrival) {
+      setArrival(date);
+      setDeparture(null);
+      return;
+    }
+    if (nightsBetween(arrival, date) < MIN_NIGHTS) {
+      setHint(`Minimální pobyt je ${MIN_NIGHTS} nocí — vyberte pozdější odjezd.`);
+      return;
+    }
+    if (rangeOverlapsBlock(arrival, date, blocks)) {
+      setHint('Vybraný úsek zasahuje do obsazeného termínu — zvolte jiný příjezd nebo odjezd.');
+      return;
+    }
+    setDeparture(date);
+  }
+
+  function reset() {
+    setArrival(null);
+    setDeparture(null);
+    setHint(null);
+  }
+
+  const ready = Boolean(arrival && departure);
 
   return (
     <div>
-      <div className="mb-8 flex flex-wrap items-end gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-card">
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink/45">Odlet z</span>
-          <select
-            value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
-            suppressHydrationWarning
-            className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm font-medium text-ink transition-colors focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
-          >
-            {ORIGINS.map((o) => (
-              <option key={o.code} value={o.code}>
-                {o.code} — {o.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink/45">Počet nocí</span>
-          <input
-            type="number"
-            min={7}
-            value={nights}
-            onChange={(e) => setNights(Number(e.target.value))}
-            suppressHydrationWarning
-            className="w-28 rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm font-medium text-ink transition-colors focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
-          />
-        </label>
-      </div>
-
-      {status === 'loading' && (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-80 animate-pulse rounded-2xl border border-ink/10 bg-white p-5 shadow-card"
-            >
-              <div className="mb-4 flex justify-between">
-                <div className="h-5 w-24 rounded bg-ink/8" />
-                <div className="h-6 w-16 rounded-full bg-ink/8" />
-              </div>
-              <div className="grid grid-cols-7 gap-1">
-                {Array.from({ length: 35 }).map((__, j) => (
-                  <div key={j} className="aspect-square rounded-lg bg-ink/5" />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <p className="mb-5 text-sm text-ink/60">
+        Klikněte na den příjezdu a poté na den odjezdu. Volné dny jsou modré, obsazené přeškrtnuté.
+        Minimální pobyt je {MIN_NIGHTS} nocí.
+      </p>
 
       {status === 'error' && (
-        <div
-          role="alert"
-          className="rounded-2xl border border-terracotta/30 bg-terracotta/5 p-6 text-center"
-        >
+        <div role="alert" className="rounded-2xl border border-terracotta/30 bg-terracotta/5 p-6 text-center">
           <p className="font-medium text-terracotta">Dostupnost se nepodařilo načíst.</p>
           <p className="mt-1 text-sm text-ink/55">Zkuste to prosím za chvíli znovu.</p>
         </div>
       )}
 
-      {status === 'success' && months.length === 0 && (
-        <div className="rounded-2xl border border-ink/10 bg-white p-10 text-center shadow-card">
-          <p className="font-medium text-ink">Žádné volné termíny</p>
-          <p className="mt-1 text-sm text-ink/55">Pro zvolené nastavení nejsou k dispozici volné měsíce.</p>
+      {status === 'loading' && (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-72 animate-pulse rounded-2xl border border-ink/10 bg-white p-5 shadow-card" />
+          ))}
         </div>
       )}
 
-      {status === 'success' && months.length > 0 && (
+      {status === 'success' && (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {months.map((m) => (
-            <MonthCard key={`${m.year}-${m.month}`} m={m} />
+          {months.map((mm) => (
+            <MonthCard
+              key={`${mm.year}-${mm.month}`}
+              year={mm.year}
+              month={mm.month}
+              blocks={blocks}
+              today={today}
+              arrival={arrival}
+              departure={departure}
+              onPick={pick}
+            />
           ))}
+        </div>
+      )}
+
+      {(arrival || hint) && (
+        <div className="sticky bottom-4 z-10 mt-6">
+          <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
+            <div className="text-sm">
+              {ready ? (
+                <span className="font-medium text-ink">
+                  {arrival} <span className="text-ink/30">→</span> {departure} · {nights} nocí
+                </span>
+              ) : arrival ? (
+                <span className="text-ink/70">
+                  Příjezd <span className="font-medium text-ink">{arrival}</span> — vyberte odjezd
+                </span>
+              ) : null}
+              {hint && <span className={arrival ? 'ml-2 text-terracotta' : 'text-terracotta'}>{hint}</span>}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={reset}
+                className="rounded-xl px-3 py-2 text-sm text-ink/60 transition-colors hover:text-ink"
+              >
+                Zrušit
+              </button>
+              <Link
+                href={ready ? `/rezervace?arrival=${arrival}&departure=${departure}` : '#'}
+                aria-disabled={!ready}
+                tabIndex={ready ? undefined : -1}
+                className={`rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-colors ${
+                  ready
+                    ? 'bg-terracotta hover:bg-terracotta/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/50 focus-visible:ring-offset-2'
+                    : 'pointer-events-none bg-ink/20'
+                }`}
+              >
+                Rezervovat termín
+              </Link>
+            </div>
+          </div>
         </div>
       )}
     </div>
