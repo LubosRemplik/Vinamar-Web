@@ -17,13 +17,6 @@ test('nav reaches all showcase pages', async ({ page }) => {
   await expect(page).toHaveURL(/\/tipy-na-vylety$/);
 });
 
-test('rezervace link navigates to the booking page', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('navigation').getByRole('link', { name: 'Rezervace' }).click();
-  await expect(page).toHaveURL(/\/rezervace$/);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Rezervace');
-});
-
 test('a trip detail page loads from its slug', async ({ page }) => {
   await page.goto('/tipy-na-vylety');
   await page.getByText('Pláž La Mata').click();
