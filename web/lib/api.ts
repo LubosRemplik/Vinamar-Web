@@ -64,3 +64,32 @@ export async function fetchCheapestWindows(
   if (!res.ok) throw new Error('optimizer failed');
   return res.json();
 }
+
+export interface CalendarWindow {
+  arrival: string;
+  departure: string;
+  nights: number;
+  indicativePrice: number;
+  currency: string;
+  flightDeepLink: string;
+  hasOrphanGap: boolean;
+}
+export interface CalendarMonth {
+  year: number;
+  month: number;
+  freeRanges: { start: string; end: string }[];
+  cheapest: CalendarWindow | null;
+}
+export interface AvailabilityCalendar {
+  origin: string;
+  nights: number;
+  months: CalendarMonth[];
+}
+export async function fetchAvailabilityCalendar(
+  origin: string,
+  nights: number,
+): Promise<AvailabilityCalendar> {
+  const res = await fetch(`${BASE}/calendar?origin=${origin}&nights=${nights}`);
+  if (!res.ok) throw new Error('calendar failed');
+  return res.json();
+}
