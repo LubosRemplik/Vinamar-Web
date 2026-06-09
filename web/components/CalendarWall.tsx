@@ -53,7 +53,7 @@ function departureProblem(arrival: string, departure: string, blocks: Block[]): 
     return `Minimální pobyt je ${MIN_NIGHTS} nocí — Vyberte jiný termín.`;
   }
   if (rangeOverlapsBlock(arrival, departure, blocks)) {
-    return 'Vybraný úsek zasahuje do obsazeného termínu — zvolte jiný příjezd nebo odjezd.';
+    return 'Vybraný úsek zasahuje do obsazeného termínu — Zvolte jiný termín.';
   }
   if (createsOrphanGap(arrival, departure, blocks)) {
     return (
