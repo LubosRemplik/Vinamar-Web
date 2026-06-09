@@ -18,13 +18,9 @@ export default function Nav() {
             {l.label}
           </Link>
         ))}
-        <span
-          className="text-ink/40 cursor-not-allowed"
-          title="Připravujeme"
-          aria-disabled="true"
-        >
+        <Link href="/rezervace" className="hover:text-terracotta">
           Rezervace
-        </span>
+        </Link>
       </nav>
     </header>
   );
