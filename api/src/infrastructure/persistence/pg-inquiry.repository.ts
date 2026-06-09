@@ -10,6 +10,7 @@ interface InquiryRow {
   id: string;
   guest_name: string;
   email: string;
+  phone: string;
   arrival: string | Date;
   departure: string | Date;
   message: string;
@@ -26,6 +27,7 @@ export class PgInquiryRepository implements InquiryRepository {
       row.id,
       row.guest_name,
       new EmailAddress(row.email),
+      row.phone ?? '',
       new DateRange(new Date(row.arrival), new Date(row.departure)),
       row.message,
       row.status as InquiryStatus,
@@ -35,12 +37,13 @@ export class PgInquiryRepository implements InquiryRepository {
 
   async save(inquiry: Inquiry): Promise<void> {
     await this.pool.query(
-      `INSERT INTO inquiries (id, guest_name, email, arrival, departure, message, status, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+      `INSERT INTO inquiries (id, guest_name, email, phone, arrival, departure, message, status, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
       [
         inquiry.id,
         inquiry.guestName,
         inquiry.email.value,
+        inquiry.phone,
         inquiry.range.arrival,
         inquiry.range.departure,
         inquiry.message,

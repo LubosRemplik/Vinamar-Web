@@ -15,6 +15,7 @@ export async function fetchAvailability(from: string, to: string): Promise<Block
 export async function submitInquiry(input: {
   guestName: string;
   email: string;
+  phone: string;
   arrival: string;
   departure: string;
   message: string;

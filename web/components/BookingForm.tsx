@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { submitInquiry } from '@/lib/api';
+import { formatCzDate } from '@/lib/date';
 
 // Renders bare (no card) — the parent (the sticky bottom bar) provides the surface.
 export default function BookingForm({
@@ -17,6 +18,7 @@ export default function BookingForm({
 }) {
   const [guestName, setGuestName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [error, setError] = useState('');
@@ -25,7 +27,7 @@ export default function BookingForm({
     e.preventDefault();
     setState('sending');
     setError('');
-    const result = await submitInquiry({ guestName, email, arrival, departure, message });
+    const result = await submitInquiry({ guestName, email, phone, arrival, departure, message });
     if (result.ok) {
       setState('done');
     } else {
@@ -39,7 +41,7 @@ export default function BookingForm({
       <div className="text-center">
         <p className="font-semibold text-ink">Děkujeme, ozveme se vám.</p>
         <p className="mt-1 text-sm text-ink/60">
-          Poptávku na termín {arrival} → {departure} jsme přijali.
+          Poptávku na termín {formatCzDate(arrival)} → {formatCzDate(departure)} jsme přijali.
         </p>
         <button
           type="button"
@@ -56,7 +58,7 @@ export default function BookingForm({
     <form onSubmit={submit}>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-semibold text-ink">
-          {arrival} <span className="text-ink/30">→</span> {departure}{' '}
+          {formatCzDate(arrival)} <span className="text-ink/30">→</span> {formatCzDate(departure)}{' '}
           <span className="font-normal text-ink/50">· {nights} nocí</span>
         </p>
         <button type="button" onClick={onReset} className="text-sm text-ink/55 transition-colors hover:text-ink">
@@ -68,7 +70,7 @@ export default function BookingForm({
         <input
           required
           suppressHydrationWarning
-          placeholder="Jméno"
+          placeholder="Jméno a příjmení"
           value={guestName}
           onChange={(e) => setGuestName(e.target.value)}
           className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
@@ -81,6 +83,15 @@ export default function BookingForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
+        />
+        <input
+          required
+          suppressHydrationWarning
+          type="tel"
+          placeholder="Telefonní číslo"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30 sm:col-span-2"
         />
       </div>
       <textarea

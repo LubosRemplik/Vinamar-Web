@@ -46,7 +46,7 @@ export class InMemoryInquiries implements InquiryRepository {
   async updateStatus(id: string, status: InquiryStatus): Promise<void> {
     this.items = this.items.map((i) =>
       i.id === id
-        ? new Inquiry(i.id, i.guestName, i.email, i.range, i.message, status, i.createdAt)
+        ? new Inquiry(i.id, i.guestName, i.email, i.phone, i.range, i.message, status, i.createdAt)
         : i,
     );
   }

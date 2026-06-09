@@ -17,7 +17,7 @@ export class SmtpOwnerNotifier implements OwnerNotifier {
       to: process.env.OWNER_EMAIL ?? 'owner@example.com',
       subject: `Nová poptávka: ${inquiry.guestName}`,
       text:
-        `${inquiry.guestName} (${inquiry.email.value})\n` +
+        `${inquiry.guestName} (${inquiry.email.value}${inquiry.phone ? `, tel. ${inquiry.phone}` : ''})\n` +
         `${inquiry.range.arrival.toISOString().slice(0, 10)} → ` +
         `${inquiry.range.departure.toISOString().slice(0, 10)}\n\n${inquiry.message}`,
     });
