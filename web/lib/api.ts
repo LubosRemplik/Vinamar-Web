@@ -28,3 +28,20 @@ export async function submitInquiry(input: {
   const problem = await res.json().catch(() => ({}));
   return { ok: false, error: problem.detail ?? 'Odeslání se nezdařilo' };
 }
+
+export interface CheapestFlight {
+  origin: string;
+  originName: string;
+  price: number;
+  currency: string;
+  departureDate: string;
+  returnDate: string;
+  airline: string;
+  deepLink: string;
+}
+
+export async function fetchCheapestFlights(): Promise<CheapestFlight[]> {
+  const res = await fetch(`${BASE}/flights/cheapest`);
+  if (!res.ok) throw new Error('flights failed');
+  return res.json();
+}

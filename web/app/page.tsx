@@ -20,6 +20,7 @@ export default function Home() {
       <section className="flex flex-col md:flex-row gap-4 px-6">
         <SectionTeaser href="/okoli" title="Okolí" text="La Mata, solná jezera, Torrevieja" />
         <SectionTeaser href="/apartman" title="Apartmán" text="Prohlédněte si fotky a vybavení" />
+        <SectionTeaser href="/letenky" title="Letenky" text="Najděte nejlevnější let do Alicante" />
       </section>
       <section className="px-6 mt-10">
         <h2 className="text-2xl mb-4">Tipy na výlety</h2>

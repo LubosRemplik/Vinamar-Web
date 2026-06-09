@@ -69,5 +69,5 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 ## TODO (další sub-projekty)
 - [x] A — Foundation & Showcase
 - [x] B — Availability & Inquiries
-- [ ] C — Flight Prices (Travelpayouts)
+- [x] C — Flight Prices (Travelpayouts)
 - [ ] D — Cheapest-Dates Optimizer
