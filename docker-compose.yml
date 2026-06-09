@@ -24,7 +24,7 @@ services:
       ADMIN_USERNAME: ${ADMIN_USERNAME:-owner}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change-me}
       OWNER_EMAIL: ${OWNER_EMAIL:-owner@example.com}
-      SMTP_HOST: ${SMTP_HOST:-mailhog}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
       SMTP_PORT: ${SMTP_PORT:-1025}
       SMTP_FROM: ${SMTP_FROM:-vinamar@example.com}
       TRAVELPAYOUTS_TOKEN: ${TRAVELPAYOUTS_TOKEN:-}
@@ -43,11 +43,16 @@ services:
       - ./api:/app
       - /app/node_modules
 
-  mailhog:
-    image: mailhog/mailhog:latest
+  mailpit:
+    image: axllent/mailpit:latest
     ports:
-      - "${MAILHOG_SMTP_PORT:-1025}:1025"
-      - "${MAILHOG_UI_PORT:-8025}:8025"
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"   # SMTP
+      - "${MAILPIT_UI_PORT:-8025}:8025"     # web UI
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   web:
     build: ./web

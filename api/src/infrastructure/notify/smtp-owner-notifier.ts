@@ -6,7 +6,7 @@ import { Inquiry } from '../../domain/inquiry/inquiry';
 @Injectable()
 export class SmtpOwnerNotifier implements OwnerNotifier {
   private readonly transport: Transporter = createTransport({
-    host: process.env.SMTP_HOST ?? 'mailhog',
+    host: process.env.SMTP_HOST ?? 'mailpit',
     port: Number(process.env.SMTP_PORT ?? 1025),
     secure: false,
   });
