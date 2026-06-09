@@ -29,42 +29,6 @@ export async function submitInquiry(input: {
   return { ok: false, error: problem.detail ?? 'Odeslání se nezdařilo' };
 }
 
-export interface CheapestFlight {
-  origin: string;
-  originName: string;
-  price: number;
-  currency: string;
-  departureDate: string;
-  returnDate: string;
-  airline: string;
-  deepLink: string;
-}
-
-export async function fetchCheapestFlights(): Promise<CheapestFlight[]> {
-  const res = await fetch(`${BASE}/flights/cheapest`);
-  if (!res.ok) throw new Error('flights failed');
-  return res.json();
-}
-
-export interface CheapestWindow {
-  origin: string;
-  arrival: string;
-  departure: string;
-  nights: number;
-  indicativePrice: number;
-  currency: string;
-  flightDeepLink: string;
-}
-
-export async function fetchCheapestWindows(
-  origin: string,
-  nights: number,
-): Promise<CheapestWindow[]> {
-  const res = await fetch(`${BASE}/optimizer/cheapest-windows?origin=${origin}&nights=${nights}`);
-  if (!res.ok) throw new Error('optimizer failed');
-  return res.json();
-}
-
 export interface CalendarWindow {
   arrival: string;
   departure: string;
