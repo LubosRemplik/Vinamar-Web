@@ -46,6 +46,23 @@ function createsOrphanGap(a: string, b: string, blocks: Block[]): boolean {
   return false;
 }
 
+// Returns a human hint if [arrival, departure) is not a valid stay, otherwise null.
+function departureProblem(arrival: string, departure: string, blocks: Block[]): string | null {
+  if (nightsBetween(arrival, departure) < MIN_NIGHTS) {
+    return `Minimální pobyt je ${MIN_NIGHTS} nocí — vyberte pozdější odjezd.`;
+  }
+  if (rangeOverlapsBlock(arrival, departure, blocks)) {
+    return 'Vybraný úsek zasahuje do obsazeného termínu — zvolte jiný příjezd nebo odjezd.';
+  }
+  if (createsOrphanGap(arrival, departure, blocks)) {
+    return (
+      `Termín by vedle obsazeného období nechal mezeru 3–6 nocí, kterou už nelze obsadit. ` +
+      `Zvolte ho tak, aby mezera byla nejvýše ${MAX_TURNOVER_GAP} noci, nebo aspoň ${MIN_NIGHTS} nocí.`
+    );
+  }
+  return null;
+}
+
 export default function CalendarWall() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [status, setStatus] = useState<'loading' | 'error' | 'success'>('loading');
@@ -79,8 +96,32 @@ export default function CalendarWall() {
   const months = useMemo(() => (today ? buildMonths(today) : []), [today]);
   const nights = arrival && departure ? nightsBetween(arrival, departure) : 0;
 
-  function pick(date: string) {
+  function chooseDeparture(arr: string, date: string) {
+    if (date <= arr) {
+      setHint('Den odjezdu musí být po dni příjezdu.');
+      return;
+    }
+    const problem = departureProblem(arr, date, blocks);
+    if (problem) {
+      setHint(problem);
+      return;
+    }
+    setDeparture(date);
+  }
+
+  function pick(date: string, kind: 'free' | 'checkout') {
     setHint(null);
+    // A term's check-in day is occupied from the afternoon, so it can only be a check-out.
+    if (kind === 'checkout') {
+      if (!arrival) {
+        setHint(
+          'Tento den je obsazený příjezdem dalšího hosta — vyberte nejdřív den příjezdu; tohle může být jen den odjezdu.',
+        );
+        return;
+      }
+      chooseDeparture(arrival, date);
+      return;
+    }
     if (!arrival || departure) {
       setArrival(date);
       setDeparture(null);
@@ -91,22 +132,7 @@ export default function CalendarWall() {
       setDeparture(null);
       return;
     }
-    if (nightsBetween(arrival, date) < MIN_NIGHTS) {
-      setHint(`Minimální pobyt je ${MIN_NIGHTS} nocí — vyberte pozdější odjezd.`);
-      return;
-    }
-    if (rangeOverlapsBlock(arrival, date, blocks)) {
-      setHint('Vybraný úsek zasahuje do obsazeného termínu — zvolte jiný příjezd nebo odjezd.');
-      return;
-    }
-    if (createsOrphanGap(arrival, date, blocks)) {
-      setHint(
-        `Termín by vedle obsazeného období nechal mezeru 3–6 nocí, kterou už nelze obsadit. ` +
-          `Zvolte ho tak, aby mezera byla nejvýše ${MAX_TURNOVER_GAP} noci, nebo aspoň ${MIN_NIGHTS} nocí.`,
-      );
-      return;
-    }
-    setDeparture(date);
+    chooseDeparture(arrival, date);
   }
 
   function reset() {
@@ -121,7 +147,8 @@ export default function CalendarWall() {
     <div>
       <p className="mb-5 text-sm text-ink/60">
         Klikněte na den příjezdu a poté na den odjezdu. Volné dny jsou modré, obsazené přeškrtnuté.
-        Minimální pobyt je {MIN_NIGHTS} nocí.
+        Dny na hraně termínu jsou poloviční (střídání) — lze na ně přijet odpoledne, nebo odjet
+        dopoledne. Minimální pobyt je {MIN_NIGHTS} nocí.
       </p>
 
       {status === 'error' && (
