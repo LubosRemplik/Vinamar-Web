@@ -57,7 +57,8 @@ services:
   web:
     build: ./web
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001/api}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+      API_PROXY_TARGET: http://api:3001
     ports:
       - "${WEB_PORT:-3000}:3000"
     depends_on:
@@ -67,5 +68,22 @@ services:
       - /app/node_modules
       - /app/.next
 
+  tailscale:
+    image: tailscale/tailscale:latest
+    hostname: ${TS_HOSTNAME:-vinamar}
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY:-}
+      TS_HOSTNAME: ${TS_HOSTNAME:-vinamar}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_USERSPACE: "true"
+      TS_SERVE_CONFIG: /config/serve.json
+    volumes:
+      - tailscale_state:/var/lib/tailscale
+      - ./tailscale/serve.json:/config/serve.json:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+
 volumes:
   db_data:
+  tailscale_state:

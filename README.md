@@ -26,6 +26,30 @@ WEB_PORT=3100 API_PORT=3101 docker compose up --build
 …nebo zkopíruj `docker-compose.override.yml.example` do `docker-compose.override.yml`
 (soubor je v `.gitignore`) a uprav porty.
 
+### Přístup přes Tailscale (MagicDNS, jen tvůj tailnet)
+
+Služba `tailscale` (sidecar, userspace režim) zpřístupní aplikaci v rámci tvého
+tailnetu přes HTTPS na MagicDNS jménu — bez veřejné expozice (Tailscale Serve, ne Funnel).
+
+1. V [admin konzoli Tailscale](https://login.tailscale.com/admin/settings/keys) vygeneruj
+   **reusable** auth key (doporučeno tagged, např. `tag:vinamar`).
+2. V konzoli zapni **HTTPS certifikáty** (MagicDNS → HTTPS) pro tailnet — Serve je bez nich
+   nevydá.
+3. Vlož klíč do `.env.local` (je v `.gitignore`):
+   ```bash
+   echo "TS_AUTHKEY=tskey-auth-…" >> .env.local
+   ```
+4. `cp .env.example .env` (nastavuje `TS_HOSTNAME`, výchozí `vinamar`) a spusť:
+   ```bash
+   docker compose up --build
+   ```
+5. Z libovolného zařízení v tailnetu otevři **`https://vinamar.<tvůj-tailnet>.ts.net`**.
+
+Prohlížeč mluví s API přes stejný původ: Next.js přepisuje `/api/*` na službu `api`
+(`API_PROXY_TARGET`), takže přes MagicDNS i přes `localhost` to funguje bez napevno
+zadaného hostu. Identita uzlu přežívá restarty ve volume `tailscale_state`; serve
+konfigurace je v `tailscale/serve.json`.
+
 ## Architektura
 
 - **api/** — onion vrstvy: `domain` (bez frameworku) → `application` (CQRS handlery) → `infrastructure` (raw SQL přes `pg`, migrace `node-pg-migrate`) → `interface` (HTTP). Závislosti míří dovnitř; hlídá ESLint (`api/.eslintrc.cjs`, rule pro `src/domain/**`).
