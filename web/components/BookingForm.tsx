@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { submitInquiry } from '@/lib/api';
 import { formatCzDate } from '@/lib/date';
+import { totalPrice } from '@/lib/price';
 
 // Renders bare (no card) — the parent (the sticky bottom bar) provides the surface.
 export default function BookingForm({
@@ -23,6 +24,8 @@ export default function BookingForm({
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [error, setError] = useState('');
 
+  const price = totalPrice(arrival, departure);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setState('sending');
@@ -41,7 +44,7 @@ export default function BookingForm({
       <div className="text-center">
         <p className="font-semibold text-ink">Děkujeme, ozveme se vám.</p>
         <p className="mt-1 text-sm text-ink/60">
-          Poptávku na termín {formatCzDate(arrival)} → {formatCzDate(departure)} jsme přijali.
+          Poptávku na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €) jsme přijali.
         </p>
         <button
           type="button"
@@ -59,7 +62,8 @@ export default function BookingForm({
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-semibold text-ink">
           {formatCzDate(arrival)} <span className="text-ink/30">→</span> {formatCzDate(departure)}{' '}
-          <span className="font-normal text-ink/50">· {nights} nocí</span>
+          <span className="font-normal text-ink/50">· {nights} nocí</span>{' '}
+          <span className="text-terracotta">· {price} €</span>
         </p>
         <button
           type="button"
