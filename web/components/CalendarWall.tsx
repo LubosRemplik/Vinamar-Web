@@ -50,7 +50,7 @@ function createsOrphanGap(a: string, b: string, blocks: Block[]): boolean {
 // Returns a human hint if [arrival, departure) is not a valid stay, otherwise null.
 function departureProblem(arrival: string, departure: string, blocks: Block[]): string | null {
   if (nightsBetween(arrival, departure) < MIN_NIGHTS) {
-    return `Minimální pobyt je ${MIN_NIGHTS} nocí — vyberte pozdější odjezd.`;
+    return `Minimální pobyt je ${MIN_NIGHTS} nocí — Vyberte jiný termín.`;
   }
   if (rangeOverlapsBlock(arrival, departure, blocks)) {
     return 'Vybraný úsek zasahuje do obsazeného termínu — zvolte jiný příjezd nebo odjezd.';
