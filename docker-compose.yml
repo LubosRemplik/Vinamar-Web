@@ -71,8 +71,12 @@ services:
   tailscale:
     image: tailscale/tailscale:latest
     hostname: ${TS_HOSTNAME:-vinamar}
+    # TS_AUTHKEY is read from .env.local (git-ignored). Docker Compose only auto-loads
+    # .env for ${...} interpolation, so the secret is injected into the container via env_file.
+    env_file:
+      - path: .env.local
+        required: false
     environment:
-      TS_AUTHKEY: ${TS_AUTHKEY:-}
       TS_HOSTNAME: ${TS_HOSTNAME:-vinamar}
       TS_STATE_DIR: /var/lib/tailscale
       TS_USERSPACE: "true"
