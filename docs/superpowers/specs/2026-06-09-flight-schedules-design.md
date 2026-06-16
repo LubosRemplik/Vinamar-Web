@@ -121,13 +121,19 @@ a přidáme paralelní, rozvrhově orientovanou část — stejné DDD/CQRS vrst
   Praha: `directRyanair: false`, `note: "Ryanair sem nelétá; přímo Smartwings/Eurowings"`.
 
 ### 4.5 Frontend (Next.js)
-- Sekce/stránka napojená na reframovaný web (apartmán první, doprava jako doplněk).
-  Návrh: na stránce „Volné termíny" tlačítko/odkaz „Jak se sem dostat" nebo nová
-  stránka `/letecke-spojeni`.
-- **Výběr termínu**: předvyplnit rozsahem, který si uživatel zvolil v kalendáři
-  (pokud přišel odtud), jinak vlastní date‑range picker.
-- **Zobrazení**: karty po letišti v pořadí preference; v kartě seznam dní s časy
-  (`Po 12:00 → 15:00 FR1495`). U Prahy poctivá poznámka. Žádné ceny.
+- Sekce napojená na reframovaný web (apartmán první, doprava jako doplněk) na
+  stránce „Volné termíny".
+- **Výběr termínu**: žádný vlastní date‑range picker. Sekce je řízená výběrem v
+  rezervačním kalendáři a zobrazí se **inline pod kalendářem až po zvolení příjezdu
+  i odjezdu** (revize 2026‑06‑16 — viz rozhodnutí §6.2).
+- **Okno letů**: odlety se vážou k **příjezdu**, návraty k **odjezdu**. Frontend dělá
+  dva okenní dotazy na `/flights/schedules`: `[příjezd ± WINDOW_DAYS]` → `.outbound`,
+  `[odjezd ± WINDOW_DAYS]` → `.return` (`WINDOW_DAYS = 3`). Při `MIN_NIGHTS = 7` se
+  okna nepřekrývají, takže střed pobytu (irelevantní lety) do výpisu nespadne. Bez
+  změny backendu.
+- **Zobrazení**: karty po letišti v pořadí preference; v kartě dva sloupce Tam/Zpět
+  se seznamem dní a časů (`St 15. 7. 12:00 → 15:00 FR1495`). U Prahy poctivá poznámka.
+  Žádné ceny.
 - České formátování dat (`formatCzDate`) a dnů v týdnu — sjednotit se stávajícím UI.
 
 ## 5. Testování
@@ -141,8 +147,11 @@ a přidáme paralelní, rozvrhově orientovanou část — stejné DDD/CQRS vrst
 ## 6. Rozhodnutí (potvrzeno majitelem 2026‑06‑09)
 
 1. **Praha**: jen poznámka „přímo Smartwings/Eurowings" — bez druhého zdroje. ✅
-2. **Umístění**: napojeno pod „Volné termíny", pod poptávkový formulář
-   (`web/components/FlightSchedules.tsx` na konci stránky `/volne-terminy`). ✅
+2. **Umístění**: napojeno pod „Volné termíny".
+   - Původně (2026‑06‑09): samostatná sekce s vlastním Od–Do pickerem na konci stránky.
+   - **Revize 2026‑06‑16 (majitel):** zrušen vlastní picker; `FlightSchedules` je nyní
+     prop‑driven (`arrival`, `departure`) a vykreslí se **inline pod kalendářem až po
+     výběru termínu** přímo z `CalendarWall`. ✅
 3. **Zpáteční lety**: ano, oba směry (tam i ALC→letiště). ✅
 4. **Persistence**: tabulka `flight_schedules` + denní cron (4:00) + refresh při
    startu. ✅

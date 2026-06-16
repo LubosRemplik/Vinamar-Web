@@ -5,6 +5,7 @@ import { fetchAvailability, type Block } from '@/lib/api';
 import { formatCzDate } from '@/lib/date';
 import MonthCard from '@/components/MonthCard';
 import BookingForm from '@/components/BookingForm';
+import FlightSchedules from '@/components/FlightSchedules';
 
 const MS_DAY = 86_400_000;
 const MIN_NIGHTS = 7;
@@ -214,6 +215,10 @@ export default function CalendarWall() {
             )}
           </div>
         </div>
+      )}
+
+      {ready && arrival && departure && (
+        <FlightSchedules arrival={arrival} departure={departure} />
       )}
     </div>
   );

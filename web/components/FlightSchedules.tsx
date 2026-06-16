@@ -7,11 +7,15 @@ import { formatCzDate } from '@/lib/date';
 const CZ_DOW = ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'];
 const dayOfWeek = (iso: string) => CZ_DOW[new Date(`${iso}T00:00:00Z`).getUTCDay()];
 
+const MS_DAY = 86_400_000;
+const WINDOW_DAYS = 3;
+
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+const shiftDays = (iso: string, days: number) => isoDate(new Date(Date.parse(iso) + days * MS_DAY));
 
 function FlightList({ flights }: { flights: ScheduledFlight[] }) {
   if (flights.length === 0) {
-    return <p className="text-sm text-ink/40">V tomto období žádné lety.</p>;
+    return <p className="text-sm text-ink/40">V okolí termínu žádné lety.</p>;
   }
   return (
     <ul className="space-y-1.5">
@@ -33,77 +37,63 @@ function FlightList({ flights }: { flights: ScheduledFlight[] }) {
   );
 }
 
-export default function FlightSchedules() {
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-  const [schedules, setSchedules] = useState<AirportSchedule[]>([]);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
+// Outbound flights cluster around the arrival day, return flights around departure.
+// Two windowed fetches keep the middle of the stay (irrelevant flights) out of the list.
+function mergeByOrigin(
+  outboundSource: AirportSchedule[],
+  returnSource: AirportSchedule[],
+): AirportSchedule[] {
+  const returnByOrigin = new Map(returnSource.map((a) => [a.origin, a]));
+  return outboundSource.map((a) => {
+    const ret = returnByOrigin.get(a.origin);
+    return {
+      ...a,
+      directRyanair: a.directRyanair || Boolean(ret?.directRyanair),
+      outbound: a.outbound,
+      return: ret?.return ?? [],
+    };
+  });
+}
 
-  async function load(rangeFrom: string, rangeTo: string) {
-    setStatus('loading');
-    try {
-      const data = await fetchFlightSchedules(rangeFrom, rangeTo);
-      setSchedules(data);
-      setStatus('success');
-    } catch {
-      setStatus('error');
-    }
-  }
+export default function FlightSchedules({
+  arrival,
+  departure,
+}: {
+  arrival: string;
+  departure: string;
+}) {
+  const [schedules, setSchedules] = useState<AirportSchedule[]>([]);
+  const [status, setStatus] = useState<'loading' | 'error' | 'success'>('loading');
 
   useEffect(() => {
-    const today = new Date();
-    const end = new Date(today);
-    end.setDate(end.getDate() + 30);
-    const f = isoDate(today);
-    const t = isoDate(end);
-    setFrom(f);
-    setTo(t);
-    load(f, t);
-  }, []);
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (from && to && from <= to) load(from, to);
-  }
+    let active = true;
+    setStatus('loading');
+    Promise.all([
+      fetchFlightSchedules(shiftDays(arrival, -WINDOW_DAYS), shiftDays(arrival, WINDOW_DAYS)),
+      fetchFlightSchedules(shiftDays(departure, -WINDOW_DAYS), shiftDays(departure, WINDOW_DAYS)),
+    ])
+      .then(([out, back]) => {
+        if (!active) return;
+        setSchedules(mergeByOrigin(out, back));
+        setStatus('success');
+      })
+      .catch(() => {
+        if (active) setStatus('error');
+      });
+    return () => {
+      active = false;
+    };
+  }, [arrival, departure]);
 
   return (
-    <section className="mt-16 border-t border-ink/10 pt-12">
+    <section className="mt-12 border-t border-ink/10 pt-10">
       <header className="mb-6 max-w-2xl">
         <h2 className="text-2xl font-semibold text-ink">Letecké spojení do Alicante</h2>
         <p className="mt-2 text-ink/60">
-          Přímé lety (Ryanair) z vybraných letišť. Zadejte období a uvidíte, ve které dny a v kolik
-          hodin se letí — tam i zpět. Letiště jsou seřazena podle preference.
+          Přímé lety Ryanairu z vybraných letišť kolem vašeho termínu — tam ({formatCzDate(arrival)})
+          i zpět ({formatCzDate(departure)}), ± {WINDOW_DAYS} dny. Letiště jsou seřazena podle preference.
         </p>
       </header>
-
-      <form onSubmit={submit} className="mb-8 flex flex-wrap items-end gap-3">
-        <label className="text-sm text-ink/70">
-          <span className="mb-1 block">Od</span>
-          <input
-            suppressHydrationWarning
-            type="date"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
-          />
-        </label>
-        <label className="text-sm text-ink/70">
-          <span className="mb-1 block">Do</span>
-          <input
-            suppressHydrationWarning
-            type="date"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
-          />
-        </label>
-        <button
-          type="submit"
-          className="rounded-xl bg-sea px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sea/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40"
-        >
-          Zobrazit spojení
-        </button>
-      </form>
 
       {status === 'loading' && <p className="text-sm text-ink/50">Načítám spojení…</p>}
       {status === 'error' && (
@@ -123,7 +113,7 @@ export default function FlightSchedules() {
 
               {!airport.directRyanair ? (
                 <p className="text-sm text-ink/55">
-                  {airport.note ?? 'V zadaném období zde nejsou přímé lety Ryanairu do Alicante.'}
+                  {airport.note ?? 'Pro toto období zde nejsou zveřejněné přímé lety Ryanairu do Alicante.'}
                 </p>
               ) : (
                 <div className="grid gap-5 sm:grid-cols-2">

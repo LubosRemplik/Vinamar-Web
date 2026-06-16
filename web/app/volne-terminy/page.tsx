@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import CalendarWall from '@/components/CalendarWall';
-import FlightSchedules from '@/components/FlightSchedules';
 import { SEASON_RATE, OFF_SEASON_RATE } from '@/lib/price';
 
 export const metadata: Metadata = {
@@ -27,7 +26,6 @@ export default function VolneTerminyPage() {
         </p>
       </header>
       <CalendarWall />
-      <FlightSchedules />
     </main>
   );
 }
