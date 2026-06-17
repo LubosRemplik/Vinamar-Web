@@ -200,6 +200,9 @@ export default function CalendarWall() {
       {ready && arrival && departure && (
         <div className="fixed inset-0 z-50 sm:sticky sm:inset-auto sm:bottom-4 sm:z-10 sm:mt-6">
           <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-ink/10 sm:shadow-cardHover">
+            <div className="sticky top-0 -mx-4 -mt-4 mb-4 border-b border-ink/10 bg-white px-4 py-3 sm:hidden">
+              <h2 className="text-lg font-semibold text-ink">Nezávazná poptávka</h2>
+            </div>
             <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
             <FlightSchedules arrival={arrival} departure={departure} />
           </div>
