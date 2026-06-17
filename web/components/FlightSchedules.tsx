@@ -80,7 +80,12 @@ export default function FlightSchedules({
     };
   }, [arrival, departure]);
 
-  const withFlights = schedules.filter((a) => a.outbound.length > 0 || a.return.length > 0);
+  // Only airports usable for the whole trip — a flight there AND back.
+  const withFlights = schedules.filter((a) => a.outbound.length > 0 && a.return.length > 0);
+
+  // No Ryanair connection for the chosen term → hide the whole section. The
+  // inquiry form is a sibling, so this never blocks sending the inquiry.
+  if (status === 'success' && withFlights.length === 0) return null;
 
   return (
     <div className="mt-4 border-t border-ink/10 pt-3">
@@ -92,26 +97,26 @@ export default function FlightSchedules({
       {status === 'error' && (
         <p className="text-sm text-terracotta">Spojení se nepodařilo načíst.</p>
       )}
-      {status === 'success' && withFlights.length === 0 && (
-        <p className="text-sm text-ink/50">V těchto dnech nelétá z preferovaných letišť přímý Ryanair do Alicante.</p>
-      )}
-
       {status === 'success' && withFlights.length > 0 && (
         <ul className="space-y-1.5">
           {withFlights.map((airport) => (
-            <li key={airport.origin} className="flex flex-wrap items-baseline gap-x-3 text-sm">
-              <span className="w-24 shrink-0 font-medium text-ink">{airport.originName}</span>
-              <span className="text-ink/70">
-                <span className="text-sea">Tam</span> {times(airport.outbound) ?? '—'}
-              </span>
-              <span className="text-ink/70">
-                <span className="text-terracotta">Zpět</span> {times(airport.return) ?? '—'}
-              </span>
+            <li key={airport.origin} className="flex items-center justify-between gap-3 text-sm">
+              <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                <span className="w-32 shrink-0 font-medium text-ink">
+                  {airport.originName} <span className="text-ink/40">({airport.origin})</span>
+                </span>
+                <span className="text-ink/70">
+                  <span className="text-sea">Tam</span> {times(airport.outbound) ?? '—'}
+                </span>
+                <span className="text-ink/70">
+                  <span className="text-terracotta">Zpět</span> {times(airport.return) ?? '—'}
+                </span>
+              </div>
               <a
                 href={ryanairTripUrl(airport.origin, arrival, departure)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-lg bg-sea px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sea/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40"
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-sea px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sea/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40"
               >
                 Cena na Ryanair →
               </a>
