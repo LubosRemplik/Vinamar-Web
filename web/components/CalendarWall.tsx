@@ -186,7 +186,7 @@ export default function CalendarWall() {
 
       {(arrival || hint) && (
         <div className="sticky bottom-4 z-10 mt-6">
-          <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
+          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
             {ready && arrival && departure ? (
               <>
                 <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
