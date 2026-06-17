@@ -104,7 +104,7 @@ export default function FlightSchedules({
                 href={ryanairTripUrl(airport.origin, arrival, departure)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-sea underline decoration-sea/30 underline-offset-2 hover:decoration-sea"
+                className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-lg bg-sea px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sea/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40"
               >
                 Cena na Ryanair →
               </a>
