@@ -186,7 +186,10 @@ export default function CalendarWall() {
         <div className="sticky bottom-4 z-10 mt-6">
           <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
             {ready && arrival && departure ? (
-              <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+              <>
+                <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+                <FlightSchedules arrival={arrival} departure={departure} />
+              </>
             ) : (
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm">
@@ -215,10 +218,6 @@ export default function CalendarWall() {
             )}
           </div>
         </div>
-      )}
-
-      {ready && arrival && departure && (
-        <FlightSchedules arrival={arrival} departure={departure} />
       )}
     </div>
   );
