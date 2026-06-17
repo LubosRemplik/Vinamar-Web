@@ -142,6 +142,17 @@ export default function CalendarWall() {
 
   const ready = Boolean(arrival && departure);
 
+  // The mobile booking sheet is a fullscreen overlay — lock the page behind it so
+  // there's a single scroll, not the sheet's scroll fighting the page's.
+  useEffect(() => {
+    if (!ready || !window.matchMedia('(max-width: 639px)').matches) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [ready]);
+
   return (
     <div>
       <p className="mb-5 text-sm text-ink/60">
@@ -184,40 +195,44 @@ export default function CalendarWall() {
         </div>
       )}
 
-      {(arrival || hint) && (
+      {/* Booking + flights: fullscreen sheet on mobile (single scroll), centered
+          sticky card on desktop. */}
+      {ready && arrival && departure && (
+        <div className="fixed inset-0 z-50 sm:sticky sm:inset-auto sm:bottom-4 sm:z-10 sm:mt-6">
+          <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-ink/10 sm:shadow-cardHover">
+            <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+            <FlightSchedules arrival={arrival} departure={departure} />
+          </div>
+        </div>
+      )}
+
+      {!ready && (arrival || hint) && (
         <div className="sticky bottom-4 z-10 mt-6">
-          <div className="mx-auto max-h-[85vh] max-w-3xl overflow-y-auto rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
-            {ready && arrival && departure ? (
-              <>
-                <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
-                <FlightSchedules arrival={arrival} departure={departure} />
-              </>
-            ) : (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="text-sm">
-                  {arrival && (
-                    <span className="text-ink/70">
-                      Příjezd <span className="font-medium text-ink">{formatCzDate(arrival)}</span> — vyberte den
-                      odjezdu
-                    </span>
-                  )}
-                  {hint && (
-                    <span className={arrival ? 'ml-2 font-medium text-red-600' : 'font-medium text-red-600'}>
-                      {hint}
-                    </span>
-                  )}
-                </div>
+          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm">
                 {arrival && (
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
-                  >
-                    Zrušit
-                  </button>
+                  <span className="text-ink/70">
+                    Příjezd <span className="font-medium text-ink">{formatCzDate(arrival)}</span> — vyberte den
+                    odjezdu
+                  </span>
+                )}
+                {hint && (
+                  <span className={arrival ? 'ml-2 font-medium text-red-600' : 'font-medium text-red-600'}>
+                    {hint}
+                  </span>
                 )}
               </div>
-            )}
+              {arrival && (
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
+                >
+                  Zrušit
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
