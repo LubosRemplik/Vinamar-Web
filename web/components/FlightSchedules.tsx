@@ -24,6 +24,25 @@ const times = (flights: ScheduledFlight[]) =>
         .map((f) => `${f.departureTime}–${f.arrivalTime} ${f.carrier}${f.flightNumber}`)
         .join(', ');
 
+// Round-trip link to Ryanair's fare-select page: lands the guest on origin↔ALC
+// with both dates pre-filled, so Ryanair prices the exact trip.
+function ryanairTripUrl(origin: string, arrival: string, departure: string): string {
+  const params = new URLSearchParams({
+    adults: '1',
+    teens: '0',
+    children: '0',
+    infants: '0',
+    isConnectedFlight: 'false',
+    isReturn: 'true',
+    discount: '0',
+    originIata: origin,
+    destinationIata: 'ALC',
+    dateOut: arrival,
+    dateIn: departure,
+  });
+  return `https://www.ryanair.com/cz/cs/trip/flights/select?${params}`;
+}
+
 export default function FlightSchedules({
   arrival,
   departure,
@@ -81,6 +100,14 @@ export default function FlightSchedules({
               <span className="text-ink/70">
                 <span className="text-terracotta">Zpět</span> {times(airport.return) ?? '—'}
               </span>
+              <a
+                href={ryanairTripUrl(airport.origin, arrival, departure)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-sea underline decoration-sea/30 underline-offset-2 hover:decoration-sea"
+              >
+                Cena na Ryanair →
+              </a>
             </li>
           ))}
         </ul>
