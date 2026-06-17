@@ -43,6 +43,13 @@ function ryanairTripUrl(origin: string, arrival: string, departure: string): str
   return `https://www.ryanair.com/cz/cs/trip/flights/select?${params}`;
 }
 
+// Google Flights covers every carrier and airport (incl. Prague, where Ryanair
+// doesn't fly to ALC). The IATA + ISO-date query reliably pre-fills the search.
+function googleFlightsUrl(arrival: string, departure: string): string {
+  const q = `Flights from PRG to ALC on ${arrival} through ${departure}`;
+  return `https://www.google.com/travel/flights?hl=cs&curr=EUR&q=${encodeURIComponent(q)}`;
+}
+
 export default function FlightSchedules({
   arrival,
   departure,
@@ -111,6 +118,23 @@ export default function FlightSchedules({
             </li>
           ))}
         </ul>
+      )}
+
+      {status === 'success' && (
+        <p className="mt-3 text-xs leading-relaxed text-ink/50">
+          Spojení může existovat i z dalších letišť — například z Prahy, kam Ryanair do Alicante
+          přímo nelétá (létají odsud Smartwings a Eurowings), nebo v jiné dny z více letišť.
+          Kompletní nabídku všech dopravců pro váš termín najdete na{' '}
+          <a
+            href={googleFlightsUrl(arrival, departure)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-sea underline decoration-sea/30 underline-offset-2 hover:decoration-sea"
+          >
+            Google Letenky
+          </a>
+          .
+        </p>
       )}
     </div>
   );
