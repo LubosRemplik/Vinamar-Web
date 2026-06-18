@@ -28,12 +28,12 @@ describe('CancelCalendarEntryHandler', () => {
     expect((await inquiries.get('id-1'))!.status).toBe('cancelled');
   });
 
-  it('cancels a standalone block without touching any inquiry', async () => {
+  it('cancels an entry with no linked inquiry without touching any inquiry', async () => {
     const availability = new InMemoryAvailability();
     const inquiries = new InMemoryInquiries();
     const block = await availability.save(
       new DateRange(new Date('2026-06-01'), new Date('2026-06-08')),
-      'blocked',
+      'booked',
     );
 
     const cancel = new CancelCalendarEntryHandler(availability, inquiries);

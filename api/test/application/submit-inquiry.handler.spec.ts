@@ -34,7 +34,7 @@ describe('SubmitInquiryHandler', () => {
 
   it('rejects dates overlapping an existing block', async () => {
     const { handler, availability } = make();
-    await availability.save(new DateRange(new Date('2026-05-03'), new Date('2026-05-10')), 'blocked');
+    await availability.save(new DateRange(new Date('2026-05-03'), new Date('2026-05-10')), 'booked');
     await expect(handler.execute(validCmd())).rejects.toBeInstanceOf(DatesUnavailableError);
   });
 
