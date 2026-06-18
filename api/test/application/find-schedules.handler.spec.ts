@@ -16,7 +16,17 @@ describe('FindSchedules', () => {
       new FindSchedulesQuery('2026-07-01', '2026-07-31'),
     );
 
-    expect(result.map((r) => r.origin)).toEqual(['PED', 'PRG', 'WRO', 'LNZ', 'BTS', 'VIE', 'KTW']);
+    expect(result.map((r) => r.origin)).toEqual([
+      'PED',
+      'BTS',
+      'VIE',
+      'LNZ',
+      'WRO',
+      'KTW',
+      'NUE',
+      'KRK',
+      'BER',
+    ]);
     const vie = result.find((r) => r.origin === 'VIE')!;
     expect(vie.directRyanair).toBe(true);
     expect(vie.outbound).toHaveLength(1);
@@ -25,15 +35,15 @@ describe('FindSchedules', () => {
     expect(vie.return[0].flightNumber).toBe('1568');
   });
 
-  it('flags Prague as having no direct Ryanair with an explanatory note', async () => {
+  it('reports an origin with no flights as not directly served', async () => {
     const repo = new InMemoryFlightSchedules();
     const result = await new FindSchedulesHandler(repo).execute(
       new FindSchedulesQuery('2026-07-01', '2026-07-31'),
     );
-    const prg = result.find((r) => r.origin === 'PRG')!;
-    expect(prg.directRyanair).toBe(false);
-    expect(prg.outbound).toHaveLength(0);
-    expect(prg.note).toContain('Smartwings');
+    const ber = result.find((r) => r.origin === 'BER')!;
+    expect(ber.directRyanair).toBe(false);
+    expect(ber.outbound).toHaveLength(0);
+    expect(ber.note).toBeNull();
   });
 
   it('excludes flights outside the requested range', async () => {

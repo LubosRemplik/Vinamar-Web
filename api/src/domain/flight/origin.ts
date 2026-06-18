@@ -1,23 +1,35 @@
 export const DESTINATION = 'ALC';
-export type OriginCode = 'PED' | 'WRO' | 'PRG' | 'LNZ' | 'BTS' | 'VIE' | 'KTW';
+export type OriginCode =
+  | 'PED'
+  | 'BTS'
+  | 'VIE'
+  | 'LNZ'
+  | 'WRO'
+  | 'KTW'
+  | 'NUE'
+  | 'KRK'
+  | 'BER';
 
 interface OriginInfo {
   name: string;
   order: number;
 }
 
+// Airports we track for direct flights to Alicante, best-to-worst preference.
 const ORIGINS: Record<OriginCode, OriginInfo> = {
   PED: { name: 'Pardubice', order: 1 },
-  PRG: { name: 'Praha', order: 2 },
-  WRO: { name: 'Vratislav', order: 3 },
-  LNZ: { name: 'Linec', order: 4 },
-  BTS: { name: 'Bratislava', order: 5 },
-  VIE: { name: 'Vídeň', order: 6 },
-  KTW: { name: 'Katovice', order: 7 },
+  BTS: { name: 'Bratislava', order: 2 },
+  VIE: { name: 'Vídeň', order: 3 },
+  LNZ: { name: 'Linz', order: 4 },
+  WRO: { name: 'Wrocław', order: 5 },
+  KTW: { name: 'Katovice', order: 6 },
+  NUE: { name: 'Norimberk', order: 7 },
+  KRK: { name: 'Kraków', order: 8 },
+  BER: { name: 'Berlín', order: 9 },
 };
 
-// Legacy price slice (Travelpayouts) only covers these three.
-const PRICED_CODES: OriginCode[] = ['PED', 'WRO', 'PRG'];
+// Legacy price slice (Travelpayouts) only covers these.
+const PRICED_CODES: OriginCode[] = ['PED', 'WRO'];
 
 function isOriginCode(code: string): code is OriginCode {
   return Object.prototype.hasOwnProperty.call(ORIGINS, code);

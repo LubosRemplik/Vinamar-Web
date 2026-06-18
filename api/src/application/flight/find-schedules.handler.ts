@@ -26,10 +26,8 @@ export interface AirportScheduleDto {
   return: ScheduledFlightDto[];
 }
 
-// Airports Ryanair does not serve to/from ALC get an explanatory note instead of flights.
-const ROUTE_NOTES: Partial<Record<OriginCode, string>> = {
-  PRG: 'Ryanair sem přímo nelétá — přímé spojení do Alicante nabízí Smartwings a Eurowings.',
-};
+// Airports that need an explanatory note instead of flights (none right now).
+const ROUTE_NOTES: Partial<Record<OriginCode, string>> = {};
 
 function toDto(schedule: FlightSchedule): ScheduledFlightDto {
   return {

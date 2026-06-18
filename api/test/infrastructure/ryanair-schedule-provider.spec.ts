@@ -46,7 +46,7 @@ describe('RyanairScheduleProvider', () => {
     const fetchStub = async () => ({ ok: false, json: async () => ({ month: 7, days: [] }) });
     const provider = new RyanairScheduleProvider(fetchStub);
     const schedules = await provider.schedulesForOrigin(
-      Origin.fromCode('PRG'),
+      Origin.fromCode('NUE'),
       '2026-07-01',
       '2026-07-31',
     );

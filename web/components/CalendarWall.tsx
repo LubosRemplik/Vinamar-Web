@@ -176,8 +176,8 @@ export default function CalendarWall() {
         Klikněte na den příjezdu a poté na den odjezdu. Volné dny jsou modré, obsazené přeškrtnuté.
         Dny na hraně termínu jsou poloviční (střídání) — lze na ně přijet odpoledne, nebo odjet
         dopoledne. Minimální pobyt je {MIN_NIGHTS} nocí. Přímé lety Ryanairu do Alicante sledujeme
-        z Pardubic, Vratislavi, Lince, Bratislavy, Vídně a Katovic — konkrétní spojení tam i zpět
-        pro váš pobyt se zobrazí po zvolení termínu.
+        z devíti letišť (Pardubice, Bratislava, Vídeň, Linz, Wrocław, Katovice, Norimberk, Kraków,
+        Berlín) — konkrétní spojení tam i zpět pro váš pobyt se zobrazí po zvolení termínu.
       </p>
 
       {status === 'error' && (
