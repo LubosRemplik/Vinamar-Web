@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getAdminToken } from '@/lib/admin';
 
 const links = [
   { href: '/volne-terminy', label: 'Volné termíny' },
@@ -11,6 +12,12 @@ const links = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  // Admin token lives in localStorage, so this resolves client-side only — the
+  // Administrace link appears just for a logged-in owner, never for visitors.
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    setIsAdmin(Boolean(getAdminToken()));
+  }, []);
 
   return (
     <header className="bg-sand border-b border-ochre/40">
@@ -29,6 +36,11 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link href="/admin" className="font-medium text-sea hover:text-sea/80">
+              Administrace
+            </Link>
+          )}
         </nav>
 
         <button
@@ -74,6 +86,15 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="block py-3 text-lg font-medium text-sea hover:text-sea/80 border-b border-ochre/15 last:border-0"
+              onClick={() => setOpen(false)}
+            >
+              Administrace
+            </Link>
+          )}
         </nav>
       )}
     </header>
