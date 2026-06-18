@@ -3,7 +3,7 @@ import { EmailAddress } from '../shared/email-address';
 import { MinimumStayNotMetError } from './minimum-stay-not-met.error';
 import { ArrivalInPastError } from './arrival-in-past.error';
 
-export type InquiryStatus = 'pending' | 'confirmed' | 'declined';
+export type InquiryStatus = 'pending' | 'confirmed' | 'declined' | 'cancelled';
 
 export const MINIMUM_NIGHTS = 7;
 
@@ -42,6 +42,30 @@ export class Inquiry {
       params.range,
       params.message,
       'pending',
+      params.now,
+    );
+  }
+
+  // Admin booking on behalf of a guest: the public stay rules (minimum nights,
+  // arrival-in-past) do not apply — only availability is enforced downstream.
+  // The reservation is firm, so it starts confirmed.
+  static createByAdmin(params: {
+    id: string;
+    guestName: string;
+    email: EmailAddress;
+    phone: string;
+    range: DateRange;
+    message: string;
+    now: Date;
+  }): Inquiry {
+    return new Inquiry(
+      params.id,
+      params.guestName,
+      params.email,
+      params.phone,
+      params.range,
+      params.message,
+      'confirmed',
       params.now,
     );
   }
