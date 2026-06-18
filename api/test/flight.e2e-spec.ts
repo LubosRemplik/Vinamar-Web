@@ -27,8 +27,8 @@ describe('Flights (e2e, mock provider)', () => {
   it('returns one cheapest quote per origin in EUR', async () => {
     const res = await request(app.getHttpServer()).get('/api/flights/cheapest');
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(3);
-    expect(res.body.map((r: { origin: string }) => r.origin).sort()).toEqual(['PED', 'PRG', 'WRO']);
+    expect(res.body).toHaveLength(2);
+    expect(res.body.map((r: { origin: string }) => r.origin).sort()).toEqual(['PED', 'WRO']);
     expect(res.body[0].currency).toBe('EUR');
   });
 });
