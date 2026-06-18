@@ -54,6 +54,7 @@ export class InMemoryAvailability implements AvailabilityRepository {
       guestName: null,
       email: null,
       phone: null,
+      message: null,
     }));
   }
 }

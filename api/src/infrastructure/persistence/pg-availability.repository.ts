@@ -29,6 +29,7 @@ interface EntryRow {
   guest_name: string | null;
   email: string | null;
   phone: string | null;
+  message: string | null;
 }
 
 const isoDate = (value: string | Date): string =>
@@ -85,7 +86,7 @@ export class PgAvailabilityRepository implements AvailabilityRepository {
   async listEntries(): Promise<CalendarEntryView[]> {
     const { rows } = await this.pool.query<EntryRow>(
       `SELECT cb.id, cb.start_date, cb.end_date, cb.reason, cb.note, cb.inquiry_id,
-              i.guest_name, i.email, i.phone
+              i.guest_name, i.email, i.phone, i.message
        FROM calendar_blocks cb
        LEFT JOIN inquiries i ON i.id = cb.inquiry_id
        ORDER BY cb.start_date`,
@@ -100,6 +101,7 @@ export class PgAvailabilityRepository implements AvailabilityRepository {
       guestName: r.guest_name ?? null,
       email: r.email ?? null,
       phone: r.phone ?? null,
+      message: r.message ?? null,
     }));
   }
 }

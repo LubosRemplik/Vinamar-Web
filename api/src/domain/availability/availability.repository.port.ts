@@ -18,6 +18,7 @@ export interface CalendarEntryView {
   guestName: string | null;
   email: string | null;
   phone: string | null;
+  message: string | null;
 }
 
 export interface AvailabilityRepository {

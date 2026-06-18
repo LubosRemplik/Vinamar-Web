@@ -43,6 +43,7 @@ export interface CalendarEntry {
   guestName: string | null;
   email: string | null;
   phone: string | null;
+  message: string | null;
 }
 
 export async function fetchAdminCalendar(token: string): Promise<CalendarEntry[]> {

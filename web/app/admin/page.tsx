@@ -18,6 +18,7 @@ interface Row {
   arrival: string;
   departure: string;
   status: string;
+  message: string;
 }
 
 const STATUS: Record<string, { label: string; cls: string }> = {
@@ -82,6 +83,11 @@ function StatusBadge({ status }: { status: string }) {
 
 function term(from: string, to: string) {
   return `${formatCzDate(from)} → ${formatCzDate(to)}`;
+}
+
+function Comment({ text }: { text?: string | null }) {
+  if (!text) return null;
+  return <div className="mt-1 max-w-xs whitespace-pre-wrap italic text-ink/70">„{text}"</div>;
 }
 
 export default function AdminDashboard() {
@@ -220,6 +226,7 @@ export default function AdminDashboard() {
                     <div className="font-medium text-ink">{r.guestName}</div>
                     <div className="text-ink/55">{r.email}</div>
                     {r.phone && <div className="text-ink/55">{r.phone}</div>}
+                    <Comment text={r.message} />
                   </td>
                   <td className="px-4 py-3 align-top text-ink/80">{term(r.arrival, r.departure)}</td>
                   <td className="px-4 py-3 align-top">
@@ -271,6 +278,7 @@ export default function AdminDashboard() {
                     <div className="font-medium text-ink">{e.guestName}</div>
                     {e.email && <div className="text-ink/55">{e.email}</div>}
                     {e.phone && <div className="text-ink/55">{e.phone}</div>}
+                    <Comment text={e.message} />
                   </td>
                   <td className="px-4 py-3 align-top text-right">
                     <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
