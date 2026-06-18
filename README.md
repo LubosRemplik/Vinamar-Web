@@ -107,3 +107,4 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [ ] N — Zkontrolovat loginy a bezpečnost (silný `JWT_SECRET` při bootu, audit admin endpointů)
 - [ ] O - Stranka s info "Z letiste"
 - [ ] P - Multi apartman
+- [ ] Q - Rozsireni administrace o pridani vice uzivatelu (neni nutny prehled, jen prihlaseni a pripadne role pozdeji pro vice apartmanu)
