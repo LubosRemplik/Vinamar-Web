@@ -6,5 +6,6 @@ export class SubmitInquiryCommand {
     public readonly departure: string,
     public readonly message: string,
     public readonly phone: string = '',
+    public readonly isAdmin: boolean = false,
   ) {}
 }
