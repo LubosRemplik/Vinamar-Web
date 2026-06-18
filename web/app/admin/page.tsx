@@ -121,8 +121,15 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function term(from: string, to: string) {
-  return `${formatCzDate(from)} → ${formatCzDate(to)}`;
+// Arrival and departure each on their own non-wrapping line, so a date never
+// breaks mid-way (important in the narrow mobile column).
+function Term({ from, to }: { from: string; to: string }) {
+  return (
+    <div className="leading-tight">
+      <div className="whitespace-nowrap">{formatCzDate(from)}</div>
+      <div className="whitespace-nowrap text-ink/50">→ {formatCzDate(to)}</div>
+    </div>
+  );
 }
 
 function Comment({ text }: { text?: string | null }) {
@@ -270,7 +277,9 @@ export default function AdminDashboard() {
             <tbody>
               {pagedEntries.map((e) => (
                 <tr key={e.id} className="border-b border-ink/5 last:border-0">
-                  <td className="px-4 py-3 align-top text-ink/80">{term(e.start, e.end)}</td>
+                  <td className="px-4 py-3 align-top text-ink/80">
+                    <Term from={e.start} to={e.end} />
+                  </td>
                   <td className="px-4 py-3 align-top">
                     <div className="font-medium text-ink">{e.guestName}</div>
                     {e.email && <div className="text-ink/55">{e.email}</div>}
@@ -325,7 +334,9 @@ export default function AdminDashboard() {
                     {r.phone && <div className="text-ink/55">{r.phone}</div>}
                     <Comment text={r.message} />
                   </td>
-                  <td className="px-4 py-3 align-top text-ink/80">{term(r.arrival, r.departure)}</td>
+                  <td className="px-4 py-3 align-top text-ink/80">
+                    <Term from={r.arrival} to={r.departure} />
+                  </td>
                   <td className="px-4 py-3 align-top">
                     <StatusBadge status={r.status} />
                   </td>
