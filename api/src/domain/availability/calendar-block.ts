@@ -8,5 +8,7 @@ export class CalendarBlock {
     public readonly range: DateRange,
     public readonly reason: BlockReason,
     public readonly createdAt: Date,
+    public readonly note: string | null = null,
+    public readonly inquiryId: string | null = null,
   ) {}
 }
