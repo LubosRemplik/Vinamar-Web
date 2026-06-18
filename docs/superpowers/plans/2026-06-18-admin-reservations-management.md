@@ -628,9 +628,11 @@ export async function cancelCalendarEntry(token: string, id: string): Promise<bo
   - Nad mřížkou, je-li `isAdmin`, zobraz pruh: `<p className="mb-4 rounded-xl border border-terracotta/30 bg-terracotta/5 px-4 py-2 text-sm font-medium text-terracotta">Režim správce — pravidla pobytu se neuplatní, rezervace se vytvoří jako potvrzená.</p>`
   - Předej `isAdmin` do `BookingForm`.
 
-- [ ] **Step 2: `BookingForm`** — přijmi `isAdmin?: boolean`, použij token:
+- [ ] **Step 2: `BookingForm`** — přijmi `isAdmin?: boolean` a `onBooked?: () => void`, použij token:
   - Import `getAdminToken`. V `submit` zavolej `submitInquiry({...}, isAdmin ? getAdminToken() ?? undefined : undefined)`.
+  - Po úspěchu zavolej `onBooked?.()` (rodič v admin režimu refetchne dostupnost, aby se právě obsazený termín hned překreslil — server overlap stejně vynutí, jde o UX).
   - Pokud `isAdmin`: tlačítko „Vytvořit rezervaci“ místo „Odeslat poptávku“, hláška po úspěchu „Rezervace vytvořena.“ (jinak beze změny).
+  - V `CalendarWall` předej `onBooked={isAdmin ? refetchAvailability : undefined}`, kde `refetchAvailability` znovu zavolá `fetchAvailability(from, to)` a aktualizuje `blocks`.
 
 - [ ] **Step 3: Build + lint** — `cd web && npm run build`.
 
