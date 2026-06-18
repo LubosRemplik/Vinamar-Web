@@ -40,7 +40,8 @@ jobs:
       - run: npm ci
       - run: npm run migrate up
       - run: npm run lint
-      - run: npm test
+      # Ephemeral CI database — enable the destructive DB integration suites here.
+      - run: RUN_DB_INTEGRATION=1 npm test
       - run: npm run test:e2e
 
   web:

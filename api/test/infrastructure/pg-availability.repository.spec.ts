@@ -4,7 +4,13 @@ import { DateRange } from '../../src/domain/shared/date-range';
 
 const url = process.env.DATABASE_URL ?? 'postgres://vinamar:vinamar@localhost:5432/vinamar';
 
-describe('PgAvailabilityRepository (integration)', () => {
+// This suite DELETEs all calendar_blocks and inquiries to assert on counts, so it
+// would wipe a developer's local dev database. It is skipped unless explicitly
+// opted in (CI sets RUN_DB_INTEGRATION=1 against an ephemeral DB). Run locally only
+// against a disposable database.
+const dbDescribe = process.env.RUN_DB_INTEGRATION === '1' ? describe : describe.skip;
+
+dbDescribe('PgAvailabilityRepository (integration)', () => {
   const pool = new Pool({ connectionString: url });
   const repo = new PgAvailabilityRepository(pool);
 
@@ -20,7 +26,7 @@ describe('PgAvailabilityRepository (integration)', () => {
 
   it('saves and finds overlapping blocks', async () => {
     await reset();
-    await repo.save(new DateRange(new Date('2026-06-01'), new Date('2026-06-08')), 'blocked');
+    await repo.save(new DateRange(new Date('2026-06-01'), new Date('2026-06-08')), 'booked');
     const hit = await repo.findOverlapping(
       new DateRange(new Date('2026-06-05'), new Date('2026-06-12')),
     );
