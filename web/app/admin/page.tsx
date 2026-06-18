@@ -42,6 +42,35 @@ const BTN_DANGER =
 const BTN_NEUTRAL =
   'rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/5';
 
+const PAGE_SIZE = 10;
+
+function Pager({
+  page,
+  totalPages,
+  onPage,
+}: {
+  page: number;
+  totalPages: number;
+  onPage: (p: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+  const btn =
+    'rounded-lg border border-ink/20 px-3 py-1 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-40';
+  return (
+    <div className="mt-3 flex items-center justify-end gap-3 text-sm">
+      <button className={btn} disabled={page <= 1} onClick={() => onPage(page - 1)}>
+        Předchozí
+      </button>
+      <span className="text-ink/55">
+        Strana {page} z {totalPages}
+      </span>
+      <button className={btn} disabled={page >= totalPages} onClick={() => onPage(page + 1)}>
+        Další
+      </button>
+    </div>
+  );
+}
+
 function StatusBadge({ status }: { status: string }) {
   const s = STATUS[status] ?? { label: status, cls: 'bg-ink/10 text-ink/60' };
   return (
@@ -59,7 +88,11 @@ export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
   const [token, setToken] = useState<string | null>(null);
-  const [filter, setFilter] = useState('all');
+  // Default to pending so a long history of resolved inquiries doesn't bury the
+  // ones that still need a decision.
+  const [filter, setFilter] = useState('pending');
+  const [inquiryPage, setInquiryPage] = useState(1);
+  const [reservationPage, setReservationPage] = useState(1);
 
   useEffect(() => {
     const t = getAdminToken();
@@ -122,6 +155,22 @@ export default function AdminDashboard() {
 
   const visibleRows = filter === 'all' ? rows : rows.filter((r) => r.status === filter);
 
+  const inquiryTotalPages = Math.max(1, Math.ceil(visibleRows.length / PAGE_SIZE));
+  const inquirySafePage = Math.min(inquiryPage, inquiryTotalPages);
+  const pagedRows = visibleRows.slice((inquirySafePage - 1) * PAGE_SIZE, inquirySafePage * PAGE_SIZE);
+
+  const reservationTotalPages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
+  const reservationSafePage = Math.min(reservationPage, reservationTotalPages);
+  const pagedEntries = entries.slice(
+    (reservationSafePage - 1) * PAGE_SIZE,
+    reservationSafePage * PAGE_SIZE,
+  );
+
+  function selectFilter(value: string) {
+    setFilter(value);
+    setInquiryPage(1);
+  }
+
   return (
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div className="mb-8 flex items-center justify-between">
@@ -140,7 +189,7 @@ export default function AdminDashboard() {
             return (
               <button
                 key={f.value}
-                onClick={() => setFilter(f.value)}
+                onClick={() => selectFilter(f.value)}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   active ? 'bg-ink text-white' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'
                 }`}
@@ -165,7 +214,7 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {visibleRows.map((r) => (
+              {pagedRows.map((r) => (
                 <tr key={r.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-4 py-3 align-top">
                     <div className="font-medium text-ink">{r.guestName}</div>
@@ -200,6 +249,7 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
+        <Pager page={inquirySafePage} totalPages={inquiryTotalPages} onPage={setInquiryPage} />
       </section>
 
       <section>
@@ -214,7 +264,7 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {entries.map((e) => (
+              {pagedEntries.map((e) => (
                 <tr key={e.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-4 py-3 align-top text-ink/80">{term(e.start, e.end)}</td>
                   <td className="px-4 py-3 align-top">
@@ -239,6 +289,11 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
+        <Pager
+          page={reservationSafePage}
+          totalPages={reservationTotalPages}
+          onPage={setReservationPage}
+        />
       </section>
     </main>
   );
