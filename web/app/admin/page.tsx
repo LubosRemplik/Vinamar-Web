@@ -137,6 +137,27 @@ function Comment({ text }: { text?: string | null }) {
   return <div className="mt-1 max-w-xs whitespace-pre-wrap italic text-ink/70">„{text}"</div>;
 }
 
+function GuestCell({
+  name,
+  email,
+  phone,
+  message,
+}: {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  message: string | null;
+}) {
+  return (
+    <div className="min-w-0">
+      <div className="font-medium text-ink">{name}</div>
+      {email && <div className="break-words text-ink/55">{email}</div>}
+      {phone && <div className="text-ink/55">{phone}</div>}
+      <Comment text={message} />
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
@@ -265,7 +286,8 @@ export default function AdminDashboard() {
           counts={reservationCounts}
           onSelect={selectReservationFilter}
         />
-        <div className="overflow-x-auto rounded-2xl border border-ink/10">
+        {/* Desktop: table */}
+        <div className="hidden overflow-x-auto rounded-2xl border border-ink/10 md:block">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-ink/10 bg-ink/[0.03] text-left text-ink/60">
@@ -281,10 +303,7 @@ export default function AdminDashboard() {
                     <Term from={e.start} to={e.end} />
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <div className="font-medium text-ink">{e.guestName}</div>
-                    {e.email && <div className="text-ink/55">{e.email}</div>}
-                    {e.phone && <div className="text-ink/55">{e.phone}</div>}
-                    <Comment text={e.message} />
+                    <GuestCell name={e.guestName} email={e.email} phone={e.phone} message={e.message} />
                   </td>
                   <td className="px-4 py-3 align-top text-right">
                     <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
@@ -303,6 +322,30 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
+
+        {/* Mobile: cards */}
+        <div className="space-y-3 md:hidden">
+          {pagedEntries.map((e) => (
+            <div key={e.id} className="rounded-2xl border border-ink/10 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="text-sm font-medium text-ink">
+                  <Term from={e.start} to={e.end} />
+                </div>
+                <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
+                  Zrušit
+                </button>
+              </div>
+              <div className="mt-2">
+                <GuestCell name={e.guestName} email={e.email} phone={e.phone} message={e.message} />
+              </div>
+            </div>
+          ))}
+          {visibleEntries.length === 0 && (
+            <p className="rounded-2xl border border-ink/10 px-4 py-4 text-sm text-ink/50">
+              Žádné rezervace.
+            </p>
+          )}
+        </div>
         <Pager
           page={reservationSafePage}
           totalPages={reservationTotalPages}
@@ -315,7 +358,8 @@ export default function AdminDashboard() {
 
         <FilterChips options={FILTERS} value={filter} counts={counts} onSelect={selectFilter} />
 
-        <div className="overflow-x-auto rounded-2xl border border-ink/10">
+        {/* Desktop: table */}
+        <div className="hidden overflow-x-auto rounded-2xl border border-ink/10 md:block">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-ink/10 bg-ink/[0.03] text-left text-ink/60">
@@ -329,10 +373,7 @@ export default function AdminDashboard() {
               {pagedRows.map((r) => (
                 <tr key={r.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-4 py-3 align-top">
-                    <div className="font-medium text-ink">{r.guestName}</div>
-                    <div className="text-ink/55">{r.email}</div>
-                    {r.phone && <div className="text-ink/55">{r.phone}</div>}
-                    <Comment text={r.message} />
+                    <GuestCell name={r.guestName} email={r.email} phone={r.phone} message={r.message} />
                   </td>
                   <td className="px-4 py-3 align-top text-ink/80">
                     <Term from={r.arrival} to={r.departure} />
@@ -363,6 +404,36 @@ export default function AdminDashboard() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile: cards */}
+        <div className="space-y-3 md:hidden">
+          {pagedRows.map((r) => (
+            <div key={r.id} className="rounded-2xl border border-ink/10 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <GuestCell name={r.guestName} email={r.email} phone={r.phone} message={r.message} />
+                <StatusBadge status={r.status} />
+              </div>
+              <div className="mt-2 text-sm text-ink/80">
+                <Term from={r.arrival} to={r.departure} />
+              </div>
+              {r.status === 'pending' && (
+                <div className="mt-3 flex gap-2 border-t border-ink/5 pt-3">
+                  <button onClick={() => act(r.id, 'confirm')} className={BTN_PRIMARY}>
+                    Potvrdit
+                  </button>
+                  <button onClick={() => act(r.id, 'decline')} className={BTN_DANGER}>
+                    Zamítnout
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+          {visibleRows.length === 0 && (
+            <p className="rounded-2xl border border-ink/10 px-4 py-4 text-sm text-ink/50">
+              Žádné poptávky.
+            </p>
+          )}
         </div>
         <Pager page={inquirySafePage} totalPages={inquiryTotalPages} onPage={setInquiryPage} />
       </section>
