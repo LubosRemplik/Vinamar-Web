@@ -8,7 +8,11 @@ const url = process.env.DATABASE_URL ?? 'postgres://vinamar:vinamar@localhost:54
 const q = (origin: Origin, amount: number, day: string) =>
   new FlightQuote(origin, new Date(day), new Date(day), new Money(amount), 'FR', 'x', new Date());
 
-describe('PgFlightQuoteRepository (integration)', () => {
+// DELETEs flight_quotes; skipped unless opted in (CI sets RUN_DB_INTEGRATION=1) so
+// it never touches a developer's local dev database. See pg-availability spec.
+const dbDescribe = process.env.RUN_DB_INTEGRATION === '1' ? describe : describe.skip;
+
+dbDescribe('PgFlightQuoteRepository (integration)', () => {
   const pool = new Pool({ connectionString: url });
   const repo = new PgFlightQuoteRepository(pool);
 

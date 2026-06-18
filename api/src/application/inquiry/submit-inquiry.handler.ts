@@ -38,7 +38,7 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
 
   async execute(cmd: SubmitInquiryCommand): Promise<{ id: string }> {
     const range = new DateRange(new Date(cmd.arrival), new Date(cmd.departure));
-    const inquiry = Inquiry.create({
+    const params = {
       id: this.idFactory(),
       guestName: cmd.guestName,
       email: new EmailAddress(cmd.email),
@@ -46,19 +46,35 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
       range,
       message: cmd.message,
       now: this.clock.now(),
-    });
+    };
+    // Admin books on behalf of a guest: stay rules (min nights, arrival-in-past,
+    // orphan gap) do not apply — only availability is enforced.
+    const inquiry = cmd.isAdmin ? Inquiry.createByAdmin(params) : Inquiry.create(params);
+
     if (await this.availability.findOverlapping(range)) {
       throw new DatesUnavailableError();
     }
-    const windowStart = new Date(range.arrival);
-    windowStart.setDate(windowStart.getDate() - MINIMUM_NIGHTS);
-    const windowEnd = new Date(range.departure);
-    windowEnd.setDate(windowEnd.getDate() + MINIMUM_NIGHTS);
-    const neighbours = await this.availability.listBetween(windowStart, windowEnd);
-    if (this.gapPolicy.wouldCreateOrphanGap(range, neighbours, MINIMUM_NIGHTS)) {
-      throw new OrphanGapError();
+
+    if (!cmd.isAdmin) {
+      const windowStart = new Date(range.arrival);
+      windowStart.setDate(windowStart.getDate() - MINIMUM_NIGHTS);
+      const windowEnd = new Date(range.departure);
+      windowEnd.setDate(windowEnd.getDate() + MINIMUM_NIGHTS);
+      const neighbours = await this.availability.listBetween(windowStart, windowEnd);
+      if (this.gapPolicy.wouldCreateOrphanGap(range, neighbours, MINIMUM_NIGHTS)) {
+        throw new OrphanGapError();
+      }
     }
+
     await this.inquiries.save(inquiry);
+
+    // Admin bookings are firm reservations: confirm them straight away by
+    // occupying the term, and skip the owner notification (the owner is acting).
+    if (cmd.isAdmin) {
+      await this.availability.save(range, 'booked', { inquiryId: inquiry.id });
+      return { id: inquiry.id };
+    }
+
     // Email is best-effort: a notifier failure must not fail the guest's
     // inquiry (it is persisted and visible in the admin dashboard regardless).
     try {

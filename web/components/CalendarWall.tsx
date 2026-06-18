@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchAvailability, type Block } from '@/lib/api';
+import { getAdminToken } from '@/lib/admin';
 import { formatCzDate } from '@/lib/date';
 import MonthCard from '@/components/MonthCard';
 import BookingForm from '@/components/BookingForm';
@@ -49,12 +50,22 @@ function createsOrphanGap(a: string, b: string, blocks: Block[]): boolean {
 }
 
 // Returns a human hint if [arrival, departure) is not a valid stay, otherwise null.
-function departureProblem(arrival: string, departure: string, blocks: Block[]): string | null {
-  if (nightsBetween(arrival, departure) < MIN_NIGHTS) {
-    return `Minimální pobyt je ${MIN_NIGHTS} nocí, vyberte prosím jiný termín.`;
-  }
+// Admin books on behalf of a guest: only the occupied-term rule applies — the
+// minimum stay and orphan-gap rules are relaxed.
+function departureProblem(
+  arrival: string,
+  departure: string,
+  blocks: Block[],
+  isAdmin: boolean,
+): string | null {
   if (rangeOverlapsBlock(arrival, departure, blocks)) {
     return 'Vybraný úsek zasahuje do obsazeného termínu, vyberte prosím jiný termín.';
+  }
+  if (isAdmin) {
+    return null;
+  }
+  if (nightsBetween(arrival, departure) < MIN_NIGHTS) {
+    return `Minimální pobyt je ${MIN_NIGHTS} nocí, vyberte prosím jiný termín.`;
   }
   if (createsOrphanGap(arrival, departure, blocks)) {
     return 'Termín by vedle obsazeného období nechal příliš mnoho nevyužitých dní, vyberte prosím jiný termín.';
@@ -69,16 +80,29 @@ export default function CalendarWall() {
   const [arrival, setArrival] = useState<string | null>(null);
   const [departure, setDeparture] = useState<string | null>(null);
   const [hint, setHint] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(Boolean(getAdminToken()));
+  }, []);
+
+  const range = useMemo(() => {
+    const now = new Date();
+    const end = new Date(now);
+    end.setMonth(end.getMonth() + HORIZON_MONTHS);
+    return { from: iso(now), to: iso(end) };
+  }, []);
+
+  const refetchAvailability = useCallback(
+    () => fetchAvailability(range.from, range.to).then(setBlocks),
+    [range],
+  );
 
   useEffect(() => {
     let active = true;
-    const now = new Date();
-    const from = iso(now);
-    const end = new Date(now);
-    end.setMonth(end.getMonth() + HORIZON_MONTHS);
-    setToday(from);
+    setToday(range.from);
     setStatus('loading');
-    fetchAvailability(from, iso(end))
+    fetchAvailability(range.from, range.to)
       .then((b) => {
         if (!active) return;
         setBlocks(b);
@@ -90,7 +114,7 @@ export default function CalendarWall() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [range]);
 
   const months = useMemo(() => (today ? buildMonths(today) : []), [today]);
   const nights = arrival && departure ? nightsBetween(arrival, departure) : 0;
@@ -100,7 +124,7 @@ export default function CalendarWall() {
       setHint('Den odjezdu musí být po dni příjezdu.');
       return;
     }
-    const problem = departureProblem(arr, date, blocks);
+    const problem = departureProblem(arr, date, blocks, isAdmin);
     if (problem) {
       setHint(problem);
       return;
@@ -180,6 +204,12 @@ export default function CalendarWall() {
         Berlín) — konkrétní spojení tam i zpět pro váš pobyt se zobrazí po zvolení termínu.
       </p>
 
+      {isAdmin && (
+        <p className="mb-4 rounded-xl border border-terracotta/30 bg-terracotta/5 px-4 py-2 text-sm font-medium text-terracotta">
+          Režim správce — pravidla pobytu se neuplatní, rezervace se vytvoří jako potvrzená.
+        </p>
+      )}
+
       {status === 'error' && (
         <div role="alert" className="rounded-2xl border border-terracotta/30 bg-terracotta/5 p-6 text-center">
           <p className="font-medium text-terracotta">Dostupnost se nepodařilo načíst.</p>
@@ -218,9 +248,16 @@ export default function CalendarWall() {
         <div className="fixed inset-0 z-50 sm:sticky sm:inset-auto sm:bottom-4 sm:z-10 sm:mt-6">
           <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-ink/10 sm:shadow-cardHover">
             <h2 className="mb-4 border-b border-ink/10 pb-3 text-lg font-semibold text-ink sm:hidden">
-              Nezávazná poptávka
+              {isAdmin ? 'Nová rezervace' : 'Nezávazná poptávka'}
             </h2>
-            <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+            <BookingForm
+              arrival={arrival}
+              departure={departure}
+              nights={nights}
+              onReset={reset}
+              isAdmin={isAdmin}
+              onBooked={isAdmin ? refetchAvailability : undefined}
+            />
             <FlightSchedules arrival={arrival} departure={departure} />
           </div>
         </div>

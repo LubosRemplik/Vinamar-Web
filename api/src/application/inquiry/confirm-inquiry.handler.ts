@@ -27,6 +27,19 @@ export class ConfirmInquiryHandler implements ICommandHandler<ConfirmInquiryComm
       throw new DatesUnavailableError();
     }
     await this.inquiries.updateStatus(cmd.id, 'confirmed');
-    await this.availability.save(inquiry.range, 'booked');
+    await this.availability.save(inquiry.range, 'booked', { inquiryId: inquiry.id });
+
+    // The term is now booked, so every other still-pending inquiry whose dates
+    // overlap it can no longer be honoured — decline them automatically.
+    const others = await this.inquiries.list();
+    for (const other of others) {
+      if (
+        other.id !== inquiry.id &&
+        other.status === 'pending' &&
+        other.range.overlaps(inquiry.range)
+      ) {
+        await this.inquiries.updateStatus(other.id, 'declined');
+      }
+    }
   }
 }

@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import { AdminAuthController } from './http/admin-auth.controller';
 import { AdminInquiryController } from './http/admin-inquiry.controller';
-import { AdminBlockController } from './http/admin-block.controller';
+import { AdminCalendarController } from './http/admin-calendar.controller';
 import { AdminGuard } from './http/admin.guard';
 
 // NOTE: Do NOT re-register the CQRS handlers or repositories here. They are
@@ -13,7 +13,7 @@ import { AdminGuard } from './http/admin.guard';
 // its controllers, the JWT guard, and JwtModule for token verification.
 @Module({
   imports: [CqrsModule, JwtModule.register({})],
-  controllers: [AdminAuthController, AdminInquiryController, AdminBlockController],
+  controllers: [AdminAuthController, AdminInquiryController, AdminCalendarController],
   providers: [AdminGuard],
 })
 export class AdminModule {}

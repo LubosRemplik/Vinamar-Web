@@ -34,7 +34,25 @@ describe('SubmitInquiryHandler', () => {
 
   it('rejects dates overlapping an existing block', async () => {
     const { handler, availability } = make();
-    await availability.save(new DateRange(new Date('2026-05-03'), new Date('2026-05-10')), 'blocked');
+    await availability.save(new DateRange(new Date('2026-05-03'), new Date('2026-05-10')), 'booked');
     await expect(handler.execute(validCmd())).rejects.toBeInstanceOf(DatesUnavailableError);
+  });
+
+  it('admin booking: short stay is auto-confirmed and booked with a linked block', async () => {
+    const { handler, availability, inquiries, notifier } = make();
+    const cmd = new SubmitInquiryCommand('Jan', 'jan@x.cz', '2026-05-01', '2026-05-03', '', '', true);
+    await handler.execute(cmd);
+    expect(inquiries.items[0].status).toBe('confirmed');
+    expect(availability.blocks).toHaveLength(1);
+    expect(availability.blocks[0].reason).toBe('booked');
+    expect(availability.blocks[0].inquiryId).toBe('id-1');
+    expect(notifier.received).toHaveLength(0);
+  });
+
+  it('admin booking still rejects an overlapping term', async () => {
+    const { handler, availability } = make();
+    await availability.save(new DateRange(new Date('2026-05-03'), new Date('2026-05-10')), 'booked');
+    const cmd = new SubmitInquiryCommand('Jan', 'jan@x.cz', '2026-05-01', '2026-05-08', '', '', true);
+    await expect(handler.execute(cmd)).rejects.toBeInstanceOf(DatesUnavailableError);
   });
 });

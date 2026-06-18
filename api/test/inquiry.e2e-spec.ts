@@ -9,7 +9,11 @@ const url = process.env.DATABASE_URL ?? 'postgres://vinamar:vinamar@localhost:54
 const future = (days: number) =>
   new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
 
-describe('Inquiries (e2e)', () => {
+// Wipes calendar_blocks and inquiries in beforeAll, so it must never run against a
+// local dev DB. Skipped unless RUN_DB_INTEGRATION=1 (set in CI's ephemeral DB).
+const dbDescribe = process.env.RUN_DB_INTEGRATION === '1' ? describe : describe.skip;
+
+dbDescribe('Inquiries (e2e)', () => {
   let app: INestApplication;
   const pool = new Pool({ connectionString: url });
 
@@ -41,5 +45,31 @@ describe('Inquiries (e2e)', () => {
       .post('/api/inquiries')
       .send({ guestName: 'Jan', email: 'jan@x.cz', arrival: future(30), departure: future(33), message: '' });
     expect(res.status).toBe(422);
+  });
+
+  it('rejects a message with forbidden characters with 400', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/inquiries')
+      .send({
+        guestName: 'Jan',
+        email: 'jan@x.cz',
+        arrival: future(60),
+        departure: future(67),
+        message: 'hi <script>',
+      });
+    expect(res.status).toBe(400);
+  });
+
+  it('rejects a message longer than 500 characters with 400', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/inquiries')
+      .send({
+        guestName: 'Jan',
+        email: 'jan@x.cz',
+        arrival: future(60),
+        departure: future(67),
+        message: 'a'.repeat(501),
+      });
+    expect(res.status).toBe(400);
   });
 });

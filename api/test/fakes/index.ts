@@ -22,13 +22,40 @@ export class InMemoryAvailability implements AvailabilityRepository {
   async findOverlapping(range: DateRange): Promise<CalendarBlock | null> {
     return this.blocks.find((b) => b.range.overlaps(range)) ?? null;
   }
-  async save(range: DateRange, reason: BlockReason): Promise<CalendarBlock> {
-    const block = new CalendarBlock(`b${++this.seq}`, range, reason, new Date());
+  async save(
+    range: DateRange,
+    reason: BlockReason,
+    opts?: { inquiryId?: string; note?: string },
+  ): Promise<CalendarBlock> {
+    const block = new CalendarBlock(
+      `b${++this.seq}`,
+      range,
+      reason,
+      new Date(),
+      opts?.note ?? null,
+      opts?.inquiryId ?? null,
+    );
     this.blocks.push(block);
     return block;
   }
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<{ inquiryId: string | null }> {
+    const found = this.blocks.find((b) => b.id === id) ?? null;
     this.blocks = this.blocks.filter((b) => b.id !== id);
+    return { inquiryId: found?.inquiryId ?? null };
+  }
+  async listEntries() {
+    return this.blocks.map((b) => ({
+      id: b.id,
+      start: b.range.arrival.toISOString().slice(0, 10),
+      end: b.range.departure.toISOString().slice(0, 10),
+      reason: b.reason,
+      note: b.note,
+      inquiryId: b.inquiryId,
+      guestName: null,
+      email: null,
+      phone: null,
+      message: null,
+    }));
   }
 }
 

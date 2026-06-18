@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { JwtModule } from '@nestjs/jwt';
 import { InquiryController } from './http/inquiry.controller';
 import { SubmitInquiryHandler } from '../application/inquiry/submit-inquiry.handler';
 import { ConfirmInquiryHandler } from '../application/inquiry/confirm-inquiry.handler';
 import { DeclineInquiryHandler } from '../application/inquiry/decline-inquiry.handler';
 import { ListInquiriesHandler } from '../application/inquiry/list-inquiries.handler';
+import { ListCalendarHandler } from '../application/availability/list-calendar.handler';
+import { CancelCalendarEntryHandler } from '../application/availability/cancel-calendar-entry.handler';
 import { pgPoolProvider } from '../infrastructure/persistence/pg-connection';
 import { PgInquiryRepository } from '../infrastructure/persistence/pg-inquiry.repository';
 import { PgAvailabilityRepository } from '../infrastructure/persistence/pg-availability.repository';
@@ -16,13 +19,15 @@ import { OWNER_NOTIFIER } from '../domain/inquiry/owner-notifier.port';
 import { CLOCK } from '../domain/shared/clock.port';
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, JwtModule.register({})],
   controllers: [InquiryController],
   providers: [
     SubmitInquiryHandler,
     ConfirmInquiryHandler,
     DeclineInquiryHandler,
     ListInquiriesHandler,
+    ListCalendarHandler,
+    CancelCalendarEntryHandler,
     pgPoolProvider,
     { provide: INQUIRY_REPOSITORY, useClass: PgInquiryRepository },
     { provide: AVAILABILITY_REPOSITORY, useClass: PgAvailabilityRepository },

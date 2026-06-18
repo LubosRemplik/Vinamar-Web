@@ -2,8 +2,24 @@
 
 import { useState } from 'react';
 import { submitInquiry } from '@/lib/api';
+import { getAdminToken } from '@/lib/admin';
 import { formatCzDate } from '@/lib/date';
 import { totalPrice } from '@/lib/price';
+
+const MESSAGE_MAX = 500;
+// Forbid angle brackets (avoid HTML-looking content) and non-printable control
+// characters, while allowing normal text, diacritics and line breaks (tab/LF/CR).
+const MESSAGE_FORBIDDEN = /[<>\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/;
+
+function messageError(message: string): string | null {
+  if (message.length > MESSAGE_MAX) {
+    return `Zpráva může mít nejvýše ${MESSAGE_MAX} znaků.`;
+  }
+  if (MESSAGE_FORBIDDEN.test(message)) {
+    return 'Zpráva obsahuje nepovolené znaky (např. < nebo >).';
+  }
+  return null;
+}
 
 // Renders bare (no card) — the parent (the sticky bottom bar) provides the surface.
 export default function BookingForm({
@@ -11,11 +27,15 @@ export default function BookingForm({
   departure,
   nights,
   onReset,
+  isAdmin = false,
+  onBooked,
 }: {
   arrival: string;
   departure: string;
   nights: number;
   onReset: () => void;
+  isAdmin?: boolean;
+  onBooked?: () => void;
 }) {
   const [guestName, setGuestName] = useState('');
   const [email, setEmail] = useState('');
@@ -25,14 +45,24 @@ export default function BookingForm({
   const [error, setError] = useState('');
 
   const price = totalPrice(arrival, departure);
+  const messageProblem = messageError(message);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    // Name, e-mail and phone are enforced as required by the inputs; the optional
+    // message still needs its own length/character check before we submit.
+    if (messageProblem) {
+      setState('error');
+      setError(messageProblem);
+      return;
+    }
     setState('sending');
     setError('');
-    const result = await submitInquiry({ guestName, email, phone, arrival, departure, message });
+    const token = isAdmin ? getAdminToken() ?? undefined : undefined;
+    const result = await submitInquiry({ guestName, email, phone, arrival, departure, message }, token);
     if (result.ok) {
       setState('done');
+      onBooked?.();
     } else {
       setState('error');
       setError(result.error ?? 'Odeslání se nezdařilo.');
@@ -42,9 +72,12 @@ export default function BookingForm({
   if (state === 'done') {
     return (
       <div className="text-center">
-        <p className="font-semibold text-ink">Děkujeme, ozveme se vám.</p>
+        <p className="font-semibold text-ink">
+          {isAdmin ? 'Rezervace vytvořena.' : 'Děkujeme, ozveme se vám.'}
+        </p>
         <p className="mt-1 text-sm text-ink/60">
-          Poptávku na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €) jsme přijali.
+          {isAdmin ? 'Rezervaci' : 'Poptávku'} na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €){' '}
+          {isAdmin ? 'jsme uložili.' : 'jsme přijali.'}
         </p>
         <button
           type="button"
@@ -107,18 +140,26 @@ export default function BookingForm({
         placeholder="Zpráva (nepovinné)"
         value={message}
         rows={2}
+        maxLength={MESSAGE_MAX}
+        aria-invalid={messageProblem ? true : undefined}
         onChange={(e) => setMessage(e.target.value)}
         className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
       />
+      <div className="mt-1 flex items-center justify-between text-xs">
+        <span className="font-medium text-red-600">{messageProblem ?? ''}</span>
+        <span className="text-ink/45">
+          {message.length}/{MESSAGE_MAX}
+        </span>
+      </div>
 
       {state === 'error' && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
 
       <button
         type="submit"
-        disabled={state === 'sending'}
+        disabled={state === 'sending' || messageProblem !== null}
         className="mt-3 w-full rounded-xl bg-terracotta px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-terracotta/90 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/50"
       >
-        {state === 'sending' ? 'Odesílám…' : 'Odeslat poptávku'}
+        {state === 'sending' ? 'Odesílám…' : isAdmin ? 'Vytvořit rezervaci' : 'Odeslat poptávku'}
       </button>
     </form>
   );
