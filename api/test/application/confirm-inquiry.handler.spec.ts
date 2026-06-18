@@ -18,5 +18,6 @@ describe('ConfirmInquiryHandler', () => {
     expect((await inquiries.get('id-1'))!.status).toBe('confirmed');
     expect(availability.blocks).toHaveLength(1);
     expect(availability.blocks[0].reason).toBe('booked');
+    expect(availability.blocks[0].inquiryId).toBe('id-1');
   });
 });

@@ -27,6 +27,6 @@ export class ConfirmInquiryHandler implements ICommandHandler<ConfirmInquiryComm
       throw new DatesUnavailableError();
     }
     await this.inquiries.updateStatus(cmd.id, 'confirmed');
-    await this.availability.save(inquiry.range, 'booked');
+    await this.availability.save(inquiry.range, 'booked', { inquiryId: inquiry.id });
   }
 }
