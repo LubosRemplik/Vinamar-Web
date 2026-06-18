@@ -37,7 +37,7 @@ export interface CalendarEntry {
   id: string;
   start: string;
   end: string;
-  reason: 'booked' | 'blocked';
+  reason: 'booked';
   note: string | null;
   inquiryId: string | null;
   guestName: string | null;

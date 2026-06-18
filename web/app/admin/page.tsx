@@ -1,11 +1,12 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   fetchAdminCalendar,
   cancelCalendarEntry,
   type CalendarEntry,
 } from '@/lib/api';
 import { getAdminToken, adminLogout } from '@/lib/admin';
+import { formatCzDate } from '@/lib/date';
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
@@ -19,10 +20,46 @@ interface Row {
   status: string;
 }
 
+const STATUS: Record<string, { label: string; cls: string }> = {
+  pending: { label: 'Čeká', cls: 'bg-amber-100 text-amber-800' },
+  confirmed: { label: 'Potvrzeno', cls: 'bg-emerald-100 text-emerald-800' },
+  declined: { label: 'Zamítnuto', cls: 'bg-rose-100 text-rose-700' },
+  cancelled: { label: 'Zrušeno', cls: 'bg-ink/10 text-ink/60' },
+};
+
+const FILTERS: { value: string; label: string }[] = [
+  { value: 'all', label: 'Vše' },
+  { value: 'pending', label: 'Čeká' },
+  { value: 'confirmed', label: 'Potvrzeno' },
+  { value: 'declined', label: 'Zamítnuto' },
+  { value: 'cancelled', label: 'Zrušeno' },
+];
+
+const BTN_PRIMARY =
+  'rounded-lg bg-sea px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-sea/90';
+const BTN_DANGER =
+  'rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700 transition-colors hover:bg-rose-50';
+const BTN_NEUTRAL =
+  'rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/5';
+
+function StatusBadge({ status }: { status: string }) {
+  const s = STATUS[status] ?? { label: status, cls: 'bg-ink/10 text-ink/60' };
+  return (
+    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${s.cls}`}>
+      {s.label}
+    </span>
+  );
+}
+
+function term(from: string, to: string) {
+  return `${formatCzDate(from)} → ${formatCzDate(to)}`;
+}
+
 export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const t = getAdminToken();
@@ -68,7 +105,7 @@ export default function AdminDashboard() {
 
   async function cancel(id: string) {
     if (!token) return;
-    if (!window.confirm('Opravdu zrušit tuto položku kalendáře a uvolnit termín?')) return;
+    if (!window.confirm('Opravdu zrušit tuto rezervaci a uvolnit termín?')) return;
     try {
       await cancelCalendarEntry(token, id);
       reload(token);
@@ -77,79 +114,132 @@ export default function AdminDashboard() {
     }
   }
 
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: rows.length };
+    for (const r of rows) c[r.status] = (c[r.status] ?? 0) + 1;
+    return c;
+  }, [rows]);
+
+  const visibleRows = filter === 'all' ? rows : rows.filter((r) => r.status === filter);
+
   return (
-    <main className="max-w-4xl mx-auto px-6 py-10">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl">Administrace</h1>
-        <button onClick={() => adminLogout()} className="text-sm text-ink/60 underline hover:text-ink">
+    <main className="mx-auto max-w-4xl px-6 py-10">
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold text-ink">Administrace</h1>
+        <button onClick={() => adminLogout()} className={BTN_NEUTRAL}>
           Odhlásit
         </button>
       </div>
 
-      <h2 className="text-xl mb-3">Poptávky</h2>
-      <table className="w-full text-sm mb-10">
-        <thead>
-          <tr className="text-left border-b">
-            <th className="py-2">Host</th><th>Termín</th><th>Stav</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.id} className="border-b">
-              <td className="py-2">
-                {r.guestName}
-                <br />
-                <span className="text-ink/60">{r.email}</span>
-                {r.phone && <><br /><span className="text-ink/60">{r.phone}</span></>}
-              </td>
-              <td>{r.arrival} → {r.departure}</td>
-              <td>{r.status}</td>
-              <td className="text-right">
-                {r.status === 'pending' && (
-                  <>
-                    <button onClick={() => act(r.id, 'confirm')} className="text-sea mr-3">Potvrdit</button>
-                    <button onClick={() => act(r.id, 'decline')} className="text-red-600">Zamítnout</button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <section className="mb-10">
+        <h2 className="mb-3 text-xl font-semibold text-ink">Poptávky</h2>
 
-      <h2 className="text-xl mb-3">Kalendář — rezervace a bloky</h2>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left border-b">
-            <th className="py-2">Termín</th><th>Typ</th><th>Host / poznámka</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {entries.map((e) => (
-            <tr key={e.id} className="border-b">
-              <td className="py-2">{e.start} → {e.end}</td>
-              <td>{e.reason === 'booked' ? 'Rezervace' : 'Blok'}</td>
-              <td>
-                {e.reason === 'booked' ? (
-                  <>
-                    {e.guestName}
-                    {e.email && <><br /><span className="text-ink/60">{e.email}</span></>}
-                    {e.phone && <><br /><span className="text-ink/60">{e.phone}</span></>}
-                  </>
-                ) : (
-                  <span className="text-ink/60">{e.note ?? '—'}</span>
-                )}
-              </td>
-              <td className="text-right">
-                <button onClick={() => cancel(e.id)} className="text-red-600">Zrušit</button>
-              </td>
-            </tr>
-          ))}
-          {entries.length === 0 && (
-            <tr><td colSpan={4} className="py-3 text-ink/50">Žádné rezervace ani bloky.</td></tr>
-          )}
-        </tbody>
-      </table>
+        <div className="mb-4 flex flex-wrap gap-2">
+          {FILTERS.map((f) => {
+            const active = filter === f.value;
+            return (
+              <button
+                key={f.value}
+                onClick={() => setFilter(f.value)}
+                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+                  active ? 'bg-ink text-white' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'
+                }`}
+              >
+                {f.label}
+                <span className={active ? 'ml-1.5 text-white/70' : 'ml-1.5 text-ink/40'}>
+                  {counts[f.value] ?? 0}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="overflow-x-auto rounded-2xl border border-ink/10">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-ink/10 bg-ink/[0.03] text-left text-ink/60">
+                <th className="px-4 py-2 font-medium">Host</th>
+                <th className="px-4 py-2 font-medium">Termín</th>
+                <th className="px-4 py-2 font-medium">Stav</th>
+                <th className="px-4 py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleRows.map((r) => (
+                <tr key={r.id} className="border-b border-ink/5 last:border-0">
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-ink">{r.guestName}</div>
+                    <div className="text-ink/55">{r.email}</div>
+                    {r.phone && <div className="text-ink/55">{r.phone}</div>}
+                  </td>
+                  <td className="px-4 py-3 align-top text-ink/80">{term(r.arrival, r.departure)}</td>
+                  <td className="px-4 py-3 align-top">
+                    <StatusBadge status={r.status} />
+                  </td>
+                  <td className="px-4 py-3 align-top text-right">
+                    {r.status === 'pending' && (
+                      <div className="flex justify-end gap-2">
+                        <button onClick={() => act(r.id, 'confirm')} className={BTN_PRIMARY}>
+                          Potvrdit
+                        </button>
+                        <button onClick={() => act(r.id, 'decline')} className={BTN_DANGER}>
+                          Zamítnout
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {visibleRows.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-4 py-4 text-ink/50">
+                    Žádné poptávky.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-3 text-xl font-semibold text-ink">Rezervace</h2>
+        <div className="overflow-x-auto rounded-2xl border border-ink/10">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-ink/10 bg-ink/[0.03] text-left text-ink/60">
+                <th className="px-4 py-2 font-medium">Termín</th>
+                <th className="px-4 py-2 font-medium">Host</th>
+                <th className="px-4 py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((e) => (
+                <tr key={e.id} className="border-b border-ink/5 last:border-0">
+                  <td className="px-4 py-3 align-top text-ink/80">{term(e.start, e.end)}</td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-ink">{e.guestName}</div>
+                    {e.email && <div className="text-ink/55">{e.email}</div>}
+                    {e.phone && <div className="text-ink/55">{e.phone}</div>}
+                  </td>
+                  <td className="px-4 py-3 align-top text-right">
+                    <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
+                      Zrušit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {entries.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-4 py-4 text-ink/50">
+                    Žádné rezervace.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
   );
 }
