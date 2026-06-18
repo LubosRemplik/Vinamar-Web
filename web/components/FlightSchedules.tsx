@@ -44,9 +44,10 @@ function ryanairTripUrl(origin: string, arrival: string, departure: string): str
 }
 
 // Google Flights covers every carrier and airport (incl. Prague, where Ryanair
-// doesn't fly to ALC). The IATA + ISO-date query reliably pre-fills the search.
+// doesn't fly to ALC). The IATA + ISO-date query reliably pre-fills the search;
+// "nonstop" restricts it to direct flights only.
 function googleFlightsUrl(arrival: string, departure: string): string {
-  const q = `Flights from PRG to ALC on ${arrival} through ${departure}`;
+  const q = `Nonstop flights from PRG to ALC on ${arrival} through ${departure}`;
   return `https://www.google.com/travel/flights?hl=cs&curr=EUR&q=${encodeURIComponent(q)}`;
 }
 
@@ -128,7 +129,7 @@ export default function FlightSchedules({
 
       {status === 'success' && (
         <p className="mt-3 text-xs leading-relaxed text-ink/50">
-          Spojení může existovat i z dalších letišť — například z Prahy, kam Ryanair do Alicante
+          Přímé spojení může existovat i z dalších letišť — například z Prahy, kam Ryanair do Alicante
           přímo nelétá (létají odsud Smartwings a Eurowings), nebo v jiné dny z více letišť.
           Kompletní nabídku všech dopravců pro váš termín najdete na{' '}
           <a
