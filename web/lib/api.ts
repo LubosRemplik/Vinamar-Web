@@ -19,15 +19,48 @@ export async function submitInquiry(input: {
   arrival: string;
   departure: string;
   message: string;
-}): Promise<{ ok: boolean; error?: string }> {
+}, token?: string): Promise<{ ok: boolean; error?: string }> {
   const res = await fetch(`${BASE}/inquiries`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify(input),
   });
   if (res.ok) return { ok: true };
   const problem = await res.json().catch(() => ({}));
   return { ok: false, error: problem.detail ?? 'Odeslání se nezdařilo' };
+}
+
+export interface CalendarEntry {
+  id: string;
+  start: string;
+  end: string;
+  reason: 'booked' | 'blocked';
+  note: string | null;
+  inquiryId: string | null;
+  guestName: string | null;
+  email: string | null;
+  phone: string | null;
+}
+
+export async function fetchAdminCalendar(token: string): Promise<CalendarEntry[]> {
+  const res = await fetch(`${BASE}/admin/calendar`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401) throw new Error('unauthorized');
+  if (!res.ok) throw new Error('calendar failed');
+  return res.json();
+}
+
+export async function cancelCalendarEntry(token: string, id: string): Promise<boolean> {
+  const res = await fetch(`${BASE}/admin/calendar/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401) throw new Error('unauthorized');
+  return res.ok;
 }
 
 export interface CalendarWindow {
