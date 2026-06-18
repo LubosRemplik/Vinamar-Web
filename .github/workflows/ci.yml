@@ -42,7 +42,7 @@ jobs:
       - run: npm run lint
       # Ephemeral CI database — enable the destructive DB integration suites here.
       - run: RUN_DB_INTEGRATION=1 npm test
-      - run: npm run test:e2e
+      - run: RUN_DB_INTEGRATION=1 npm run test:e2e
 
   web:
     runs-on: ubuntu-latest
