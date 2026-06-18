@@ -142,14 +142,31 @@ export default function CalendarWall() {
 
   const ready = Boolean(arrival && departure);
 
-  // The mobile booking sheet is a fullscreen overlay — lock the page behind it so
-  // there's a single scroll, not the sheet's scroll fighting the page's.
+  // The mobile booking sheet is a fullscreen overlay. Lock the page behind it (single
+  // scroll) and route the browser Back button to closing the sheet rather than leaving
+  // the page — push a history entry on open, close on popstate, and pop it on a normal
+  // close so the history stays clean.
   useEffect(() => {
     if (!ready || !window.matchMedia('(max-width: 639px)').matches) return;
-    const previous = document.body.style.overflow;
+
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    window.history.pushState({ bookingSheet: true }, '');
+    const closeSheet = () => {
+      setArrival(null);
+      setDeparture(null);
+      setHint(null);
+    };
+    window.addEventListener('popstate', closeSheet);
+
     return () => {
-      document.body.style.overflow = previous;
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('popstate', closeSheet);
+      // Closed via the in-sheet button (not Back): drop the entry we pushed.
+      if (window.history.state?.bookingSheet) {
+        window.history.back();
+      }
     };
   }, [ready]);
 
@@ -200,9 +217,9 @@ export default function CalendarWall() {
       {ready && arrival && departure && (
         <div className="fixed inset-0 z-50 sm:sticky sm:inset-auto sm:bottom-4 sm:z-10 sm:mt-6">
           <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-ink/10 sm:shadow-cardHover">
-            <div className="sticky top-0 -mx-4 -mt-4 mb-4 border-b border-ink/10 bg-white px-4 py-3 sm:hidden">
-              <h2 className="text-lg font-semibold text-ink">Nezávazná poptávka</h2>
-            </div>
+            <h2 className="mb-4 border-b border-ink/10 pb-3 text-lg font-semibold text-ink sm:hidden">
+              Nezávazná poptávka
+            </h2>
             <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
             <FlightSchedules arrival={arrival} departure={departure} />
           </div>
