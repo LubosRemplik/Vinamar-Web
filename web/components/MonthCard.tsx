@@ -83,8 +83,14 @@ export default function MonthCard({
           const isTermStart = blocks.some((b) => b.start === date);
           const isTermEnd = blocks.some((b) => b.end === date);
 
-          // A fully booked night that is not a term boundary — not selectable.
-          if (nightBlocked && !isTermStart) {
+          // Turnover: one term ends and another begins the same day, so the morning
+          // (departure) and the afternoon (arrival) are both taken — the day is fully
+          // occupied and cannot be a check-in or check-out for anyone else.
+          const isTurnover = isTermStart && isTermEnd;
+
+          // A fully booked night that is not a term boundary, or a full turnover day —
+          // not selectable.
+          if ((nightBlocked && !isTermStart) || isTurnover) {
             return (
               <div
                 key={day}
