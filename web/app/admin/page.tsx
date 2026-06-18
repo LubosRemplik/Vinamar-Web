@@ -29,11 +29,11 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 };
 
 const FILTERS: { value: string; label: string }[] = [
-  { value: 'all', label: 'Vše' },
   { value: 'pending', label: 'Čeká' },
   { value: 'confirmed', label: 'Potvrzeno' },
   { value: 'declined', label: 'Zamítnuto' },
   { value: 'cancelled', label: 'Zrušeno' },
+  { value: 'all', label: 'Vše' },
 ];
 
 const RESERVATION_FILTERS: { value: string; label: string }[] = [
