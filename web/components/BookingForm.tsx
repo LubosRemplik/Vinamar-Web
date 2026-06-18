@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { submitInquiry } from '@/lib/api';
+import { getAdminToken } from '@/lib/admin';
 import { formatCzDate } from '@/lib/date';
 import { totalPrice } from '@/lib/price';
 
@@ -11,11 +12,15 @@ export default function BookingForm({
   departure,
   nights,
   onReset,
+  isAdmin = false,
+  onBooked,
 }: {
   arrival: string;
   departure: string;
   nights: number;
   onReset: () => void;
+  isAdmin?: boolean;
+  onBooked?: () => void;
 }) {
   const [guestName, setGuestName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,9 +35,11 @@ export default function BookingForm({
     e.preventDefault();
     setState('sending');
     setError('');
-    const result = await submitInquiry({ guestName, email, phone, arrival, departure, message });
+    const token = isAdmin ? getAdminToken() ?? undefined : undefined;
+    const result = await submitInquiry({ guestName, email, phone, arrival, departure, message }, token);
     if (result.ok) {
       setState('done');
+      onBooked?.();
     } else {
       setState('error');
       setError(result.error ?? 'Odeslání se nezdařilo.');
@@ -42,9 +49,12 @@ export default function BookingForm({
   if (state === 'done') {
     return (
       <div className="text-center">
-        <p className="font-semibold text-ink">Děkujeme, ozveme se vám.</p>
+        <p className="font-semibold text-ink">
+          {isAdmin ? 'Rezervace vytvořena.' : 'Děkujeme, ozveme se vám.'}
+        </p>
         <p className="mt-1 text-sm text-ink/60">
-          Poptávku na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €) jsme přijali.
+          {isAdmin ? 'Rezervaci' : 'Poptávku'} na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €){' '}
+          {isAdmin ? 'jsme uložili.' : 'jsme přijali.'}
         </p>
         <button
           type="button"
@@ -118,7 +128,7 @@ export default function BookingForm({
         disabled={state === 'sending'}
         className="mt-3 w-full rounded-xl bg-terracotta px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-terracotta/90 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/50"
       >
-        {state === 'sending' ? 'Odesílám…' : 'Odeslat poptávku'}
+        {state === 'sending' ? 'Odesílám…' : isAdmin ? 'Vytvořit rezervaci' : 'Odeslat poptávku'}
       </button>
     </form>
   );
