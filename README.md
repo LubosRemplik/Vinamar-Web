@@ -97,3 +97,4 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] D — Cheapest-Dates Optimizer
 - [x] E — CI/CD (GitHub Actions)
 - [x] F — Availability-first reframe (calendar wall, retire flight-first pages)
+- [x] G — Letecké spojení do Alicante (rozvrh tam/zpět z 7 letišť, Ryanair timetable, tabulka + cron)

@@ -63,6 +63,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      # Install web deps BEFORE the stack: `docker compose up` would otherwise
+      # create the bind-mount node_modules dir as root, making this `npm ci` fail.
+      - name: Install web deps
+        working-directory: web
+        run: npm ci
       - name: Start the stack
         run: |
           cp .env.example .env
@@ -73,15 +83,9 @@ jobs:
             if curl -sf http://localhost:3001/api/health; then echo ready; break; fi
             sleep 3
           done
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-      - name: Install Playwright + run e2e
+      - name: Run e2e
         working-directory: web
         run: |
-          npm ci
           npx playwright install --with-deps chromium
           E2E_BASE_URL=http://localhost:3000 npm run e2e
       - name: Tear down

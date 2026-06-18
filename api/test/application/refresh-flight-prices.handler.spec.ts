@@ -6,18 +6,18 @@ import { StubProvider, InMemoryFlightQuotes } from '../fakes/flight';
 describe('RefreshFlightPrices', () => {
   it('stores quotes for every origin', async () => {
     const repo = new InMemoryFlightQuotes();
-    const provider = new StubProvider({ PED: 80, WRO: 58, PRG: 70 });
+    const provider = new StubProvider({ PED: 80, WRO: 58 });
     await new RefreshFlightPricesHandler(provider, repo).execute(new RefreshFlightPricesCommand(9));
     const cheapest = await new GetCheapestPerOriginHandler(repo).execute();
-    expect(cheapest).toHaveLength(3);
+    expect(cheapest).toHaveLength(2);
     expect(cheapest.find((c) => c.origin === 'WRO')!.price).toBe(58);
   });
 
   it('continues when one origin fails', async () => {
     const repo = new InMemoryFlightQuotes();
-    const provider = new StubProvider({ PED: 80, PRG: 70 }, 'WRO');
+    const provider = new StubProvider({ PED: 80 }, 'WRO');
     await new RefreshFlightPricesHandler(provider, repo).execute(new RefreshFlightPricesCommand(9));
     const cheapest = await new GetCheapestPerOriginHandler(repo).execute();
-    expect(cheapest.map((c) => c.origin).sort()).toEqual(['PED', 'PRG']);
+    expect(cheapest.map((c) => c.origin).sort()).toEqual(['PED']);
   });
 });

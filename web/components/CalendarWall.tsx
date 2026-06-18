@@ -5,6 +5,7 @@ import { fetchAvailability, type Block } from '@/lib/api';
 import { formatCzDate } from '@/lib/date';
 import MonthCard from '@/components/MonthCard';
 import BookingForm from '@/components/BookingForm';
+import FlightSchedules from '@/components/FlightSchedules';
 
 const MS_DAY = 86_400_000;
 const MIN_NIGHTS = 7;
@@ -50,13 +51,13 @@ function createsOrphanGap(a: string, b: string, blocks: Block[]): boolean {
 // Returns a human hint if [arrival, departure) is not a valid stay, otherwise null.
 function departureProblem(arrival: string, departure: string, blocks: Block[]): string | null {
   if (nightsBetween(arrival, departure) < MIN_NIGHTS) {
-    return `Minimální pobyt je ${MIN_NIGHTS} nocí, vyberte jiný termín.`;
+    return `Minimální pobyt je ${MIN_NIGHTS} nocí, vyberte prosím jiný termín.`;
   }
   if (rangeOverlapsBlock(arrival, departure, blocks)) {
-    return 'Vybraný úsek zasahuje do obsazeného termínu, vyberte jiný termín.';
+    return 'Vybraný úsek zasahuje do obsazeného termínu, vyberte prosím jiný termín.';
   }
   if (createsOrphanGap(arrival, departure, blocks)) {
-    return 'Termín by vedle obsazeného období nechal příliš mnoho nevyužitých dní, vyberte jiný termín.';
+    return 'Termín by vedle obsazeného období nechal příliš mnoho nevyužitých dní, vyberte prosím jiný termín.';
   }
   return null;
 }
@@ -141,12 +142,42 @@ export default function CalendarWall() {
 
   const ready = Boolean(arrival && departure);
 
+  // The mobile booking sheet is a fullscreen overlay. Lock the page behind it (single
+  // scroll) and route the browser Back button to closing the sheet rather than leaving
+  // the page — push a history entry on open, close on popstate, and pop it on a normal
+  // close so the history stays clean.
+  useEffect(() => {
+    if (!ready || !window.matchMedia('(max-width: 639px)').matches) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    window.history.pushState({ bookingSheet: true }, '');
+    const closeSheet = () => {
+      setArrival(null);
+      setDeparture(null);
+      setHint(null);
+    };
+    window.addEventListener('popstate', closeSheet);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('popstate', closeSheet);
+      // Closed via the in-sheet button (not Back): drop the entry we pushed.
+      if (window.history.state?.bookingSheet) {
+        window.history.back();
+      }
+    };
+  }, [ready]);
+
   return (
     <div>
       <p className="mb-5 text-sm text-ink/60">
         Klikněte na den příjezdu a poté na den odjezdu. Volné dny jsou modré, obsazené přeškrtnuté.
         Dny na hraně termínu jsou poloviční (střídání) — lze na ně přijet odpoledne, nebo odjet
-        dopoledne. Minimální pobyt je {MIN_NIGHTS} nocí.
+        dopoledne. Minimální pobyt je {MIN_NIGHTS} nocí. Přímé lety Ryanairu do Alicante sledujeme
+        z devíti letišť (Pardubice, Bratislava, Vídeň, Linz, Wrocław, Katovice, Norimberk, Kraków,
+        Berlín) — konkrétní spojení tam i zpět pro váš pobyt se zobrazí po zvolení termínu.
       </p>
 
       {status === 'error' && (
@@ -181,37 +212,47 @@ export default function CalendarWall() {
         </div>
       )}
 
-      {(arrival || hint) && (
+      {/* Booking + flights: fullscreen sheet on mobile (single scroll), centered
+          sticky card on desktop. */}
+      {ready && arrival && departure && (
+        <div className="fixed inset-0 z-50 sm:sticky sm:inset-auto sm:bottom-4 sm:z-10 sm:mt-6">
+          <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-ink/10 sm:shadow-cardHover">
+            <h2 className="mb-4 border-b border-ink/10 pb-3 text-lg font-semibold text-ink sm:hidden">
+              Nezávazná poptávka
+            </h2>
+            <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
+            <FlightSchedules arrival={arrival} departure={departure} />
+          </div>
+        </div>
+      )}
+
+      {!ready && (arrival || hint) && (
         <div className="sticky bottom-4 z-10 mt-6">
-          <div className="mx-auto max-w-2xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
-            {ready && arrival && departure ? (
-              <BookingForm arrival={arrival} departure={departure} nights={nights} onReset={reset} />
-            ) : (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="text-sm">
-                  {arrival && (
-                    <span className="text-ink/70">
-                      Příjezd <span className="font-medium text-ink">{formatCzDate(arrival)}</span> — vyberte den
-                      odjezdu
-                    </span>
-                  )}
-                  {hint && (
-                    <span className={arrival ? 'ml-2 font-medium text-red-600' : 'font-medium text-red-600'}>
-                      {hint}
-                    </span>
-                  )}
-                </div>
+          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm">
                 {arrival && (
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
-                  >
-                    Zrušit
-                  </button>
+                  <span className="text-ink/70">
+                    Příjezd <span className="font-medium text-ink">{formatCzDate(arrival)}</span> — vyberte den
+                    odjezdu
+                  </span>
+                )}
+                {hint && (
+                  <span className={arrival ? 'ml-2 font-medium text-red-600' : 'font-medium text-red-600'}>
+                    {hint}
+                  </span>
                 )}
               </div>
-            )}
+              {arrival && (
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
+                >
+                  Zrušit
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

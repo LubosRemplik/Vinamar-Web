@@ -7,7 +7,7 @@ import { FlightPriceProvider } from '../../domain/flight/flight-price-provider.p
 @Injectable()
 export class MockFlightPriceProvider implements FlightPriceProvider {
   async cheapestForOrigin(origin: Origin, horizonMonths: number): Promise<FlightQuote[]> {
-    const base = { PED: 95, WRO: 58, PRG: 75 }[origin.code];
+    const base = ({ PED: 95, WRO: 58 } as Partial<Record<string, number>>)[origin.code] ?? 80;
     const quotes: FlightQuote[] = [];
     const start = new Date('2026-07-01');
     const weeks = horizonMonths * 4;
