@@ -99,3 +99,9 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] F — Availability-first reframe (calendar wall, retire flight-first pages)
 - [x] G — Letecké spojení do Alicante (rozvrh tam/zpět z 7 letišť, Ryanair timetable, tabulka + cron)
 - [x] H — Administrace rezervací (odhlášení, admin rezervace přes veřejný tok s relaxací pravidel, jednotný seznam kalendáře s rušením)
+- [ ] I — Smlouvy v PDF (varianty se zálohou / bez zálohy), generované a odeslané e-mailem; navázat na stavy rezervace
+- [ ] J — iCal export (přidání rezervace do Google Calendaru včetně jména, příjmení a tel. čísla hosta)
+- [ ] K — E-maily (rozmyslet typy a design)
+- [ ] L — Logo a design
+- [ ] M — Instalace na produkci
+- [ ] N — Zkontrolovat loginy a bezpečnost (silný `JWT_SECRET` při bootu, audit admin endpointů)
