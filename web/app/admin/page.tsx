@@ -36,6 +36,46 @@ const FILTERS: { value: string; label: string }[] = [
   { value: 'cancelled', label: 'Zrušeno' },
 ];
 
+const RESERVATION_FILTERS: { value: string; label: string }[] = [
+  { value: 'current', label: 'Aktuální' },
+  { value: 'past', label: 'Minulé' },
+  { value: 'all', label: 'Vše' },
+];
+
+function FilterChips({
+  options,
+  value,
+  counts,
+  onSelect,
+}: {
+  options: { value: string; label: string }[];
+  value: string;
+  counts: Record<string, number>;
+  onSelect: (v: string) => void;
+}) {
+  return (
+    <div className="mb-4 flex flex-wrap gap-2">
+      {options.map((f) => {
+        const active = value === f.value;
+        return (
+          <button
+            key={f.value}
+            onClick={() => onSelect(f.value)}
+            className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+              active ? 'bg-ink text-white' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'
+            }`}
+          >
+            {f.label}
+            <span className={active ? 'ml-1.5 text-white/70' : 'ml-1.5 text-ink/40'}>
+              {counts[f.value] ?? 0}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 const BTN_PRIMARY =
   'rounded-lg bg-sea px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-sea/90';
 const BTN_DANGER =
@@ -97,8 +137,13 @@ export default function AdminDashboard() {
   // Default to pending so a long history of resolved inquiries doesn't bury the
   // ones that still need a decision.
   const [filter, setFilter] = useState('pending');
+  // Reservations default to current/upcoming (ongoing or not yet ended); 'past' lets
+  // the owner look back at stays that already finished.
+  const [reservationFilter, setReservationFilter] = useState('current');
   const [inquiryPage, setInquiryPage] = useState(1);
   const [reservationPage, setReservationPage] = useState(1);
+
+  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   useEffect(() => {
     const t = getAdminToken();
@@ -165,9 +210,23 @@ export default function AdminDashboard() {
   const inquirySafePage = Math.min(inquiryPage, inquiryTotalPages);
   const pagedRows = visibleRows.slice((inquirySafePage - 1) * PAGE_SIZE, inquirySafePage * PAGE_SIZE);
 
-  const reservationTotalPages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
+  // A stay is "current" until its departure day passes (covers ongoing and upcoming);
+  // once departure is before today it moves to "past".
+  const reservationCounts = useMemo(() => {
+    const c: Record<string, number> = { all: entries.length, current: 0, past: 0 };
+    for (const e of entries) c[e.end < today ? 'past' : 'current'] += 1;
+    return c;
+  }, [entries, today]);
+
+  const visibleEntries = entries.filter((e) => {
+    if (reservationFilter === 'current') return e.end >= today;
+    if (reservationFilter === 'past') return e.end < today;
+    return true;
+  });
+
+  const reservationTotalPages = Math.max(1, Math.ceil(visibleEntries.length / PAGE_SIZE));
   const reservationSafePage = Math.min(reservationPage, reservationTotalPages);
-  const pagedEntries = entries.slice(
+  const pagedEntries = visibleEntries.slice(
     (reservationSafePage - 1) * PAGE_SIZE,
     reservationSafePage * PAGE_SIZE,
   );
@@ -175,6 +234,11 @@ export default function AdminDashboard() {
   function selectFilter(value: string) {
     setFilter(value);
     setInquiryPage(1);
+  }
+
+  function selectReservationFilter(value: string) {
+    setReservationFilter(value);
+    setReservationPage(1);
   }
 
   return (
@@ -188,6 +252,12 @@ export default function AdminDashboard() {
 
       <section className="mb-10">
         <h2 className="mb-3 text-xl font-semibold text-ink">Rezervace</h2>
+        <FilterChips
+          options={RESERVATION_FILTERS}
+          value={reservationFilter}
+          counts={reservationCounts}
+          onSelect={selectReservationFilter}
+        />
         <div className="overflow-x-auto rounded-2xl border border-ink/10">
           <table className="w-full text-sm">
             <thead>
@@ -214,7 +284,7 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
               ))}
-              {entries.length === 0 && (
+              {visibleEntries.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-4 py-4 text-ink/50">
                     Žádné rezervace.
@@ -234,25 +304,7 @@ export default function AdminDashboard() {
       <section>
         <h2 className="mb-3 text-xl font-semibold text-ink">Poptávky</h2>
 
-        <div className="mb-4 flex flex-wrap gap-2">
-          {FILTERS.map((f) => {
-            const active = filter === f.value;
-            return (
-              <button
-                key={f.value}
-                onClick={() => selectFilter(f.value)}
-                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                  active ? 'bg-ink text-white' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'
-                }`}
-              >
-                {f.label}
-                <span className={active ? 'ml-1.5 text-white/70' : 'ml-1.5 text-ink/40'}>
-                  {counts[f.value] ?? 0}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <FilterChips options={FILTERS} value={filter} counts={counts} onSelect={selectFilter} />
 
         <div className="overflow-x-auto rounded-2xl border border-ink/10">
           <table className="w-full text-sm">
