@@ -187,6 +187,51 @@ export default function AdminDashboard() {
       </div>
 
       <section className="mb-10">
+        <h2 className="mb-3 text-xl font-semibold text-ink">Rezervace</h2>
+        <div className="overflow-x-auto rounded-2xl border border-ink/10">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-ink/10 bg-ink/[0.03] text-left text-ink/60">
+                <th className="px-4 py-2 font-medium">Termín</th>
+                <th className="px-4 py-2 font-medium">Host</th>
+                <th className="px-4 py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {pagedEntries.map((e) => (
+                <tr key={e.id} className="border-b border-ink/5 last:border-0">
+                  <td className="px-4 py-3 align-top text-ink/80">{term(e.start, e.end)}</td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-ink">{e.guestName}</div>
+                    {e.email && <div className="text-ink/55">{e.email}</div>}
+                    {e.phone && <div className="text-ink/55">{e.phone}</div>}
+                    <Comment text={e.message} />
+                  </td>
+                  <td className="px-4 py-3 align-top text-right">
+                    <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
+                      Zrušit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {entries.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-4 py-4 text-ink/50">
+                    Žádné rezervace.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Pager
+          page={reservationSafePage}
+          totalPages={reservationTotalPages}
+          onPage={setReservationPage}
+        />
+      </section>
+
+      <section>
         <h2 className="mb-3 text-xl font-semibold text-ink">Poptávky</h2>
 
         <div className="mb-4 flex flex-wrap gap-2">
@@ -257,51 +302,6 @@ export default function AdminDashboard() {
           </table>
         </div>
         <Pager page={inquirySafePage} totalPages={inquiryTotalPages} onPage={setInquiryPage} />
-      </section>
-
-      <section>
-        <h2 className="mb-3 text-xl font-semibold text-ink">Rezervace</h2>
-        <div className="overflow-x-auto rounded-2xl border border-ink/10">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-ink/10 bg-ink/[0.03] text-left text-ink/60">
-                <th className="px-4 py-2 font-medium">Termín</th>
-                <th className="px-4 py-2 font-medium">Host</th>
-                <th className="px-4 py-2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {pagedEntries.map((e) => (
-                <tr key={e.id} className="border-b border-ink/5 last:border-0">
-                  <td className="px-4 py-3 align-top text-ink/80">{term(e.start, e.end)}</td>
-                  <td className="px-4 py-3 align-top">
-                    <div className="font-medium text-ink">{e.guestName}</div>
-                    {e.email && <div className="text-ink/55">{e.email}</div>}
-                    {e.phone && <div className="text-ink/55">{e.phone}</div>}
-                    <Comment text={e.message} />
-                  </td>
-                  <td className="px-4 py-3 align-top text-right">
-                    <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
-                      Zrušit
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {entries.length === 0 && (
-                <tr>
-                  <td colSpan={3} className="px-4 py-4 text-ink/50">
-                    Žádné rezervace.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <Pager
-          page={reservationSafePage}
-          totalPages={reservationTotalPages}
-          onPage={setReservationPage}
-        />
       </section>
     </main>
   );
