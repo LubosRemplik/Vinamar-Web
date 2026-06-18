@@ -108,3 +108,4 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [ ] O - Stranka s info "Z letiste"
 - [ ] P - Multi apartman
 - [ ] Q - Rozsireni administrace o pridani vice uzivatelu (neni nutny prehled, jen prihlaseni a pripadne role pozdeji pro vice apartmanu)
+- [ ] R - Editace nekterych veci v administraci, jmeno, email a telefon
