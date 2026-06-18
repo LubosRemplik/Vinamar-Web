@@ -85,8 +85,10 @@ u blocked vrátí `note`. Tvar položky:
 ```
 
 **Rušení (`DELETE /admin/calendar/:id`):** smaže řádek `calendar_blocks` (uvolní termín);
-má-li `inquiry_id`, nastaví danou poptávku na `cancelled`. Obě operace v rámci jedné
-transakce (middleware) – buď obojí, nebo nic.
+má-li `inquiry_id`, nastaví danou poptávku na `cancelled`. Obě operace atomicky –
+explicitní transakce v repository přes `pool.connect()` + `BEGIN/COMMIT/ROLLBACK`
+(vzor `pg-flight-quote.repository.ts`). Projekt **nemá** transakční middleware; každé
+volání `pool.query` je jinak autonomní.
 
 **Frontend `/admin`:** pod stávající sekcí „Poptávky“ přidat sekci
 **„Kalendář — rezervace a bloky“** se seznamem z `GET /admin/calendar`; u každé položky
@@ -113,7 +115,8 @@ tlačítko **Zrušit** (`DELETE /admin/calendar/:id`) s potvrzením, po akci ref
 - `DELETE /admin/calendar/:id` na neexistující id → 404 (doménová chyba přes
   `ProblemDetailFilter`).
 - Overlap u admin rezervace → `DatesUnavailableError` (RFC-7807) jako dnes.
-- Zrušení rezervace + revert poptávky musí být atomické (transakční middleware).
+- Zrušení rezervace + revert poptávky musí být atomické – explicitní DB transakce
+  v repository (ne middleware, ten zde neexistuje).
 
 ## Testy
 
