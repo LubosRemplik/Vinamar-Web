@@ -63,7 +63,7 @@ Respektuje stávající vrstvení (`domain` → `application` → `infrastructur
   - **admin tok (`isAdmin`, firm rezervace)** — rezervace vzniká rovnou `confirmed`
     a obsadí termín; notifikace majiteli se (jako dnes) **přeskakuje** (majitel
     jedná sám). Host dostane `guestNotifier.bookingConfirmed` (#2), **ne**
-    „přijali jsme poptávku". Viz Otevřené rozhodnutí níže.
+    „přijali jsme poptávku".
 - `confirm-inquiry.handler` — po `updateStatus('confirmed')` zavolá
   `guestNotifier.bookingConfirmed`; pro každou auto-odmítnutou poptávku
   `guestNotifier.inquiryDeclined`.
@@ -183,17 +183,12 @@ duplicitnímu odeslání při restartu nebo dvojím běhu cronu.
 - **E2E** — proti běžícímu **mailpit**: odeslání poptávky → e-mail hostovi
   i majiteli dorazí (kontrola subjectu/příjemce přes mailpit API).
 
-## Otevřené rozhodnutí (k potvrzení při revizi)
+## Rozhodnuto
 
-**Posílat hostovi automatický mail při adminem vytvořené rezervaci?**
-Když majitel založí firm rezervaci přes admin tok, dnes se neposílá nic (ani
-majiteli). Návrh **defaultně zapíná** mail #2 „Rezervace potvrzena" hostovi —
-je to moment závazné rezervace a zároveň místo, kam se v bodě **I** napojí smlouva.
-Riziko: e-mail hosta může být u admin rezervací jen zástupný / orientační údaj
-a automatický mail by byl nežádoucí. Alternativy:
-1. **(default)** vždy poslat #2 hostovi,
-2. neposílat nic (majitel řeší komunikaci sám),
-3. přidat do admin formuláře přepínač „informovat hosta e-mailem".
+**Adminem vytvořená rezervace posílá hostovi mail #2 „Rezervace potvrzena".**
+Admin tok plní guest e-mail stejně jako veřejný tok, takže příjemce je vždy
+platný. Je to moment závazné rezervace a zároveň místo, kam se v bodě **I**
+napojí smlouva. Notifikace majiteli se (jako dnes) přeskakuje — majitel jedná sám.
 
 ## Mimo rozsah (YAGNI)
 
