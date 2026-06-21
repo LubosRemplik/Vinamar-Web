@@ -23,6 +23,7 @@ import {
 import { AdminGuard } from './admin.guard';
 import { GenerateContractCommand } from '../../application/contract/generate-contract.command';
 import { GetContractPdfQuery } from '../../application/contract/get-contract-pdf.query';
+import { GetContractPdfByInquiryQuery } from '../../application/contract/get-contract-pdf-by-inquiry.query';
 import { ContractVariant } from '../../domain/contract/contract-variant';
 
 class GenerateContractDto {
@@ -72,6 +73,23 @@ export class AdminContractController {
     const pdf = await this.queryBus.execute<GetContractPdfQuery, Buffer | null>(
       new GetContractPdfQuery(id),
     );
+    this.sendPdf(res, pdf);
+  }
+
+  // The admin UI only knows the reservation (inquiry) id, so it downloads the
+  // latest contract for that reservation without tracking the contract id.
+  @Get('reservations/:inquiryId/contract/pdf')
+  async pdfByInquiry(
+    @Param('inquiryId') inquiryId: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    const pdf = await this.queryBus.execute<GetContractPdfByInquiryQuery, Buffer | null>(
+      new GetContractPdfByInquiryQuery(inquiryId),
+    );
+    this.sendPdf(res, pdf);
+  }
+
+  private sendPdf(res: Response, pdf: Buffer | null): void {
     if (!pdf) {
       throw new NotFoundException();
     }

@@ -7,4 +7,5 @@ export interface ContractRepository {
   markSent(id: string, sentAt: Date): Promise<void>;
   get(id: string): Promise<{ contract: Contract; pdf: Buffer } | null>;
   existsForInquiry(inquiryId: string): Promise<boolean>;
+  latestPdfForInquiry(inquiryId: string): Promise<Buffer | null>;
 }

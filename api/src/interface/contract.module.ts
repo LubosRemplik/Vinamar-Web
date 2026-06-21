@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GenerateContractHandler } from '../application/contract/generate-contract.handler';
 import { GetContractPdfHandler } from '../application/contract/get-contract-pdf.handler';
+import { GetContractPdfByInquiryHandler } from '../application/contract/get-contract-pdf-by-inquiry.handler';
 import { pgPoolProvider } from '../infrastructure/persistence/pg-connection';
 import { PgContractRepository } from '../infrastructure/persistence/pg-contract.repository';
 import { PgInquiryRepository } from '../infrastructure/persistence/pg-inquiry.repository';
@@ -19,6 +20,7 @@ import { CLOCK } from '../domain/shared/clock.port';
   providers: [
     GenerateContractHandler,
     GetContractPdfHandler,
+    GetContractPdfByInquiryHandler,
     pgPoolProvider,
     { provide: CONTRACT_REPOSITORY, useClass: PgContractRepository },
     { provide: CONTRACT_PDF_RENDERER, useClass: PdfmakeContractRenderer },

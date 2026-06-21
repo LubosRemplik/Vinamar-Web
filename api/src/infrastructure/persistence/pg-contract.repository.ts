@@ -94,4 +94,12 @@ export class PgContractRepository implements ContractRepository {
     );
     return rows.length > 0;
   }
+
+  async latestPdfForInquiry(inquiryId: string): Promise<Buffer | null> {
+    const { rows } = await this.pool.query<{ pdf: Buffer }>(
+      `SELECT pdf FROM contracts WHERE inquiry_id = $1 ORDER BY generated_at DESC LIMIT 1`,
+      [inquiryId],
+    );
+    return rows[0] ? rows[0].pdf : null;
+  }
 }

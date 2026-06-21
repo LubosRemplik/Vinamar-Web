@@ -106,6 +106,10 @@ export class InMemoryContracts implements ContractRepository {
   async existsForInquiry(inquiryId: string): Promise<boolean> {
     return this.items.some((x) => x.contract.inquiryId === inquiryId);
   }
+  async latestPdfForInquiry(inquiryId: string): Promise<Buffer | null> {
+    const matches = this.items.filter((x) => x.contract.inquiryId === inquiryId);
+    return matches.length ? matches[matches.length - 1].pdf : null;
+  }
 }
 
 export class SpyContractRenderer implements ContractPdfRenderer {
