@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { AdminGuard } from './admin.guard';
 import { ListInquiriesQuery } from '../../application/inquiry/list-inquiries.query';
 import { ConfirmInquiryCommand } from '../../application/inquiry/confirm-inquiry.command';
@@ -8,7 +8,7 @@ import { DeclineInquiryCommand } from '../../application/inquiry/decline-inquiry
 import { UpdateInquiryContactCommand } from '../../application/inquiry/update-inquiry-contact.command';
 
 class UpdateContactDto {
-  @IsString() guestName!: string;
+  @IsString() @IsNotEmpty() guestName!: string;
   @IsEmail() email!: string;
   @IsOptional() @IsString() phone = '';
 }

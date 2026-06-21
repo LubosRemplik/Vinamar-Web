@@ -104,6 +104,15 @@ dbDescribe('Inquiries (e2e)', () => {
     expect(res.status).toBe(400);
   });
 
+  it('rejects an empty guest name with 400', async () => {
+    const { rows } = await pool.query('SELECT id FROM inquiries LIMIT 1');
+    const res = await request(app.getHttpServer())
+      .patch(`/api/admin/inquiries/${rows[0].id}/contact`)
+      .set('Authorization', `Bearer ${adminToken()}`)
+      .send({ guestName: '', email: 'x@x.cz', phone: '' });
+    expect(res.status).toBe(400);
+  });
+
   it('rejects an unauthenticated contact edit with 401', async () => {
     const { rows } = await pool.query('SELECT id FROM inquiries LIMIT 1');
     const res = await request(app.getHttpServer())

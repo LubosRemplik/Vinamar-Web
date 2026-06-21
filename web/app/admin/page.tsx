@@ -155,12 +155,19 @@ function GuestCell({
 }) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     guestName: name ?? '',
     email: email ?? '',
     phone: phone ?? '',
   });
   const canEdit = !!inquiryId && !!onSave;
+
+  function openEdit() {
+    setForm({ guestName: name ?? '', email: email ?? '', phone: phone ?? '' });
+    setError(null);
+    setEditing(true);
+  }
 
   if (editing) {
     const input = 'w-full rounded-lg border border-ink/20 px-2 py-1 text-sm';
@@ -185,15 +192,19 @@ function GuestCell({
           placeholder="Telefon"
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
+        {error && <div className="text-xs text-rose-600">{error}</div>}
         <div className="flex gap-2 pt-1">
           <button
             disabled={saving}
             className={BTN_PRIMARY}
             onClick={async () => {
               setSaving(true);
+              setError(null);
               try {
                 await onSave!(form);
                 setEditing(false);
+              } catch {
+                setError('Uložení se nezdařilo. Zkontrolujte e-mail a jméno.');
               } finally {
                 setSaving(false);
               }
@@ -201,13 +212,7 @@ function GuestCell({
           >
             Uložit
           </button>
-          <button
-            className={BTN_NEUTRAL}
-            onClick={() => {
-              setForm({ guestName: name ?? '', email: email ?? '', phone: phone ?? '' });
-              setEditing(false);
-            }}
-          >
+          <button className={BTN_NEUTRAL} onClick={() => setEditing(false)}>
             Zrušit
           </button>
         </div>
@@ -223,7 +228,7 @@ function GuestCell({
       <Comment text={message} />
       {canEdit && (
         <button
-          onClick={() => setEditing(true)}
+          onClick={openEdit}
           className="mt-1 text-xs font-medium text-sea hover:underline"
         >
           Upravit
@@ -301,6 +306,8 @@ export default function AdminDashboard() {
     }
   }
 
+  // Only an expired session (401) logs the admin out. A validation failure (e.g. a
+  // mistyped e-mail → 400) is rethrown so the inline form can show it and stay open.
   async function editContact(
     inquiryId: string,
     data: { guestName: string; email: string; phone: string },
@@ -309,8 +316,12 @@ export default function AdminDashboard() {
     try {
       await updateInquiryContact(token, inquiryId, data);
       reload(token);
-    } catch {
-      adminLogout();
+    } catch (e) {
+      if (e instanceof Error && e.message === 'unauthorized') {
+        adminLogout();
+        return;
+      }
+      throw e;
     }
   }
 
