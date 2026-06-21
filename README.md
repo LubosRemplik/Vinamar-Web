@@ -77,6 +77,22 @@ Výletní tipy: každý soubor `web/content/trips/<slug>.md` má frontmatter
 `title`, `category`, `image`, `summary`, `order` (volitelně `externalLink`, `distanceKm`).
 Stránka `/tipy-na-vylety/<slug>` se vygeneruje automaticky (`generateStaticParams`).
 
+## E-maily
+
+Transakční maily používají následující proměnné prostředí:
+
+| Proměnná | Popis |
+|---|---|
+| `SMTP_HOST` | SMTP server (v dev: `mailpit`) |
+| `SMTP_PORT` | SMTP port (v dev: `1025`) |
+| `SMTP_FROM` | Adresa odesílatele |
+| `MAIL_FROM_NAME` | Jméno odesílatele (zobrazí se v klientovi jako „Od:") |
+| `OWNER_EMAIL` | E-mail majitele apartmánu (dostává notifikace) |
+| `PUBLIC_BASE_URL` | Veřejná URL webu — slouží pro sestavení odkazů v mailech (např. `http://localhost:3000`) |
+
+V dev prostředí zachytává všechny odchozí maily **mailpit** (UI: http://localhost:8025).
+Pro přístup na alternativním portu nastav `MAILPIT_UI_PORT` v `.env`.
+
 ## Testy
 
 ```bash
