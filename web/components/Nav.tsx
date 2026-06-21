@@ -8,6 +8,7 @@ const links = [
   { href: '/apartman', label: 'Apartmán' },
   { href: '/okoli', label: 'Okolí' },
   { href: '/tipy-na-vylety', label: 'Tipy na výlety' },
+  { href: '/z-letiste', label: 'Z letiště' },
 ];
 
 export default function Nav() {
