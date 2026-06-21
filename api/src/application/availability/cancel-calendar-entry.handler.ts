@@ -28,9 +28,13 @@ export class CancelCalendarEntryHandler implements ICommandHandler<CancelCalenda
     }
     try {
       await this.guest.bookingCancelled(inquiry);
+    } catch (err) {
+      this.logger.warn(`guest cancellation notification failed for inquiry ${inquiryId}: ${String(err)}`);
+    }
+    try {
       await this.owner.bookingCancelled(inquiry);
     } catch (err) {
-      this.logger.warn(`cancellation notification failed for inquiry ${inquiryId}: ${String(err)}`);
+      this.logger.warn(`owner cancellation notification failed for inquiry ${inquiryId}: ${String(err)}`);
     }
   }
 }
