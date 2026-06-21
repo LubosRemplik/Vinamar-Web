@@ -64,6 +64,21 @@ export async function cancelCalendarEntry(token: string, id: string): Promise<bo
   return res.ok;
 }
 
+export async function updateInquiryContact(
+  token: string,
+  id: string,
+  data: { guestName: string; email: string; phone: string },
+): Promise<boolean> {
+  const res = await fetch(`${BASE}/admin/inquiries/${id}/contact`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (res.status === 401) throw new Error('unauthorized');
+  if (!res.ok) throw new Error('update failed');
+  return true;
+}
+
 export interface CalendarWindow {
   arrival: string;
   departure: string;

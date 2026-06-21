@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   fetchAdminCalendar,
   cancelCalendarEntry,
+  updateInquiryContact,
   type CalendarEntry,
 } from '@/lib/api';
 import { getAdminToken, adminLogout } from '@/lib/admin';
@@ -142,18 +143,92 @@ function GuestCell({
   email,
   phone,
   message,
+  inquiryId,
+  onSave,
 }: {
   name: string | null;
   email: string | null;
   phone: string | null;
   message: string | null;
+  inquiryId?: string | null;
+  onSave?: (data: { guestName: string; email: string; phone: string }) => Promise<void>;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    guestName: name ?? '',
+    email: email ?? '',
+    phone: phone ?? '',
+  });
+  const canEdit = !!inquiryId && !!onSave;
+
+  if (editing) {
+    const input = 'w-full rounded-lg border border-ink/20 px-2 py-1 text-sm';
+    return (
+      <div className="min-w-0 space-y-1.5">
+        <input
+          className={input}
+          value={form.guestName}
+          placeholder="Jméno"
+          onChange={(e) => setForm({ ...form, guestName: e.target.value })}
+        />
+        <input
+          className={input}
+          type="email"
+          value={form.email}
+          placeholder="E-mail"
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+        />
+        <input
+          className={input}
+          value={form.phone}
+          placeholder="Telefon"
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+        />
+        <div className="flex gap-2 pt-1">
+          <button
+            disabled={saving}
+            className={BTN_PRIMARY}
+            onClick={async () => {
+              setSaving(true);
+              try {
+                await onSave!(form);
+                setEditing(false);
+              } finally {
+                setSaving(false);
+              }
+            }}
+          >
+            Uložit
+          </button>
+          <button
+            className={BTN_NEUTRAL}
+            onClick={() => {
+              setForm({ guestName: name ?? '', email: email ?? '', phone: phone ?? '' });
+              setEditing(false);
+            }}
+          >
+            Zrušit
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-w-0">
       <div className="font-medium text-ink">{name}</div>
       {email && <div className="break-words text-ink/55">{email}</div>}
       {phone && <div className="text-ink/55">{phone}</div>}
       <Comment text={message} />
+      {canEdit && (
+        <button
+          onClick={() => setEditing(true)}
+          className="mt-1 text-xs font-medium text-sea hover:underline"
+        >
+          Upravit
+        </button>
+      )}
     </div>
   );
 }
@@ -220,6 +295,19 @@ export default function AdminDashboard() {
     if (!window.confirm('Opravdu zrušit tuto rezervaci a uvolnit termín?')) return;
     try {
       await cancelCalendarEntry(token, id);
+      reload(token);
+    } catch {
+      adminLogout();
+    }
+  }
+
+  async function editContact(
+    inquiryId: string,
+    data: { guestName: string; email: string; phone: string },
+  ) {
+    if (!token) return;
+    try {
+      await updateInquiryContact(token, inquiryId, data);
       reload(token);
     } catch {
       adminLogout();
@@ -303,7 +391,14 @@ export default function AdminDashboard() {
                     <Term from={e.start} to={e.end} />
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <GuestCell name={e.guestName} email={e.email} phone={e.phone} message={e.message} />
+                    <GuestCell
+                      name={e.guestName}
+                      email={e.email}
+                      phone={e.phone}
+                      message={e.message}
+                      inquiryId={e.inquiryId}
+                      onSave={(d) => editContact(e.inquiryId!, d)}
+                    />
                   </td>
                   <td className="px-4 py-3 align-top text-right">
                     <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
@@ -336,7 +431,14 @@ export default function AdminDashboard() {
                 </button>
               </div>
               <div className="mt-2">
-                <GuestCell name={e.guestName} email={e.email} phone={e.phone} message={e.message} />
+                <GuestCell
+                  name={e.guestName}
+                  email={e.email}
+                  phone={e.phone}
+                  message={e.message}
+                  inquiryId={e.inquiryId}
+                  onSave={(d) => editContact(e.inquiryId!, d)}
+                />
               </div>
             </div>
           ))}
@@ -373,7 +475,14 @@ export default function AdminDashboard() {
               {pagedRows.map((r) => (
                 <tr key={r.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-4 py-3 align-top">
-                    <GuestCell name={r.guestName} email={r.email} phone={r.phone} message={r.message} />
+                    <GuestCell
+                      name={r.guestName}
+                      email={r.email}
+                      phone={r.phone}
+                      message={r.message}
+                      inquiryId={r.id}
+                      onSave={(d) => editContact(r.id, d)}
+                    />
                   </td>
                   <td className="px-4 py-3 align-top text-ink/80">
                     <Term from={r.arrival} to={r.departure} />
@@ -411,7 +520,14 @@ export default function AdminDashboard() {
           {pagedRows.map((r) => (
             <div key={r.id} className="rounded-2xl border border-ink/10 p-4">
               <div className="flex items-start justify-between gap-3">
-                <GuestCell name={r.guestName} email={r.email} phone={r.phone} message={r.message} />
+                <GuestCell
+                  name={r.guestName}
+                  email={r.email}
+                  phone={r.phone}
+                  message={r.message}
+                  inquiryId={r.id}
+                  onSave={(d) => editContact(r.id, d)}
+                />
                 <StatusBadge status={r.status} />
               </div>
               <div className="mt-2 text-sm text-ink/80">
