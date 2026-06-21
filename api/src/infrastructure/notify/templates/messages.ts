@@ -1,5 +1,5 @@
 import { Inquiry } from '../../../domain/inquiry/inquiry';
-import { EmailContent, baseLayout, formatCzechDate, publicBaseUrl } from './base';
+import { EmailContent, baseLayout, esc, formatCzechDate, publicBaseUrl } from './base';
 
 export { formatCzechDate } from './base';
 
@@ -8,7 +8,7 @@ function stay(inquiry: Inquiry): string {
 }
 
 function greeting(name: string): string {
-  return `<p>Dobrý den ${name},</p>`;
+  return `<p>Dobrý den ${esc(name)},</p>`;
 }
 
 function stayParagraph(inquiry: Inquiry): string {
@@ -73,7 +73,7 @@ export function bookingCancelledEmail(
         preheader: 'Rezervace byla zrušena',
         content:
           '<p>Dobrý den,</p>' +
-          `<p>rezervace hosta <strong>${inquiry.guestName}</strong> byla zrušena a termín se uvolnil.</p>` +
+          `<p>rezervace hosta <strong>${esc(inquiry.guestName)}</strong> byla zrušena a termín se uvolnil.</p>` +
           stayParagraph(inquiry),
       }),
     };

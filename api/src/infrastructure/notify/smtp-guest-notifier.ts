@@ -1,4 +1,4 @@
-import { Injectable, Logger, Optional } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { createTransport, Transporter } from 'nodemailer';
 import { GuestNotifier } from '../../domain/inquiry/guest-notifier.port';
 import { Inquiry } from '../../domain/inquiry/inquiry';
@@ -13,8 +13,6 @@ import {
 
 @Injectable()
 export class SmtpGuestNotifier implements GuestNotifier {
-  private readonly logger = new Logger(SmtpGuestNotifier.name);
-
   constructor(
     @Optional()
     private readonly transport: Transporter = createTransport({

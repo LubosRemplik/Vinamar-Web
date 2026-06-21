@@ -57,4 +57,21 @@ describe('email templates', () => {
   it('arrivalReminder is minimal and mentions the upcoming stay', () => {
     expect(arrivalReminderEmail(inquiry()).html).toContain('14. 7. 2025');
   });
+
+  it('escapes HTML in guest name to prevent injection', () => {
+    const evil = new Inquiry(
+      'id-x',
+      '<script>alert(1)</script>',
+      new EmailAddress('e@x.cz'),
+      '',
+      new DateRange(new Date('2025-07-14'), new Date('2025-07-25')),
+      '',
+      'confirmed',
+      new Date('2025-06-01'),
+    );
+    const m = inquiryReceivedEmail(evil);
+    expect(m.html).not.toContain('<script>alert(1)</script>');
+    expect(m.html).toContain('&lt;script&gt;');
+    expect(bookingCancelledEmail(evil, { isOwner: true }).html).not.toContain('<script>alert(1)</script>');
+  });
 });

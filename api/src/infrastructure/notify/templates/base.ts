@@ -1,5 +1,14 @@
 export type EmailContent = { subject: string; html: string; text: string };
 
+export function esc(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Branding placeholders — finální hodnoty přijdou v bodě L.
 const BRAND_NAME = 'Vinamar';
 const BRAND_TAGLINE = 'Vinamar — Apartmán La Mata, Torrevieja';
@@ -19,7 +28,7 @@ function ctaBlock(cta?: { label: string; url: string }): string {
   return `
   <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
     <tbody><tr><td align="left"><table role="presentation" border="0" cellpadding="0" cellspacing="0">
-      <tbody><tr><td><a href="${cta.url}" target="_blank">${cta.label}</a></td></tr></tbody>
+      <tbody><tr><td><a href="${esc(cta.url)}" target="_blank">${esc(cta.label)}</a></td></tr></tbody>
     </table></td></tr></tbody>
   </table>`;
 }
@@ -74,7 +83,7 @@ export function baseLayout(opts: {
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body"><tr>
       <td>&nbsp;</td>
       <td class="container"><div class="content">
-        <span class="preheader">${opts.preheader}</span>
+        <span class="preheader">${esc(opts.preheader)}</span>
         <div class="header"><a href="${publicBaseUrl()}">${BRAND_NAME}</a></div>
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main"><tr>
           <td class="wrapper">${opts.content}${ctaBlock(opts.cta)}</td>
