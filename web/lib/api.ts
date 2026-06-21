@@ -113,6 +113,47 @@ export async function updateInquiryContact(
   return true;
 }
 
+export interface ContractInput {
+  variant: 'with-deposit' | 'without-deposit';
+  guestAddress: string;
+  guestIdNumber: string;
+  guestBirthDate: string | null;
+  totalPrice: number;
+  currency: string;
+  depositAmount: number | null;
+  depositDueDate: string | null;
+}
+
+export async function generateContract(
+  token: string,
+  inquiryId: string,
+  input: ContractInput,
+): Promise<{ id: string }> {
+  const res = await fetch(`${BASE}/admin/reservations/${inquiryId}/contract`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(input),
+  });
+  if (res.status === 401) throw new Error('unauthorized');
+  if (!res.ok) {
+    const problem = await res.json().catch(() => null);
+    throw new Error(problem?.detail ?? problem?.title ?? 'Smlouvu se nepodařilo vytvořit.');
+  }
+  return res.json();
+}
+
+// The PDF endpoint needs the Bearer header, so a plain link won't do — fetch it
+// as a blob and open the object URL in a new tab.
+export async function openContractPdf(token: string, inquiryId: string): Promise<void> {
+  const res = await fetch(`${BASE}/admin/reservations/${inquiryId}/contract/pdf`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401) throw new Error('unauthorized');
+  if (!res.ok) throw new Error('Smlouvu se nepodařilo načíst.');
+  const blob = await res.blob();
+  window.open(URL.createObjectURL(blob), '_blank');
+}
+
 export interface CalendarWindow {
   arrival: string;
   departure: string;

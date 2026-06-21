@@ -7,6 +7,10 @@ import { EmailAddress } from '../../src/domain/shared/email-address';
 import { InquiryRepository } from '../../src/domain/inquiry/inquiry.repository.port';
 import { OwnerNotifier } from '../../src/domain/inquiry/owner-notifier.port';
 import { GuestNotifier } from '../../src/domain/inquiry/guest-notifier.port';
+import { Contract } from '../../src/domain/contract/contract';
+import { ContractRepository } from '../../src/domain/contract/contract.repository.port';
+import { ContractPdfRenderer } from '../../src/domain/contract/contract-pdf-renderer.port';
+import { ContractNotifier } from '../../src/domain/contract/contract-notifier.port';
 
 export class FixedClock implements Clock {
   constructor(private readonly fixed: Date) {}
@@ -114,4 +118,41 @@ export class SpyGuestNotifier implements GuestNotifier {
   async inquiryDeclined(i: Inquiry): Promise<void> { this.received.push({ method: 'inquiryDeclined', id: i.id }); }
   async bookingCancelled(i: Inquiry): Promise<void> { this.received.push({ method: 'bookingCancelled', id: i.id }); }
   async arrivalReminder(i: Inquiry): Promise<void> { this.received.push({ method: 'arrivalReminder', id: i.id }); }
+}
+
+export class InMemoryContracts implements ContractRepository {
+  items: { contract: Contract; pdf: Buffer; sentAt: Date | null }[] = [];
+  async save(contract: Contract, pdf: Buffer): Promise<void> {
+    this.items.push({ contract, pdf, sentAt: null });
+  }
+  async markSent(id: string, sentAt: Date): Promise<void> {
+    const it = this.items.find((x) => x.contract.id === id);
+    if (it) it.sentAt = sentAt;
+  }
+  async get(id: string): Promise<{ contract: Contract; pdf: Buffer } | null> {
+    const it = this.items.find((x) => x.contract.id === id);
+    return it ? { contract: it.contract, pdf: it.pdf } : null;
+  }
+  async existsForInquiry(inquiryId: string): Promise<boolean> {
+    return this.items.some((x) => x.contract.inquiryId === inquiryId);
+  }
+  async latestPdfForInquiry(inquiryId: string): Promise<Buffer | null> {
+    const matches = this.items.filter((x) => x.contract.inquiryId === inquiryId);
+    return matches.length ? matches[matches.length - 1].pdf : null;
+  }
+}
+
+export class SpyContractRenderer implements ContractPdfRenderer {
+  rendered: Contract[] = [];
+  async render(contract: Contract): Promise<Buffer> {
+    this.rendered.push(contract);
+    return Buffer.from('%PDF-fake');
+  }
+}
+
+export class SpyContractNotifier implements ContractNotifier {
+  sent: { contract: Contract; email: string }[] = [];
+  async sendToGuest(contract: Contract, guestEmail: string): Promise<void> {
+    this.sent.push({ contract, email: guestEmail });
+  }
 }

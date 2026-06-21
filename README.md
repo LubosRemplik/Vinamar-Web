@@ -115,7 +115,7 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] F — Availability-first reframe (calendar wall, retire flight-first pages)
 - [x] G — Letecké spojení do Alicante (rozvrh tam/zpět z 7 letišť, Ryanair timetable, tabulka + cron)
 - [x] H — Administrace rezervací (odhlášení, admin rezervace přes veřejný tok s relaxací pravidel, jednotný seznam kalendáře s rušením)
-- [ ] I — Smlouvy v PDF (varianty se zálohou / bez zálohy), generované a odeslané e-mailem; navázat na stavy rezervace; Vsechny smlouvy musi byt na 10 noci, 11 dni, jeste radsi udelej research legislativy
+- [x] I — Smlouvy v PDF (varianty se zálohou / bez zálohy), generované a odeslané e-mailem; navázat na stavy rezervace; Vsechny smlouvy musi byt na 10 noci, 11 dni, jeste radsi udelej research legislativy
 - [x] J — iCal export (přidání rezervace do Google Calendaru včetně jména, příjmení a tel. čísla hosta)
 - [x] K — E-maily (transakční maily kolem rezervace: poptávka, potvrzení, odmítnutí, zrušení, připomínka 14 dní; HTML šablony, čeština)
 - [ ] L — Logo a design
