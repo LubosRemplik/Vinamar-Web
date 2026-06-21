@@ -69,4 +69,19 @@ export class Inquiry {
       params.now,
     );
   }
+
+  // Admin contact edit: only the guest's identity fields change. Range, status
+  // and createdAt are preserved, and the create() stay invariants are not re-run.
+  withContact(params: { guestName: string; email: EmailAddress; phone: string }): Inquiry {
+    return new Inquiry(
+      this.id,
+      params.guestName,
+      params.email,
+      params.phone,
+      this.range,
+      this.message,
+      this.status,
+      this.createdAt,
+    );
+  }
 }
