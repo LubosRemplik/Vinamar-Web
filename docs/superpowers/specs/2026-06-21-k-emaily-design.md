@@ -82,9 +82,15 @@ Respektuje stávající vrstvení (`domain` → `application` → `infrastructur
     booking na poslední chvíli) — ty dostanou připomínku při nejbližším běhu.
 
 ### Infrastruktura (`api/src/infrastructure/notify/`)
-- Jeden SMTP adaptér (rozšíření / náhrada `SmtpOwnerNotifier`) implementuje
-  **oba** porty `GuestNotifier` i `OwnerNotifier`. Použije stávající
-  `nodemailer` (multipart: `html` + `text`).
+- **Dva** SMTP adaptéry sdílející modul šablon (jediná třída nemůže
+  implementovat oba porty — `inquiryReceived` i `bookingCancelled` by kolidovaly
+  názvem s různým příjemcem):
+  - `SmtpGuestNotifier implements GuestNotifier` — HTML šablony (Postmark).
+  - `SmtpOwnerNotifier implements OwnerNotifier` (stávající) — `inquiryReceived`
+    zůstává plain-text (interní info majiteli, beze změny); přidá se
+    `bookingCancelled`, které využije HTML šablonu `bookingCancelledEmail(..., { isOwner: true })`.
+- Oba přes stávající `nodemailer` (multipart `html` + `text`), transport
+  injektovatelný (`@Optional()`) kvůli testovatelnosti.
 - Adresát hosta: `inquiry.email`. Adresát majitele: `OWNER_EMAIL` (env).
 - Šablony viz následující sekce.
 - Cron: nový **`ArrivalReminderCron`** (`infrastructure/notify/arrival-reminder.cron.ts`)
