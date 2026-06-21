@@ -82,9 +82,9 @@ export class InMemoryInquiries implements InquiryRepository {
 
 export class SpyNotifier implements OwnerNotifier {
   received: Inquiry[] = [];
-  async inquiryReceived(inquiry: Inquiry): Promise<void> {
-    this.received.push(inquiry);
-  }
+  cancelled: Inquiry[] = [];
+  async inquiryReceived(inquiry: Inquiry): Promise<void> { this.received.push(inquiry); }
+  async bookingCancelled(inquiry: Inquiry): Promise<void> { this.cancelled.push(inquiry); }
 }
 
 export class SpyGuestNotifier implements GuestNotifier {
