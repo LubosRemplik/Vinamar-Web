@@ -99,39 +99,39 @@ export function ContractModal({
           </div>
 
           <div>
-            <label className={LABEL}>Adresa hosta</label>
-            <input className={FIELD} value={guestAddress} onChange={(e) => setGuestAddress(e.target.value)} />
+            <label htmlFor="guestAddress" className={LABEL}>Adresa hosta</label>
+            <input id="guestAddress" className={FIELD} value={guestAddress} onChange={(e) => setGuestAddress(e.target.value)} />
           </div>
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className={LABEL}>Číslo OP / pasu</label>
-              <input className={FIELD} value={guestIdNumber} onChange={(e) => setGuestIdNumber(e.target.value)} />
+              <label htmlFor="guestIdNumber" className={LABEL}>Číslo OP / pasu</label>
+              <input id="guestIdNumber" className={FIELD} value={guestIdNumber} onChange={(e) => setGuestIdNumber(e.target.value)} />
             </div>
             <div className="flex-1">
-              <label className={LABEL}>Datum narození</label>
-              <input type="date" className={FIELD} value={guestBirthDate} onChange={(e) => setGuestBirthDate(e.target.value)} />
+              <label htmlFor="guestBirthDate" className={LABEL}>Datum narození</label>
+              <input id="guestBirthDate" type="date" className={FIELD} value={guestBirthDate} onChange={(e) => setGuestBirthDate(e.target.value)} />
             </div>
           </div>
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className={LABEL}>Celková cena</label>
-              <input type="number" min="0" className={FIELD} value={totalPrice} onChange={(e) => setTotalPrice(e.target.value)} />
+              <label htmlFor="totalPrice" className={LABEL}>Celková cena</label>
+              <input id="totalPrice" type="number" min="0" className={FIELD} value={totalPrice} onChange={(e) => setTotalPrice(e.target.value)} />
             </div>
             <div className="w-24">
-              <label className={LABEL}>Měna</label>
-              <input className={FIELD} value={currency} onChange={(e) => setCurrency(e.target.value)} />
+              <label htmlFor="currency" className={LABEL}>Měna</label>
+              <input id="currency" className={FIELD} value={currency} onChange={(e) => setCurrency(e.target.value)} />
             </div>
           </div>
 
           {variant === 'with-deposit' && (
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className={LABEL}>Výše zálohy</label>
-                <input type="number" min="0" className={FIELD} value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
+                <label htmlFor="depositAmount" className={LABEL}>Výše zálohy</label>
+                <input id="depositAmount" type="number" min="0" className={FIELD} value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
               </div>
               <div className="flex-1">
-                <label className={LABEL}>Splatnost zálohy</label>
-                <input type="date" className={FIELD} value={depositDueDate} onChange={(e) => setDepositDueDate(e.target.value)} />
+                <label htmlFor="depositDueDate" className={LABEL}>Splatnost zálohy</label>
+                <input id="depositDueDate" type="date" className={FIELD} value={depositDueDate} onChange={(e) => setDepositDueDate(e.target.value)} />
               </div>
             </div>
           )}
