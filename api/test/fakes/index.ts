@@ -3,6 +3,7 @@ import { DateRange } from '../../src/domain/shared/date-range';
 import { CalendarBlock, BlockReason } from '../../src/domain/availability/calendar-block';
 import { AvailabilityRepository } from '../../src/domain/availability/availability.repository.port';
 import { Inquiry, InquiryStatus } from '../../src/domain/inquiry/inquiry';
+import { EmailAddress } from '../../src/domain/shared/email-address';
 import { InquiryRepository } from '../../src/domain/inquiry/inquiry.repository.port';
 import { OwnerNotifier } from '../../src/domain/inquiry/owner-notifier.port';
 
@@ -75,6 +76,11 @@ export class InMemoryInquiries implements InquiryRepository {
       i.id === id
         ? new Inquiry(i.id, i.guestName, i.email, i.phone, i.range, i.message, status, i.createdAt)
         : i,
+    );
+  }
+  async updateContact(id: string, guestName: string, email: string, phone: string): Promise<void> {
+    this.items = this.items.map((i) =>
+      i.id === id ? i.withContact({ guestName, email: new EmailAddress(email), phone }) : i,
     );
   }
 }

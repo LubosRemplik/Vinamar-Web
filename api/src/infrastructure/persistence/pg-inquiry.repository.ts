@@ -66,4 +66,11 @@ export class PgInquiryRepository implements InquiryRepository {
   async updateStatus(id: string, status: InquiryStatus): Promise<void> {
     await this.pool.query(`UPDATE inquiries SET status = $2 WHERE id = $1`, [id, status]);
   }
+
+  async updateContact(id: string, guestName: string, email: string, phone: string): Promise<void> {
+    await this.pool.query(
+      `UPDATE inquiries SET guest_name = $2, email = $3, phone = $4 WHERE id = $1`,
+      [id, guestName, email, phone],
+    );
+  }
 }
