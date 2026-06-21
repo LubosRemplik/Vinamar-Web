@@ -66,4 +66,24 @@ export class PgInquiryRepository implements InquiryRepository {
   async updateStatus(id: string, status: InquiryStatus): Promise<void> {
     await this.pool.query(`UPDATE inquiries SET status = $2 WHERE id = $1`, [id, status]);
   }
+
+  async listDueForArrivalReminder(now: Date): Promise<Inquiry[]> {
+    const { rows } = await this.pool.query(
+      `SELECT * FROM inquiries
+       WHERE status = 'confirmed'
+         AND arrival_reminder_sent_at IS NULL
+         AND arrival > $1::date
+         AND arrival <= $1::date + 14
+       ORDER BY arrival ASC`,
+      [now],
+    );
+    return rows.map((r) => this.toInquiry(r));
+  }
+
+  async markArrivalReminderSent(id: string): Promise<void> {
+    await this.pool.query(
+      `UPDATE inquiries SET arrival_reminder_sent_at = now() WHERE id = $1`,
+      [id],
+    );
+  }
 }

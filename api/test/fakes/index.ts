@@ -62,6 +62,7 @@ export class InMemoryAvailability implements AvailabilityRepository {
 
 export class InMemoryInquiries implements InquiryRepository {
   items: Inquiry[] = [];
+  reminderSent = new Set<string>();
   async save(inquiry: Inquiry): Promise<void> {
     this.items.push(inquiry);
   }
@@ -77,6 +78,19 @@ export class InMemoryInquiries implements InquiryRepository {
         ? new Inquiry(i.id, i.guestName, i.email, i.phone, i.range, i.message, status, i.createdAt)
         : i,
     );
+  }
+  async listDueForArrivalReminder(now: Date): Promise<Inquiry[]> {
+    const max = new Date(now.getTime() + 14 * 86400000);
+    return this.items.filter(
+      (i) =>
+        i.status === 'confirmed' &&
+        !this.reminderSent.has(i.id) &&
+        i.range.arrival.getTime() > now.getTime() &&
+        i.range.arrival.getTime() <= max.getTime(),
+    );
+  }
+  async markArrivalReminderSent(id: string): Promise<void> {
+    this.reminderSent.add(id);
   }
 }
 

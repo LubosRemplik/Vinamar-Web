@@ -7,4 +7,6 @@ export interface InquiryRepository {
   get(id: string): Promise<Inquiry | null>;
   list(): Promise<Inquiry[]>;
   updateStatus(id: string, status: InquiryStatus): Promise<void>;
+  listDueForArrivalReminder(now: Date): Promise<Inquiry[]>;
+  markArrivalReminderSent(id: string): Promise<void>;
 }
