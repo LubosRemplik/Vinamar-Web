@@ -105,7 +105,7 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [ ] L — Logo a design
 - [ ] M — Instalace na produkci
 - [ ] N — Zkontrolovat loginy a bezpečnost (silný `JWT_SECRET` při bootu, audit admin endpointů)
-- [ ] O - Stranka s info "Z letiste"
+- [x] O - Stranka s info "Z letiste" (statická stránka /z-letiste: auto / bus / taxi + odkaz na Google Maps trasu, odkaz v navigaci)
 - [ ] P - Multi apartman
 - [ ] Q - Rozsireni administrace o pridani vice uzivatelu (neni nutny prehled, jen prihlaseni a pripadne role pozdeji pro vice apartmanu)
 - [ ] R - Editace nekterych veci v administraci, jmeno, email a telefon
