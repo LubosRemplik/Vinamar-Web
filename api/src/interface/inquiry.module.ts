@@ -5,6 +5,7 @@ import { InquiryController } from './http/inquiry.controller';
 import { SubmitInquiryHandler } from '../application/inquiry/submit-inquiry.handler';
 import { ConfirmInquiryHandler } from '../application/inquiry/confirm-inquiry.handler';
 import { DeclineInquiryHandler } from '../application/inquiry/decline-inquiry.handler';
+import { UpdateInquiryContactHandler } from '../application/inquiry/update-inquiry-contact.handler';
 import { ListInquiriesHandler } from '../application/inquiry/list-inquiries.handler';
 import { ListCalendarHandler } from '../application/availability/list-calendar.handler';
 import { CancelCalendarEntryHandler } from '../application/availability/cancel-calendar-entry.handler';
@@ -25,6 +26,7 @@ import { CLOCK } from '../domain/shared/clock.port';
     SubmitInquiryHandler,
     ConfirmInquiryHandler,
     DeclineInquiryHandler,
+    UpdateInquiryContactHandler,
     ListInquiriesHandler,
     ListCalendarHandler,
     CancelCalendarEntryHandler,
