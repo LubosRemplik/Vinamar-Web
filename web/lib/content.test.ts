@@ -1,8 +1,9 @@
 import path from 'node:path';
 import { describe, it, expect } from 'vitest';
-import { renderMarkdown, getAllTrips, getTrip } from './content';
+import { renderMarkdown, getAllTrips, getTrip, readPage } from './content';
 
 const fixtures = path.join(__dirname, '__fixtures__');
+const contentDir = path.join(__dirname, '..', 'content');
 
 describe('renderMarkdown', () => {
   it('renders markdown body to html', async () => {
@@ -27,5 +28,16 @@ describe('trip content', () => {
     const { meta, body } = getTrip('sample', fixtures);
     expect(meta.title).toBe('Sample Trip');
     expect(body).toContain('Body');
+  });
+});
+
+describe('z-letiste page content', () => {
+  it('má frontmatter a všechny 4 sekce', () => {
+    const { data, body } = readPage('z-letiste.md', contentDir);
+    expect(data.title).toBe('Z letiště');
+    expect(body).toContain('Půjčení auta');
+    expect(body).toContain('Veřejná doprava');
+    expect(body).toContain('Taxi');
+    expect(body).toContain('Mapa');
   });
 });
