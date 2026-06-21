@@ -3,15 +3,16 @@ import { SubmitInquiryCommand } from '../../src/application/inquiry/submit-inqui
 import { DatesUnavailableError } from '../../src/domain/availability/dates-unavailable.error';
 import { MinimumStayNotMetError } from '../../src/domain/inquiry/minimum-stay-not-met.error';
 import { DateRange } from '../../src/domain/shared/date-range';
-import { FixedClock, InMemoryAvailability, InMemoryInquiries, SpyNotifier } from '../fakes';
+import { FixedClock, InMemoryAvailability, InMemoryInquiries, SpyNotifier, SpyGuestNotifier } from '../fakes';
 
 const make = () => {
   const availability = new InMemoryAvailability();
   const inquiries = new InMemoryInquiries();
   const notifier = new SpyNotifier();
+  const guest = new SpyGuestNotifier();
   const clock = new FixedClock(new Date('2026-01-01'));
-  const handler = new SubmitInquiryHandler(inquiries, availability, notifier, clock, () => 'id-1');
-  return { handler, availability, inquiries, notifier };
+  const handler = new SubmitInquiryHandler(inquiries, availability, notifier, guest, clock, () => 'id-1');
+  return { handler, availability, inquiries, notifier, guest };
 };
 
 const validCmd = () =>
@@ -19,11 +20,12 @@ const validCmd = () =>
 
 describe('SubmitInquiryHandler', () => {
   it('persists a pending inquiry and notifies the owner', async () => {
-    const { handler, inquiries, notifier } = make();
+    const { handler, inquiries, notifier, guest } = make();
     await handler.execute(validCmd());
     expect(inquiries.items).toHaveLength(1);
     expect(inquiries.items[0].status).toBe('pending');
     expect(notifier.received).toHaveLength(1);
+    expect(guest.received).toEqual([{ method: 'inquiryReceived', id: 'id-1' }]);
   });
 
   it('rejects a stay shorter than 7 nights', async () => {
@@ -39,7 +41,7 @@ describe('SubmitInquiryHandler', () => {
   });
 
   it('admin booking: short stay is auto-confirmed and booked with a linked block', async () => {
-    const { handler, availability, inquiries, notifier } = make();
+    const { handler, availability, inquiries, notifier, guest } = make();
     const cmd = new SubmitInquiryCommand('Jan', 'jan@x.cz', '2026-05-01', '2026-05-03', '', '', true);
     await handler.execute(cmd);
     expect(inquiries.items[0].status).toBe('confirmed');
@@ -47,6 +49,7 @@ describe('SubmitInquiryHandler', () => {
     expect(availability.blocks[0].reason).toBe('booked');
     expect(availability.blocks[0].inquiryId).toBe('id-1');
     expect(notifier.received).toHaveLength(0);
+    expect(guest.received).toEqual([{ method: 'bookingConfirmed', id: 'id-1' }]);
   });
 
   it('admin booking still rejects an overlapping term', async () => {

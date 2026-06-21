@@ -5,6 +5,7 @@ import { AvailabilityRepository } from '../../src/domain/availability/availabili
 import { Inquiry, InquiryStatus } from '../../src/domain/inquiry/inquiry';
 import { InquiryRepository } from '../../src/domain/inquiry/inquiry.repository.port';
 import { OwnerNotifier } from '../../src/domain/inquiry/owner-notifier.port';
+import { GuestNotifier } from '../../src/domain/inquiry/guest-notifier.port';
 
 export class FixedClock implements Clock {
   constructor(private readonly fixed: Date) {}
@@ -84,4 +85,13 @@ export class SpyNotifier implements OwnerNotifier {
   async inquiryReceived(inquiry: Inquiry): Promise<void> {
     this.received.push(inquiry);
   }
+}
+
+export class SpyGuestNotifier implements GuestNotifier {
+  received: { method: string; id: string }[] = [];
+  async inquiryReceived(i: Inquiry): Promise<void> { this.received.push({ method: 'inquiryReceived', id: i.id }); }
+  async bookingConfirmed(i: Inquiry): Promise<void> { this.received.push({ method: 'bookingConfirmed', id: i.id }); }
+  async inquiryDeclined(i: Inquiry): Promise<void> { this.received.push({ method: 'inquiryDeclined', id: i.id }); }
+  async bookingCancelled(i: Inquiry): Promise<void> { this.received.push({ method: 'bookingCancelled', id: i.id }); }
+  async arrivalReminder(i: Inquiry): Promise<void> { this.received.push({ method: 'arrivalReminder', id: i.id }); }
 }
