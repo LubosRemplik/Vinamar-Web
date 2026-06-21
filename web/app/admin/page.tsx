@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   fetchAdminCalendar,
   cancelCalendarEntry,
+  fetchReservationIcs,
+  googleCalendarUrl,
   type CalendarEntry,
 } from '@/lib/api';
 import { getAdminToken, adminLogout } from '@/lib/admin';
@@ -82,6 +84,8 @@ const BTN_DANGER =
   'rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700 transition-colors hover:bg-rose-50';
 const BTN_NEUTRAL =
   'rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/5';
+const BTN_GHOST =
+  'inline-flex items-center rounded-lg border border-ink/20 px-3 py-1.5 text-xs font-medium text-ink/70 transition-colors hover:bg-ink/5';
 
 const PAGE_SIZE = 10;
 
@@ -158,6 +162,22 @@ function GuestCell({
   );
 }
 
+// Export a reservation to a calendar: download an .ics (any calendar app) or
+// jump straight to a prefilled Google Calendar event. Guest name + phone travel
+// in both, per the J ticket.
+function ExportActions({ entry, onIcs }: { entry: CalendarEntry; onIcs: () => void }) {
+  return (
+    <div className="flex flex-wrap justify-end gap-2">
+      <button onClick={onIcs} className={BTN_GHOST}>
+        iCal
+      </button>
+      <a href={googleCalendarUrl(entry)} target="_blank" rel="noopener noreferrer" className={BTN_GHOST}>
+        Google
+      </a>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
@@ -213,6 +233,25 @@ export default function AdminDashboard() {
     });
     if (res.status === 401) return adminLogout();
     reload(token);
+  }
+
+  // Fetch the .ics with the admin token, then trigger a client-side download so
+  // the owner can open the reservation in any calendar app.
+  async function downloadIcs(entry: CalendarEntry) {
+    if (!token) return;
+    try {
+      const blob = await fetchReservationIcs(token, entry.id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rezervace-${entry.id}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      adminLogout();
+    }
   }
 
   async function cancel(id: string) {
@@ -306,9 +345,12 @@ export default function AdminDashboard() {
                     <GuestCell name={e.guestName} email={e.email} phone={e.phone} message={e.message} />
                   </td>
                   <td className="px-4 py-3 align-top text-right">
-                    <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
-                      Zrušit
-                    </button>
+                    <div className="flex flex-col items-end gap-2">
+                      <ExportActions entry={e} onIcs={() => downloadIcs(e)} />
+                      <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
+                        Zrušit
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -337,6 +379,9 @@ export default function AdminDashboard() {
               </div>
               <div className="mt-2">
                 <GuestCell name={e.guestName} email={e.email} phone={e.phone} message={e.message} />
+              </div>
+              <div className="mt-3 border-t border-ink/5 pt-3">
+                <ExportActions entry={e} onIcs={() => downloadIcs(e)} />
               </div>
             </div>
           ))}
