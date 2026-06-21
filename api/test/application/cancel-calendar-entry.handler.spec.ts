@@ -3,7 +3,7 @@ import { CancelCalendarEntryCommand } from '../../src/application/availability/c
 import { SubmitInquiryHandler } from '../../src/application/inquiry/submit-inquiry.handler';
 import { SubmitInquiryCommand } from '../../src/application/inquiry/submit-inquiry.command';
 import { DateRange } from '../../src/domain/shared/date-range';
-import { FixedClock, InMemoryAvailability, InMemoryInquiries, SpyNotifier } from '../fakes';
+import { FixedClock, InMemoryAvailability, InMemoryInquiries, SpyNotifier, SpyGuestNotifier } from '../fakes';
 
 describe('CancelCalendarEntryHandler', () => {
   it('frees the term and marks the linked inquiry cancelled', async () => {
@@ -13,6 +13,7 @@ describe('CancelCalendarEntryHandler', () => {
       inquiries,
       availability,
       new SpyNotifier(),
+      new SpyGuestNotifier(),
       new FixedClock(new Date('2026-01-01')),
       () => 'id-1',
     );
@@ -21,11 +22,15 @@ describe('CancelCalendarEntryHandler', () => {
     );
     const blockId = availability.blocks[0].id;
 
-    const cancel = new CancelCalendarEntryHandler(availability, inquiries);
+    const guest = new SpyGuestNotifier();
+    const owner = new SpyNotifier();
+    const cancel = new CancelCalendarEntryHandler(availability, inquiries, guest, owner);
     await cancel.execute(new CancelCalendarEntryCommand(blockId));
 
     expect(availability.blocks).toHaveLength(0);
     expect((await inquiries.get('id-1'))!.status).toBe('cancelled');
+    expect(guest.received).toEqual([{ method: 'bookingCancelled', id: 'id-1' }]);
+    expect(owner.cancelled.map((i) => i.id)).toEqual(['id-1']);
   });
 
   it('cancels an entry with no linked inquiry without touching any inquiry', async () => {
@@ -36,9 +41,32 @@ describe('CancelCalendarEntryHandler', () => {
       'booked',
     );
 
-    const cancel = new CancelCalendarEntryHandler(availability, inquiries);
+    const guest = new SpyGuestNotifier();
+    const owner = new SpyNotifier();
+    const cancel = new CancelCalendarEntryHandler(availability, inquiries, guest, owner);
     await cancel.execute(new CancelCalendarEntryCommand(block.id));
 
     expect(availability.blocks).toHaveLength(0);
+    expect(guest.received).toEqual([]);
+    expect(owner.cancelled).toEqual([]);
+  });
+
+  it('still notifies the owner when the guest notification fails', async () => {
+    const availability = new InMemoryAvailability();
+    const inquiries = new InMemoryInquiries();
+    const submit = new SubmitInquiryHandler(
+      inquiries, availability, new SpyNotifier(), new SpyGuestNotifier(),
+      new FixedClock(new Date('2026-01-01')), () => 'id-1',
+    );
+    await submit.execute(new SubmitInquiryCommand('Jan', 'jan@x.cz', '2026-05-01', '2026-05-08', '', '', true));
+    const blockId = availability.blocks[0].id;
+
+    const guest = new SpyGuestNotifier();
+    guest.bookingCancelled = async () => { throw new Error('smtp down'); };
+    const owner = new SpyNotifier();
+    const cancel = new CancelCalendarEntryHandler(availability, inquiries, guest, owner);
+    await cancel.execute(new CancelCalendarEntryCommand(blockId));
+
+    expect(owner.cancelled.map((i) => i.id)).toEqual(['id-1']);
   });
 });

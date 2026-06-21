@@ -17,6 +17,7 @@ import {
   OWNER_NOTIFIER,
   OwnerNotifier,
 } from '../../domain/inquiry/owner-notifier.port';
+import { GUEST_NOTIFIER, GuestNotifier } from '../../domain/inquiry/guest-notifier.port';
 import { CLOCK, Clock } from '../../domain/shared/clock.port';
 import { DatesUnavailableError } from '../../domain/availability/dates-unavailable.error';
 import { OrphanGapError } from '../../domain/availability/orphan-gap.error';
@@ -32,6 +33,7 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
     @Inject(INQUIRY_REPOSITORY) private readonly inquiries: InquiryRepository,
     @Inject(AVAILABILITY_REPOSITORY) private readonly availability: AvailabilityRepository,
     @Inject(OWNER_NOTIFIER) private readonly notifier: OwnerNotifier,
+    @Inject(GUEST_NOTIFIER) private readonly guest: GuestNotifier,
     @Inject(CLOCK) private readonly clock: Clock,
     @Optional() private readonly idFactory: () => string = randomUUID,
   ) {}
@@ -72,6 +74,7 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
     // occupying the term, and skip the owner notification (the owner is acting).
     if (cmd.isAdmin) {
       await this.availability.save(range, 'booked', { inquiryId: inquiry.id });
+      await this.safeGuest(() => this.guest.bookingConfirmed(inquiry), inquiry.id);
       return { id: inquiry.id };
     }
 
@@ -82,6 +85,15 @@ export class SubmitInquiryHandler implements ICommandHandler<SubmitInquiryComman
     } catch (err) {
       this.logger.warn(`owner notification failed for inquiry ${inquiry.id}: ${String(err)}`);
     }
+    await this.safeGuest(() => this.guest.inquiryReceived(inquiry), inquiry.id);
     return { id: inquiry.id };
+  }
+
+  private async safeGuest(fn: () => Promise<void>, id: string): Promise<void> {
+    try {
+      await fn();
+    } catch (err) {
+      this.logger.warn(`guest notification failed for inquiry ${id}: ${String(err)}`);
+    }
   }
 }

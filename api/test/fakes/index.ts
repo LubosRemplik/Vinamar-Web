@@ -6,6 +6,7 @@ import { Inquiry, InquiryStatus } from '../../src/domain/inquiry/inquiry';
 import { EmailAddress } from '../../src/domain/shared/email-address';
 import { InquiryRepository } from '../../src/domain/inquiry/inquiry.repository.port';
 import { OwnerNotifier } from '../../src/domain/inquiry/owner-notifier.port';
+import { GuestNotifier } from '../../src/domain/inquiry/guest-notifier.port';
 
 export class FixedClock implements Clock {
   constructor(private readonly fixed: Date) {}
@@ -62,6 +63,7 @@ export class InMemoryAvailability implements AvailabilityRepository {
 
 export class InMemoryInquiries implements InquiryRepository {
   items: Inquiry[] = [];
+  reminderSent = new Set<string>();
   async save(inquiry: Inquiry): Promise<void> {
     this.items.push(inquiry);
   }
@@ -83,11 +85,33 @@ export class InMemoryInquiries implements InquiryRepository {
       i.id === id ? i.withContact({ guestName, email: new EmailAddress(email), phone }) : i,
     );
   }
+  async listDueForArrivalReminder(now: Date): Promise<Inquiry[]> {
+    const max = new Date(now.getTime() + 14 * 86400000);
+    return this.items.filter(
+      (i) =>
+        i.status === 'confirmed' &&
+        !this.reminderSent.has(i.id) &&
+        i.range.arrival.getTime() > now.getTime() &&
+        i.range.arrival.getTime() <= max.getTime(),
+    );
+  }
+  async markArrivalReminderSent(id: string): Promise<void> {
+    this.reminderSent.add(id);
+  }
 }
 
 export class SpyNotifier implements OwnerNotifier {
   received: Inquiry[] = [];
-  async inquiryReceived(inquiry: Inquiry): Promise<void> {
-    this.received.push(inquiry);
-  }
+  cancelled: Inquiry[] = [];
+  async inquiryReceived(inquiry: Inquiry): Promise<void> { this.received.push(inquiry); }
+  async bookingCancelled(inquiry: Inquiry): Promise<void> { this.cancelled.push(inquiry); }
+}
+
+export class SpyGuestNotifier implements GuestNotifier {
+  received: { method: string; id: string }[] = [];
+  async inquiryReceived(i: Inquiry): Promise<void> { this.received.push({ method: 'inquiryReceived', id: i.id }); }
+  async bookingConfirmed(i: Inquiry): Promise<void> { this.received.push({ method: 'bookingConfirmed', id: i.id }); }
+  async inquiryDeclined(i: Inquiry): Promise<void> { this.received.push({ method: 'inquiryDeclined', id: i.id }); }
+  async bookingCancelled(i: Inquiry): Promise<void> { this.received.push({ method: 'bookingCancelled', id: i.id }); }
+  async arrivalReminder(i: Inquiry): Promise<void> { this.received.push({ method: 'arrivalReminder', id: i.id }); }
 }

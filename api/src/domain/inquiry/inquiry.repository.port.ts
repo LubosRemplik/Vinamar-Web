@@ -8,4 +8,6 @@ export interface InquiryRepository {
   list(): Promise<Inquiry[]>;
   updateStatus(id: string, status: InquiryStatus): Promise<void>;
   updateContact(id: string, guestName: string, email: string, phone: string): Promise<void>;
+  listDueForArrivalReminder(now: Date): Promise<Inquiry[]>;
+  markArrivalReminderSent(id: string): Promise<void>;
 }

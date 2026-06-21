@@ -77,6 +77,22 @@ Výletní tipy: každý soubor `web/content/trips/<slug>.md` má frontmatter
 `title`, `category`, `image`, `summary`, `order` (volitelně `externalLink`, `distanceKm`).
 Stránka `/tipy-na-vylety/<slug>` se vygeneruje automaticky (`generateStaticParams`).
 
+## E-maily
+
+Transakční maily používají následující proměnné prostředí:
+
+| Proměnná | Popis |
+|---|---|
+| `SMTP_HOST` | SMTP server (v dev: `mailpit`) |
+| `SMTP_PORT` | SMTP port (v dev: `1025`) |
+| `SMTP_FROM` | Adresa odesílatele |
+| `MAIL_FROM_NAME` | Jméno odesílatele (zobrazí se v klientovi jako „Od:") |
+| `OWNER_EMAIL` | E-mail majitele apartmánu (dostává notifikace) |
+| `PUBLIC_BASE_URL` | Veřejná URL webu — slouží pro sestavení odkazů v mailech (např. `http://localhost:3000`) |
+
+V dev prostředí zachytává všechny odchozí maily **mailpit** (UI: http://localhost:8025).
+Pro přístup na alternativním portu nastav `MAILPIT_UI_PORT` v `.env`.
+
 ## Testy
 
 ```bash
@@ -101,7 +117,7 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] H — Administrace rezervací (odhlášení, admin rezervace přes veřejný tok s relaxací pravidel, jednotný seznam kalendáře s rušením)
 - [ ] I — Smlouvy v PDF (varianty se zálohou / bez zálohy), generované a odeslané e-mailem; navázat na stavy rezervace; Vsechny smlouvy musi byt na 10 noci, 11 dni, jeste radsi udelej research legislativy
 - [x] J — iCal export (přidání rezervace do Google Calendaru včetně jména, příjmení a tel. čísla hosta)
-- [ ] K — E-maily (rozmyslet typy a design)
+- [x] K — E-maily (transakční maily kolem rezervace: poptávka, potvrzení, odmítnutí, zrušení, připomínka 14 dní; HTML šablony, čeština)
 - [ ] L — Logo a design
 - [ ] M — Instalace na produkci
 - [ ] N — Zkontrolovat loginy a bezpečnost (silný `JWT_SECRET` při bootu, audit admin endpointů)
