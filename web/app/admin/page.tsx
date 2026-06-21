@@ -5,8 +5,10 @@ import {
   cancelCalendarEntry,
   type CalendarEntry,
 } from '@/lib/api';
+import { openContractPdf } from '@/lib/api';
 import { getAdminToken, adminLogout } from '@/lib/admin';
 import { formatCzDate } from '@/lib/date';
+import { ContractModal } from './ContractModal';
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
@@ -26,11 +28,13 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   confirmed: { label: 'Potvrzeno', cls: 'bg-emerald-100 text-emerald-800' },
   declined: { label: 'Zamítnuto', cls: 'bg-rose-100 text-rose-700' },
   cancelled: { label: 'Zrušeno', cls: 'bg-ink/10 text-ink/60' },
+  contract_sent: { label: 'Smlouva odeslána', cls: 'bg-sky-100 text-sky-800' },
 };
 
 const FILTERS: { value: string; label: string }[] = [
   { value: 'pending', label: 'Čeká' },
   { value: 'confirmed', label: 'Potvrzeno' },
+  { value: 'contract_sent', label: 'Smlouva odeslána' },
   { value: 'declined', label: 'Zamítnuto' },
   { value: 'cancelled', label: 'Zrušeno' },
   { value: 'all', label: 'Vše' },
@@ -162,6 +166,7 @@ export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [contractFor, setContractFor] = useState<Row | null>(null);
   // Default to pending so a long history of resolved inquiries doesn't bury the
   // ones that still need a decision.
   const [filter, setFilter] = useState('pending');
@@ -223,6 +228,15 @@ export default function AdminDashboard() {
       reload(token);
     } catch {
       adminLogout();
+    }
+  }
+
+  async function downloadContract(inquiryId: string) {
+    if (!token) return;
+    try {
+      await openContractPdf(token, inquiryId);
+    } catch (e) {
+      if (e instanceof Error && e.message === 'unauthorized') adminLogout();
     }
   }
 
@@ -392,6 +406,16 @@ export default function AdminDashboard() {
                         </button>
                       </div>
                     )}
+                    {r.status === 'confirmed' && (
+                      <button onClick={() => setContractFor(r)} className={BTN_PRIMARY}>
+                        Smlouva
+                      </button>
+                    )}
+                    {r.status === 'contract_sent' && (
+                      <button onClick={() => downloadContract(r.id)} className={BTN_NEUTRAL}>
+                        Stáhnout PDF
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -427,6 +451,20 @@ export default function AdminDashboard() {
                   </button>
                 </div>
               )}
+              {r.status === 'confirmed' && (
+                <div className="mt-3 border-t border-ink/5 pt-3">
+                  <button onClick={() => setContractFor(r)} className={BTN_PRIMARY}>
+                    Smlouva
+                  </button>
+                </div>
+              )}
+              {r.status === 'contract_sent' && (
+                <div className="mt-3 border-t border-ink/5 pt-3">
+                  <button onClick={() => downloadContract(r.id)} className={BTN_NEUTRAL}>
+                    Stáhnout PDF
+                  </button>
+                </div>
+              )}
             </div>
           ))}
           {visibleRows.length === 0 && (
@@ -437,6 +475,22 @@ export default function AdminDashboard() {
         </div>
         <Pager page={inquirySafePage} totalPages={inquiryTotalPages} onPage={setInquiryPage} />
       </section>
+
+      {contractFor && token && (
+        <ContractModal
+          token={token}
+          inquiry={{
+            id: contractFor.id,
+            guestName: contractFor.guestName,
+            arrival: contractFor.arrival,
+          }}
+          onClose={() => setContractFor(null)}
+          onDone={() => {
+            setContractFor(null);
+            reload(token);
+          }}
+        />
+      )}
     </main>
   );
 }
