@@ -1,10 +1,8 @@
-import { Controller, Delete, Get, Param, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { AdminGuard } from './admin.guard';
 import { ListCalendarQuery } from '../../application/availability/list-calendar.query';
 import { CancelCalendarEntryCommand } from '../../application/availability/cancel-calendar-entry.command';
-import { ExportReservationIcsQuery } from '../../application/availability/export-reservation-ics.query';
 
 @Controller('admin/calendar')
 @UseGuards(AdminGuard)
@@ -16,16 +14,18 @@ export class AdminCalendarController {
     return this.queryBus.execute(new ListCalendarQuery());
   }
 
-  // iCal export of a single reservation — opens in Google/Apple Calendar. The
-  // browser fetches this with the admin Bearer token and saves the Blob, so the
-  // standard AdminGuard applies (no token-in-URL). passthrough:true keeps Nest's
-  // exception filter in play for the NotFound case.
-  @Get(':id/ics')
-  async exportIcs(@Param('id') id: string, @Res({ passthrough: true }) res: Response): Promise<string> {
-    const ics = await this.queryBus.execute(new ExportReservationIcsQuery(id));
-    res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="rezervace-${id}.ics"`);
-    return ics;
+  // The subscribable iCal feed URL (with its secret token) for the owner to paste
+  // into Google/Apple Calendar. Returned only to an authenticated admin so the
+  // token never ships in the client bundle. url is null when the feed is not
+  // configured (ICAL_FEED_TOKEN unset).
+  @Get('feed-url')
+  feedUrl(): { url: string | null } {
+    const token = process.env.ICAL_FEED_TOKEN ?? '';
+    if (!token) {
+      return { url: null };
+    }
+    const base = (process.env.PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
+    return { url: `${base}/api/calendar/feed.ics?token=${encodeURIComponent(token)}` };
   }
 
   @Delete(':id')

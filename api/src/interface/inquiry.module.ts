@@ -9,7 +9,6 @@ import { UpdateInquiryContactHandler } from '../application/inquiry/update-inqui
 import { ListInquiriesHandler } from '../application/inquiry/list-inquiries.handler';
 import { ListCalendarHandler } from '../application/availability/list-calendar.handler';
 import { CancelCalendarEntryHandler } from '../application/availability/cancel-calendar-entry.handler';
-import { ExportReservationIcsHandler } from '../application/availability/export-reservation-ics.handler';
 import { pgPoolProvider } from '../infrastructure/persistence/pg-connection';
 import { PgInquiryRepository } from '../infrastructure/persistence/pg-inquiry.repository';
 import { PgAvailabilityRepository } from '../infrastructure/persistence/pg-availability.repository';
@@ -35,7 +34,6 @@ import { CLOCK } from '../domain/shared/clock.port';
     ListInquiriesHandler,
     ListCalendarHandler,
     CancelCalendarEntryHandler,
-    ExportReservationIcsHandler,
     pgPoolProvider,
     { provide: INQUIRY_REPOSITORY, useClass: PgInquiryRepository },
     { provide: AVAILABILITY_REPOSITORY, useClass: PgAvailabilityRepository },

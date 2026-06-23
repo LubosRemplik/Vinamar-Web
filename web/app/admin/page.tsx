@@ -3,8 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   fetchAdminCalendar,
   cancelCalendarEntry,
-  fetchReservationIcs,
-  googleCalendarUrl,
+  fetchCalendarFeedUrl,
   updateInquiryContact,
   type CalendarEntry,
 } from '@/lib/api';
@@ -246,18 +245,62 @@ function GuestCell({
   );
 }
 
-// Export a reservation to a calendar: download an .ics (any calendar app) or
-// jump straight to a prefilled Google Calendar event. Guest name + phone travel
-// in both, per the J ticket.
-function ExportActions({ entry, onIcs }: { entry: CalendarEntry; onIcs: () => void }) {
+// Subscribe-to-calendar panel: one feed URL the owner pastes into Google/Apple
+// Calendar to keep an auto-syncing overview of ALL reservations. webcal:// lets
+// Apple Calendar subscribe in one click; Google needs the https URL pasted into
+// "Other calendars → From URL".
+function CalendarFeed({ url }: { url: string | null }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard blocked — the input is selectable as a fallback */
+    }
+  }
+
   return (
-    <div className="flex flex-wrap justify-end gap-2">
-      <button onClick={onIcs} className={BTN_GHOST}>
-        iCal
-      </button>
-      <a href={googleCalendarUrl(entry)} target="_blank" rel="noopener noreferrer" className={BTN_GHOST}>
-        Google
-      </a>
+    <div className="mb-4 rounded-2xl border border-ink/10 bg-ink/[0.02] p-4">
+      <h3 className="text-sm font-semibold text-ink">Předplatit kalendář</h3>
+      <p className="mt-1 text-sm text-ink/60">
+        Přidejte tento odkaz do Google nebo Apple kalendáře a uvidíte všechny rezervace,
+        které se samy aktualizují.
+      </p>
+      {url ? (
+        <>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <input
+              readOnly
+              value={url}
+              onFocus={(e) => e.currentTarget.select()}
+              className="min-w-0 flex-1 rounded-lg border border-ink/15 bg-white px-3 py-1.5 font-mono text-xs text-ink/70"
+            />
+            <div className="flex gap-2">
+              <button onClick={copy} className={BTN_PRIMARY}>
+                {copied ? 'Zkopírováno' : 'Kopírovat'}
+              </button>
+              <a
+                href={url.replace(/^https?:\/\//, 'webcal://')}
+                className={BTN_GHOST}
+              >
+                Apple Kalendář
+              </a>
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-ink/45">
+            Google: Další kalendáře → Z adresy URL. Synchronizace běží podle Googlu
+            (typicky každých několik hodin), není okamžitá.
+          </p>
+        </>
+      ) : (
+        <p className="mt-3 text-sm text-ink/45">
+          Feed není nakonfigurován — nastavte na serveru proměnnou ICAL_FEED_TOKEN.
+        </p>
+      )}
     </div>
   );
 }
@@ -266,6 +309,7 @@ export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [feedUrl, setFeedUrl] = useState<string | null>(null);
   const [contractFor, setContractFor] = useState<Row | null>(null);
   // Default to pending so a long history of resolved inquiries doesn't bury the
   // ones that still need a decision.
@@ -301,9 +345,20 @@ export default function AdminDashboard() {
     }
   }
 
+  // The feed URL never changes per session, so a load failure shouldn't bounce
+  // the admin out — just hide the panel.
+  async function loadFeedUrl(t: string) {
+    try {
+      setFeedUrl(await fetchCalendarFeedUrl(t));
+    } catch {
+      setFeedUrl(null);
+    }
+  }
+
   function reload(t: string) {
     loadInquiries(t);
     loadCalendar(t);
+    loadFeedUrl(t);
   }
 
   useEffect(() => {
@@ -318,25 +373,6 @@ export default function AdminDashboard() {
     });
     if (res.status === 401) return adminLogout();
     reload(token);
-  }
-
-  // Fetch the .ics with the admin token, then trigger a client-side download so
-  // the owner can open the reservation in any calendar app.
-  async function downloadIcs(entry: CalendarEntry) {
-    if (!token) return;
-    try {
-      const blob = await fetchReservationIcs(token, entry.id);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `rezervace-${entry.id}.ics`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch {
-      adminLogout();
-    }
   }
 
   async function cancel(id: string) {
@@ -432,6 +468,7 @@ export default function AdminDashboard() {
 
       <section className="mb-10">
         <h2 className="mb-3 text-xl font-semibold text-ink">Rezervace</h2>
+        <CalendarFeed url={feedUrl} />
         <FilterChips
           options={RESERVATION_FILTERS}
           value={reservationFilter}
@@ -465,12 +502,9 @@ export default function AdminDashboard() {
                     />
                   </td>
                   <td className="px-4 py-3 align-top text-right">
-                    <div className="flex flex-col items-end gap-2">
-                      <ExportActions entry={e} onIcs={() => downloadIcs(e)} />
-                      <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
-                        Zrušit
-                      </button>
-                    </div>
+                    <button onClick={() => cancel(e.id)} className={BTN_DANGER}>
+                      Zrušit
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -506,9 +540,6 @@ export default function AdminDashboard() {
                   inquiryId={e.inquiryId}
                   onSave={(d) => editContact(e.inquiryId!, d)}
                 />
-              </div>
-              <div className="mt-3 border-t border-ink/5 pt-3">
-                <ExportActions entry={e} onIcs={() => downloadIcs(e)} />
               </div>
             </div>
           ))}
