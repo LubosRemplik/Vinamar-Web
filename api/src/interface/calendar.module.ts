@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CalendarController } from './http/calendar.controller';
 import { FindAvailabilityCalendarHandler } from '../application/calendar/find-availability-calendar.handler';
+import { ExportCalendarFeedHandler } from '../application/availability/export-calendar-feed.handler';
 import { pgPoolProvider } from '../infrastructure/persistence/pg-connection';
 import { PgFlightQuoteRepository } from '../infrastructure/flight/pg-flight-quote.repository';
 import { PgAvailabilityRepository } from '../infrastructure/persistence/pg-availability.repository';
@@ -17,6 +18,7 @@ import { CLOCK } from '../domain/shared/clock.port';
   controllers: [CalendarController],
   providers: [
     FindAvailabilityCalendarHandler,
+    ExportCalendarFeedHandler,
     pgPoolProvider,
     { provide: FLIGHT_QUOTE_REPOSITORY, useClass: PgFlightQuoteRepository },
     { provide: AVAILABILITY_REPOSITORY, useClass: PgAvailabilityRepository },

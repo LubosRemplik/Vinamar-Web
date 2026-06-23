@@ -55,38 +55,17 @@ export async function fetchAdminCalendar(token: string): Promise<CalendarEntry[]
   return res.json();
 }
 
-// Authenticated fetch of a single reservation as an .ics file (text/calendar).
-// The caller turns the Blob into a download — no token ever lands in a URL.
-export async function fetchReservationIcs(token: string, id: string): Promise<Blob> {
-  const res = await fetch(`${BASE}/admin/calendar/${id}/ics`, {
+// The subscribable iCal feed URL (with its secret token) for all reservations,
+// fetched on behalf of the authenticated admin. Returns null when the feed is
+// not configured on the server (ICAL_FEED_TOKEN unset).
+export async function fetchCalendarFeedUrl(token: string): Promise<string | null> {
+  const res = await fetch(`${BASE}/admin/calendar/feed-url`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (res.status === 401) throw new Error('unauthorized');
-  if (!res.ok) throw new Error('ics failed');
-  return res.blob();
-}
-
-// One-click "add to Google Calendar" link, built entirely from data we already
-// hold. dates use the all-day form START/END where END is exclusive (checkout),
-// matching the .ics export.
-export function googleCalendarUrl(entry: CalendarEntry): string {
-  const day = (iso: string) => iso.replace(/-/g, '');
-  const guest = entry.guestName?.trim() || 'Rezervace';
-  const details = [
-    entry.guestName && `Host: ${entry.guestName}`,
-    entry.phone && `Telefon: ${entry.phone}`,
-    entry.email && `E-mail: ${entry.email}`,
-    entry.message && `Poznámka: ${entry.message}`,
-  ]
-    .filter(Boolean)
-    .join('\n');
-  const params = new URLSearchParams({
-    action: 'TEMPLATE',
-    text: `Vinamar — ${guest}`,
-    dates: `${day(entry.start)}/${day(entry.end)}`,
-    details,
-  });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  if (!res.ok) throw new Error('feed-url failed');
+  const data = (await res.json()) as { url: string | null };
+  return data.url;
 }
 
 export async function cancelCalendarEntry(token: string, id: string): Promise<boolean> {

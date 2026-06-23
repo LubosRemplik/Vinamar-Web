@@ -36,6 +36,9 @@ services:
       # disabled until an operator sets a high-entropy token (openssl rand -hex 32).
       # The daily cron refresh runs regardless.
       FLIGHTS_REFRESH_TOKEN: ${FLIGHTS_REFRESH_TOKEN:-}
+      # Empty by default → the iCal subscription feed (GET /api/calendar/feed.ics)
+      # is disabled until an operator sets a high-entropy token (openssl rand -hex 32).
+      ICAL_FEED_TOKEN: ${ICAL_FEED_TOKEN:-}
     ports:
       - "${API_PORT:-3001}:3001"
     depends_on:
