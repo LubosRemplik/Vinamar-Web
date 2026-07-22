@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import CalendarWall from '@/components/CalendarWall';
-import { SEASON_RATE, OFF_SEASON_RATE } from '@/lib/price';
+import { SEASON_RATE, OFF_SEASON_RATE, CLEANING_FEE } from '@/lib/price';
 
 export const metadata: Metadata = {
   title: 'Volné termíny — Vinamar',
@@ -22,7 +22,7 @@ export default function VolneTerminyPage() {
           <span className="font-medium text-ink">Cena za noc:</span>
           <span>{SEASON_RATE} € v sezóně (červen–září),</span>
           <span>{OFF_SEASON_RATE} € mimo sezónu.</span>
-          <span className="text-ink/60">Závěrečný úklid je v ceně.</span>
+          <span className="text-ink/60">Závěrečný úklid {CLEANING_FEE} € za pobyt.</span>
         </p>
       </header>
       <CalendarWall />

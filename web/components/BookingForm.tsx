@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { submitInquiry } from '@/lib/api';
 import { getAdminToken } from '@/lib/admin';
 import { formatCzDate } from '@/lib/date';
-import { totalPrice } from '@/lib/price';
+import { accommodationPrice, totalPrice, CLEANING_FEE } from '@/lib/price';
 
 const MESSAGE_MAX = 500;
 // Forbid angle brackets (avoid HTML-looking content) and non-printable control
@@ -44,6 +44,7 @@ export default function BookingForm({
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [error, setError] = useState('');
 
+  const accommodation = accommodationPrice(arrival, departure);
   const price = totalPrice(arrival, departure);
   const messageProblem = messageError(message);
 
@@ -97,6 +98,9 @@ export default function BookingForm({
           {formatCzDate(arrival)} <span className="text-ink/30">→</span> {formatCzDate(departure)}{' '}
           <span className="font-normal text-ink/50">· {nights} nocí</span>{' '}
           <span className="text-terracotta">· {price} €</span>
+        </p>
+        <p className="w-full text-xs text-ink/50">
+          Ubytování {accommodation} € + závěrečný úklid {CLEANING_FEE} €
         </p>
         <button
           type="button"
