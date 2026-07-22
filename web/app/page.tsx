@@ -52,7 +52,7 @@ export default function Home() {
         <div className="grid gap-14 sm:grid-cols-2">
           <div>
             <SectionHeading eyebrow="Apartmán a okolí" title="Kde budete bydlet" align="left" />
-            <p className="mt-6 leading-relaxed text-ink/85">
+            <p className="mt-6 leading-relaxed text-ink">
               Obývací pokoj s rozkládacím gaučem, oddělená ložnice, kuchyňský kout a balkon se
               stolkem. Za rohem bazén, o pár set metrů dál pláž La Mata s dřevěnými lávkami přes
               duny.
@@ -63,7 +63,7 @@ export default function Home() {
           </div>
           <div>
             <SectionHeading eyebrow="Termíny" title="Kdy je volno" align="left" />
-            <p className="mt-6 leading-relaxed text-ink/85">
+            <p className="mt-6 leading-relaxed text-ink">
               Kalendář ukazuje obsazenost na nejbližší měsíce dopředu. Vyberte termín a pošlete
               nezávaznou poptávku — ozveme se s potvrzením a podrobnostmi k předání klíčů.
             </p>

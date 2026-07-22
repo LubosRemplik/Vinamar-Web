@@ -12,7 +12,7 @@ const links = [
   { href: '/z-letiste', label: 'Z letiště' },
 ];
 
-const LINK = 'text-[12px] uppercase tracking-[0.12em] text-ink/70 hover:text-ink transition-colors';
+const LINK = 'text-[12px] uppercase tracking-[0.12em] text-ink/90 hover:text-ink transition-colors';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);

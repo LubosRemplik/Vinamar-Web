@@ -1,5 +1,5 @@
 ---
-heroTitle: Apartmán u moře, kde se zpomalí čas
+heroTitle: Apartmán u moře
 heroSubtitle: Tři sta metrů od písečné pláže v La Mata, s bazénem v rezidenci.
 heroImage: /images/home/hero.jpg
 heroAlt: Osvětlený bazén rezidence za soumraku

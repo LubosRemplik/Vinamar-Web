@@ -28,7 +28,11 @@ const page = (size) => `<!doctype html>
     display: flex; align-items: center; justify-content: center;
     font-family: 'Kaushan Script', cursive; text-transform: uppercase;
     font-size: ${Math.round(size * 0.56)}px;
-    line-height: 1; padding-bottom: ${Math.round(size * 0.04)}px;
+    line-height: 1;
+    /* The glyph carries a wide left sidebearing and sits high on the baseline —
+       nudge it back to the optical centre of the circle. */
+    padding-bottom: ${Math.round(size * 0.05)}px;
+    text-indent: -${Math.round(size * 0.15)}px;
   }
 </style></head>
 <body><div class="icon" id="icon">V</div></body></html>`;

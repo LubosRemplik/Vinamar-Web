@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 body {
-  @apply bg-paper text-ink font-body font-light antialiased;
+  @apply bg-paper text-ink font-body antialiased;
 }
 
 /* Headings set their own colour — the hero prints white type over a photo. */
 h1,
 h2,
 h3 {
-  @apply font-display font-light;
+  @apply font-display font-normal;
 }
 
 h1 {
@@ -52,11 +52,11 @@ h3 {
   }
 
   .prose-body p {
-    @apply mb-4 leading-relaxed text-ink/85;
+    @apply mb-4 leading-relaxed text-ink;
   }
 
   .prose-body ul {
-    @apply mb-4 list-disc space-y-1 pl-5 text-ink/85;
+    @apply mb-4 list-disc space-y-1 pl-5 text-ink;
   }
 
   .prose-body h2 {

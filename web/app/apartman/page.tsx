@@ -57,7 +57,7 @@ export default async function Apartman() {
 
       <Section>
         <SectionHeading eyebrow="Rezidence" title="Bazén za domem" />
-        <p className="mx-auto mt-8 max-w-2xl text-center leading-relaxed text-ink/85">
+        <p className="mx-auto mt-8 max-w-2xl text-center leading-relaxed text-ink">
           K rezidenci patří společný bazén s dlážděnou terasou a lehátky. Otevřený je přes den
           i večer, kdy se rozsvítí a je u něj nejpříjemněji.
         </p>

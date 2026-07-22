@@ -8,8 +8,9 @@ const config: Config = {
         // Presentation palette
         ink: '#1F3A34',
         paper: '#FBF8F3',
-        sage: '#8A9A93',
-        brass: '#C6A87C',
+        // Secondary text: 4.86:1 on paper, so the 11px eyebrows still clear WCAG AA.
+        sage: '#61716A',
+        brass: '#A9885A', // 3.12:1 on paper — icons and rules clear the 3:1 bar for graphics
         line: '#E4DCCF',
         // Legacy tokens — still used by the admin screens
         terracotta: '#d9743f',

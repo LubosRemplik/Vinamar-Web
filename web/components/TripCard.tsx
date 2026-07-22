@@ -34,7 +34,7 @@ export default function TripCard({ trip }: { trip: TripTip }) {
       <div className="mt-5">
         <Distance trip={trip} />
         <h3 className="transition-colors group-hover:text-ink/70">{trip.title}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink/70">{trip.summary}</p>
+        <p className="mt-2 text-sm leading-relaxed text-ink/90">{trip.summary}</p>
       </div>
     </Link>
   );
