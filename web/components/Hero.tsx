@@ -5,22 +5,26 @@ export default function Hero({
   title,
   subtitle,
   image,
+  eyebrow = 'La Mata · Costa Blanca',
+  alt = '',
 }: {
   title: string;
   subtitle: string;
   image: string;
+  eyebrow?: string;
+  alt?: string;
 }) {
   return (
-    <section className="relative h-[60vh] min-h-[360px] flex items-center justify-center text-center">
-      <Image src={image} alt="" fill priority className="object-cover -z-10 brightness-75" />
-      <div className="text-white px-6">
-        <h1 className="text-4xl md:text-5xl mb-3">{title}</h1>
-        <p className="text-lg mb-6">{subtitle}</p>
-        <Link
-          href="/volne-terminy"
-          className="inline-block bg-terracotta px-6 py-3 rounded-full font-semibold"
-        >
-          Zobrazit volné termíny →
+    <section className="relative flex min-h-[520px] items-end justify-center sm:h-[78vh]">
+      <Image src={image} alt={alt} fill priority sizes="100vw" className="-z-10 object-cover" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/75 via-ink/30 to-ink/20" />
+
+      <div className="px-6 pb-16 text-center text-paper sm:pb-24">
+        <p className="eyebrow mb-5 text-paper/80">{eyebrow}</p>
+        <h1 className="mx-auto max-w-3xl text-paper">{title}</h1>
+        <p className="mx-auto mt-5 max-w-xl text-base text-paper/85 sm:text-lg">{subtitle}</p>
+        <Link href="/volne-terminy" className="btn btn-light mt-9">
+          Zobrazit volné termíny
         </Link>
       </div>
     </section>

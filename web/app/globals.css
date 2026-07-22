@@ -2,32 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --canvas: #fbf9f5;
-}
-
 body {
-  @apply text-ink font-body antialiased;
-  background-color: var(--canvas);
+  @apply bg-paper text-ink font-body font-light antialiased;
 }
 
+/* Headings set their own colour — the hero prints white type over a photo. */
 h1,
 h2,
 h3 {
-  @apply font-display tracking-tight text-ink;
+  @apply font-display font-light;
 }
 
 h1 {
-  @apply text-4xl font-semibold leading-tight sm:text-5xl;
-  letter-spacing: -0.02em;
+  @apply text-4xl leading-tight sm:text-6xl;
 }
 
 h2 {
-  @apply text-2xl font-semibold leading-snug sm:text-3xl;
-  letter-spacing: -0.015em;
+  @apply text-3xl leading-snug sm:text-4xl;
 }
 
 h3 {
-  @apply text-lg font-semibold leading-snug;
-  letter-spacing: -0.01em;
+  @apply text-xl leading-snug sm:text-2xl;
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-body text-[11px] uppercase tracking-eyebrow text-sage;
+  }
+
+  .btn {
+    @apply inline-block border px-7 py-3 font-body text-[11px] uppercase tracking-button
+      transition-colors;
+  }
+
+  .btn-solid {
+    @apply border-ink bg-ink text-paper hover:bg-ink/85;
+  }
+
+  .btn-outline {
+    @apply border-ink text-ink hover:bg-ink hover:text-paper;
+  }
+
+  .btn-light {
+    @apply border-paper text-paper hover:bg-paper hover:text-ink;
+  }
+
+  .rule {
+    @apply h-px w-9 border-0 bg-brass;
+  }
+
+  .prose-body p {
+    @apply mb-4 leading-relaxed text-ink/85;
+  }
+
+  .prose-body ul {
+    @apply mb-4 list-disc space-y-1 pl-5 text-ink/85;
+  }
+
+  .prose-body h2 {
+    @apply mb-3 mt-10 text-2xl;
+  }
+
+  .prose-body a {
+    @apply underline decoration-brass underline-offset-4;
+  }
 }

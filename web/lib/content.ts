@@ -15,6 +15,10 @@ export interface TripTip {
   order: number;
   externalLink?: string;
   distanceKm?: number;
+  driveMinutes?: number;
+  /** Author and licence of a photo taken from a free-licence source. */
+  imageCredit?: string;
+  imageCreditUrl?: string;
 }
 
 export interface PageContent {

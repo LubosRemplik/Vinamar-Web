@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start -p 3000",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "favicon": "node scripts/generate-favicon.mjs",
+    "photos": "../web/scripts/prepare-photos.sh"
   },
   "keywords": [],
   "author": "",

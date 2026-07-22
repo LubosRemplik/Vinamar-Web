@@ -1,19 +1,43 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Cormorant_Garamond, Jost, Kaushan_Script } from 'next/font/google';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const script = Kaushan_Script({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-script',
+  display: 'swap',
+});
+
+const display = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const body = Jost({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-body',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: 'Vinamar — apartmán u moře, La Mata',
-  description: 'Apartmán k pronájmu v La Mata, Torrevieja. Podívejte se, kdy je volno a jak se levně dostat.',
+  title: 'ViñaMar — apartmán u moře, La Mata',
+  description:
+    'Apartmán s bazénem 300 m od pláže v La Mata u Torreviejy. Podívejte se, kdy je volno, a rezervujte termín.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="cs" className={inter.variable} suppressHydrationWarning>
+    <html
+      lang="cs"
+      className={`${script.variable} ${display.variable} ${body.variable}`}
+      suppressHydrationWarning
+    >
       <body suppressHydrationWarning>
         <Nav />
         {children}
