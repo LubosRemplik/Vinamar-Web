@@ -74,8 +74,12 @@ Nadpisy sází Cormorant Garamond, běžný text Jost; všechna tři písma se n
 přes `next/font/google`.
 
 Paleta (`web/tailwind.config.ts`): `ink` `#1F3A34`, `paper` `#FBF8F3`,
-`sage` `#8A9A93`, `brass` `#C6A87C`, `line` `#E4DCCF`. Tokeny `terracotta`,
+`sage` `#61716A`, `brass` `#A9885A`, `line` `#E4DCCF`. Tokeny `terracotta`,
 `ochre`, `sand` a `sea` zůstávají už jen kvůli administraci.
+
+Hodnoty `sage` a `brass` jsou zvolené podle kontrastu na podkladu `paper`:
+4,86:1 pro sekundární text (WCAG AA i pro 11px oční linky) a 3,12:1 pro ikony
+a linky (AA pro grafické prvky). Když je budeš ladit, kontrast přepočítej.
 
 Favicon se generuje rasterizací písmene „V“ — po změně loga spusť:
 

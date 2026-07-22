@@ -36,8 +36,8 @@ Nahrazují dosavadní `terracotta / ochre / sand / sea`.
 |---|---|---|
 | `ink` | `#1F3A34` | text, tmavé plochy, plná tlačítka |
 | `paper` | `#FBF8F3` | podklad stránky |
-| `sage` | `#8A9A93` | sekundární text, popisky, oční linky |
-| `brass` | `#C6A87C` | jemné akcenty, oddělovače |
+| `sage` | `#61716A` | sekundární text, popisky, oční linky (4,86:1 na paper) |
+| `brass` | `#A9885A` | ikony, jemné akcenty, oddělovače (3,12:1 na paper) |
 | `line` | `#E4DCCF` | rámečky a dělicí čáry |
 
 Staré tokeny zůstávají v konfiguraci jen tak dlouho, dokud je používá administrace;

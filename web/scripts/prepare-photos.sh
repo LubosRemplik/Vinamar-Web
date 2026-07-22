@@ -26,6 +26,7 @@ Apartman s bazenem/IMG_1402.JPG|apartment/kitchen.jpg
 Apartman s bazenem/IMG_1400.JPG|apartment/bathroom-01.jpg
 Apartman s bazenem/IMG_1342.JPG|apartment/bathroom-02.jpg
 Apartman s bazenem/IMG_1349.JPG|apartment/balcony.jpg
+Apartman s bazenem/IMG_1401.JPG|apartment/hallway.jpg
 Apartman s bazenem/IMG_1367.JPG|pool/pool-day.jpg
 Apartman s bazenem/IMG_1310.JPG|pool/pool-evening.jpg
 Apartman s bazenem/IMG_1366.JPG|pool/residence.jpg
@@ -33,6 +34,8 @@ Plaz/IMG_1285.JPG|surroundings/beach-boardwalk.jpg
 Plaz/IMG_1291.JPG|surroundings/beach-parasols.jpg
 Plaz/IMG_1289.JPG|surroundings/sea.jpg
 Plaz/IMG_1292.JPG|surroundings/promenade.jpg
+Plaz/IMG_1286.JPG|surroundings/beach-dunes.jpg
+Plaz/IMG_1290.JPG|surroundings/beach-bar.jpg
 EOF
 )
 

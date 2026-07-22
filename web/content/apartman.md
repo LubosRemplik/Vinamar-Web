@@ -18,6 +18,8 @@ gallery:
     alt: Umyvadlo s ručníky
   - src: /images/apartment/balcony.jpg
     alt: Balkon se stolkem a židlemi
+  - src: /images/apartment/hallway.jpg
+    alt: Chodba s pohledem do obývacího pokoje
 amenities:
   - icon: bed
     label: 4 osoby

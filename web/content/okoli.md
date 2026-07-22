@@ -10,6 +10,10 @@ gallery:
     alt: Moře u pláže La Mata
   - src: /images/surroundings/promenade.jpg
     alt: Promenáda podél pláže
+  - src: /images/surroundings/beach-dunes.jpg
+    alt: Písečná pláž s dunami
+  - src: /images/surroundings/beach-bar.jpg
+    alt: Plážový bar u vstupu na pláž
 ---
 Playa de La Mata je několik kilometrů dlouhá písečná pláž s pozvolným vstupem do
 vody. Vede k ní dřevěná lávka přes chráněné duny; cesta od domu trvá pár minut
