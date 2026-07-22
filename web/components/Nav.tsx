@@ -22,7 +22,7 @@ export default function Nav() {
 
   return (
     <header className="bg-sand border-b border-ochre/40">
-      <div className="flex items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link
           href="/"
           className="text-2xl font-display text-terracotta"
@@ -76,7 +76,7 @@ export default function Nav() {
       </div>
 
       {open && (
-        <nav id="mobile-menu" className="md:hidden border-t border-ochre/30 px-6 pb-2">
+        <nav id="mobile-menu" className="mx-auto max-w-6xl border-t border-ochre/30 px-6 pb-2 md:hidden">
           {links.map((l) => (
             <Link
               key={l.href}
