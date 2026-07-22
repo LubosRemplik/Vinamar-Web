@@ -7,7 +7,7 @@ imageCreditUrl: https://commons.wikimedia.org/wiki/File:Torrevieja_-_Puerto_07.j
 summary: Nejbližší velké město — přístav s jachtami, dlouhá promenáda, trhy a restaurace.
 distanceKm: 8
 driveMinutes: 12
-order: 2
+order: 3
 ---
 Torrevieja je nejbližší město s kompletní občanskou vybaveností — supermarkety,
 lékárny, nemocnice. Podél přístavu vede promenáda s restauracemi a kavárnami,

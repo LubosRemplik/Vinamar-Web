@@ -4,7 +4,7 @@ category: vylety
 summary: Aquapark s tobogány a bazény pro děti, na okraji Torreviejy. Ideální program na den, kdy je moře rozbouřené.
 distanceKm: 6
 driveMinutes: 10
-order: 3
+order: 2
 externalLink: https://torrevieja.aquopolis.es/
 ---
 Aquapark na okraji Torreviejy s rychlými tobogány, líným řekou a mělkou částí

@@ -37,7 +37,7 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
 
   return (
     <main>
-      <Section className="pb-10">
+      <Section>
         <div className="mx-auto max-w-2xl text-center">
           {meta.distanceKm != null && (
             <p className="eyebrow mb-4">
@@ -78,15 +78,15 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
         </figure>
       )}
 
-      <Section>
-        <div className="prose-body mx-auto max-w-2xl">
-          <div dangerouslySetInnerHTML={{ __html: html }} />
+      <Section top={Boolean(meta.image)}>
+        <div className="mx-auto max-w-2xl">
+          <div className="prose-body" dangerouslySetInnerHTML={{ __html: html }} />
 
           {meta.externalLink && (
             <p className="mt-8">
               <a
                 href={meta.externalLink}
-                className="btn btn-outline no-underline"
+                className="btn btn-outline"
                 rel="noopener noreferrer"
                 target="_blank"
               >
