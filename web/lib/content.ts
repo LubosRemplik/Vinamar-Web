@@ -10,7 +10,9 @@ export interface TripTip {
   slug: string;
   title: string;
   category: 'plaze' | 'mesta' | 'priroda' | 'restaurace' | 'vylety';
-  image: string;
+  /** Missing when no freely licensed photo of the place exists — the card falls
+   *  back to a typographic tile. */
+  image?: string;
   summary: string;
   order: number;
   externalLink?: string;

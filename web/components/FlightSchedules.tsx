@@ -96,7 +96,7 @@ export default function FlightSchedules({
 
       {status === 'loading' && <p className="text-sm text-ink/50">Načítám spojení…</p>}
       {status === 'error' && (
-        <p className="text-sm text-terracotta">Spojení se nepodařilo načíst.</p>
+        <p className="text-sm text-ink">Spojení se nepodařilo načíst.</p>
       )}
       {status === 'success' && withFlights.length > 0 && (
         <ul className="space-y-3 sm:space-y-1.5">
@@ -109,16 +109,16 @@ export default function FlightSchedules({
                 {airport.originName} <span className="text-ink/40">({airport.origin})</span>
               </span>
               <span className="text-ink/70 sm:flex-1">
-                <span className="text-sea">Tam</span> {times(airport.outbound) ?? '—'}
+                <span className="text-ink/60">Tam</span> {times(airport.outbound) ?? '—'}
               </span>
               <span className="text-ink/70 sm:flex-1">
-                <span className="text-terracotta">Zpět</span> {times(airport.return) ?? '—'}
+                <span className="text-ink/60">Zpět</span> {times(airport.return) ?? '—'}
               </span>
               <a
                 href={ryanairTripUrl(airport.origin, arrival, departure)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-1 rounded-lg bg-sea px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sea/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/40 sm:w-auto sm:shrink-0"
+                className="inline-flex w-full items-center justify-center gap-1 border border-ink bg-ink px-3 py-2 text-[10px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85 focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40 sm:w-auto sm:shrink-0"
               >
                 Cena na Ryanair →
               </a>
@@ -136,7 +136,7 @@ export default function FlightSchedules({
             href={googleFlightsUrl(arrival, departure)}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-sea underline decoration-sea/30 underline-offset-2 hover:decoration-sea"
+            className="text-ink underline decoration-brass underline-offset-2"
           >
             Google Letenky
           </a>

@@ -21,9 +21,9 @@ const WEEKDAYS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-const OCCUPIED = 'rgba(61,58,53,0.10)'; // matches the fully-booked days (bg-ink/10)
-const FREE = 'rgba(44,122,158,0.10)'; // matches the available days (bg-sea/10)
-const SELECTED = '#d9743f';
+const OCCUPIED = 'rgba(31,58,52,0.10)'; // matches the fully-booked days (bg-ink/10)
+const FREE = 'rgba(198,168,124,0.18)'; // matches the available days (bg-brass/20)
+const SELECTED = '#1F3A34';
 // Diagonal half-fills: morning is the upper-left triangle, afternoon the lower-right.
 const afternoon = (color: string) => `linear-gradient(to bottom right, transparent 49.5%, ${color} 50.5%)`;
 const morning = (color: string) => `linear-gradient(to bottom right, ${color} 49.5%, transparent 50.5%)`;
@@ -55,7 +55,7 @@ export default function MonthCard({
   const base = 'flex aspect-square items-center justify-center rounded-lg text-sm select-none';
 
   return (
-    <article className="rounded-2xl border border-ink/10 bg-white p-5 shadow-card">
+    <article className="border border-line bg-white p-5">
       <header className="mb-4">
         <h3 className="text-base font-semibold text-ink">{MONTH_NAMES[month - 1]}</h3>
         <p className="text-sm text-ink/50">{year}</p>
@@ -120,23 +120,23 @@ export default function MonthCard({
           const layers: string[] = [];
           let tone: string;
           if (isMiddle) {
-            tone = 'bg-terracotta font-semibold text-white';
+            tone = 'bg-ink font-medium text-paper';
           } else if (isCheckout) {
             layers.push(morning(isDeparture ? SELECTED : FREE));
             layers.push(afternoon(OCCUPIED));
-            tone = isDeparture ? 'font-semibold text-ink' : 'font-medium text-sea';
+            tone = isDeparture ? 'font-medium text-ink' : 'font-medium text-ink/80';
           } else if (isCheckin) {
             layers.push(afternoon(isArrival ? SELECTED : FREE));
             layers.push(morning(OCCUPIED));
-            tone = isArrival ? 'font-semibold text-ink' : 'font-medium text-sea';
+            tone = isArrival ? 'font-medium text-ink' : 'font-medium text-ink/80';
           } else if (isArrival) {
             layers.push(afternoon(SELECTED));
-            tone = 'bg-sea/10 font-semibold text-ink';
+            tone = 'bg-brass/20 font-medium text-ink';
           } else if (isDeparture) {
             layers.push(morning(SELECTED));
-            tone = 'bg-sea/10 font-semibold text-ink';
+            tone = 'bg-brass/20 font-medium text-ink';
           } else {
-            tone = 'bg-sea/10 font-medium text-sea hover:bg-sea/20';
+            tone = 'bg-brass/20 font-medium text-ink hover:bg-brass/35';
           }
 
           return (

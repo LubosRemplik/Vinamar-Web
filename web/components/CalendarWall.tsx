@@ -197,7 +197,7 @@ export default function CalendarWall() {
   return (
     <div>
       <p className="mb-5 text-sm text-ink/60">
-        Klikněte na den příjezdu a poté na den odjezdu. Volné dny jsou modré, obsazené přeškrtnuté.
+        Klikněte na den příjezdu a poté na den odjezdu. Volné dny jsou podbarvené, obsazené přeškrtnuté.
         Dny na hraně termínu jsou poloviční (střídání) — lze na ně přijet odpoledne, nebo odjet
         dopoledne. Minimální pobyt je {MIN_NIGHTS} nocí. Přímé lety Ryanairu do Alicante sledujeme
         z devíti letišť (Pardubice, Bratislava, Vídeň, Linz, Wrocław, Katovice, Norimberk, Kraków,
@@ -205,14 +205,14 @@ export default function CalendarWall() {
       </p>
 
       {isAdmin && (
-        <p className="mb-4 rounded-xl border border-terracotta/30 bg-terracotta/5 px-4 py-2 text-sm font-medium text-terracotta">
+        <p className="mb-4 border border-brass/50 bg-brass/10 px-4 py-2 text-sm text-ink">
           Režim správce — pravidla pobytu se neuplatní, rezervace se vytvoří jako potvrzená.
         </p>
       )}
 
       {status === 'error' && (
-        <div role="alert" className="rounded-2xl border border-terracotta/30 bg-terracotta/5 p-6 text-center">
-          <p className="font-medium text-terracotta">Dostupnost se nepodařilo načíst.</p>
+        <div role="alert" className="border border-brass/50 bg-brass/10 p-6 text-center">
+          <p className="font-medium text-ink">Dostupnost se nepodařilo načíst.</p>
           <p className="mt-1 text-sm text-ink/55">Zkuste to prosím za chvíli znovu.</p>
         </div>
       )}
@@ -220,7 +220,7 @@ export default function CalendarWall() {
       {status === 'loading' && (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-72 animate-pulse rounded-2xl border border-ink/10 bg-white p-5 shadow-card" />
+            <div key={i} className="h-72 animate-pulse border border-line bg-white p-5" />
           ))}
         </div>
       )}
@@ -246,7 +246,7 @@ export default function CalendarWall() {
           sticky card on desktop. */}
       {ready && arrival && departure && (
         <div className="fixed inset-0 z-50 sm:sticky sm:inset-auto sm:bottom-4 sm:z-10 sm:mt-6">
-          <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-ink/10 sm:shadow-cardHover">
+          <div className="h-full overflow-y-auto overscroll-contain bg-white p-4 sm:mx-auto sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:border sm:border-line sm:shadow-cardHover">
             <h2 className="mb-4 border-b border-ink/10 pb-3 text-lg font-semibold text-ink sm:hidden">
               {isAdmin ? 'Nová rezervace' : 'Nezávazná poptávka'}
             </h2>
@@ -265,7 +265,7 @@ export default function CalendarWall() {
 
       {!ready && (arrival || hint) && (
         <div className="sticky bottom-4 z-10 mt-6">
-          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/10 bg-white p-4 shadow-cardHover">
+          <div className="mx-auto max-w-3xl border border-line bg-white p-4 shadow-cardHover">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm">
                 {arrival && (
@@ -284,7 +284,7 @@ export default function CalendarWall() {
                 <button
                   type="button"
                   onClick={reset}
-                  className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
+                  className="border border-line bg-paper px-3 py-2 text-sm text-ink/70 transition-colors hover:bg-ink/10"
                 >
                   Zrušit
                 </button>

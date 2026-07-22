@@ -83,7 +83,7 @@ export default function BookingForm({
         <button
           type="button"
           onClick={onReset}
-          className="mt-3 rounded-xl border border-ink/15 px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-ink/5"
+          className="mt-3 border border-line px-4 py-2 text-sm text-ink transition-colors hover:bg-ink/5"
         >
           Rezervovat další termín
         </button>
@@ -97,7 +97,7 @@ export default function BookingForm({
         <p className="text-sm font-semibold text-ink">
           {formatCzDate(arrival)} <span className="text-ink/30">→</span> {formatCzDate(departure)}{' '}
           <span className="font-normal text-ink/50">· {nights} nocí</span>{' '}
-          <span className="text-terracotta">· {price} €</span>
+          <span className="font-medium text-ink">· {price} €</span>
         </p>
         <p className="w-full text-xs text-ink/50">
           Ubytování {accommodation} € + závěrečný úklid {CLEANING_FEE} €
@@ -105,7 +105,7 @@ export default function BookingForm({
         <button
           type="button"
           onClick={onReset}
-          className="rounded-xl border border-ink/15 bg-ink/5 px-3 py-1.5 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/10"
+          className="border border-line bg-paper px-3 py-1.5 text-sm text-ink/70 transition-colors hover:bg-ink/10"
         >
           Zrušit
         </button>
@@ -118,7 +118,7 @@ export default function BookingForm({
           placeholder="Jméno a příjmení"
           value={guestName}
           onChange={(e) => setGuestName(e.target.value)}
-          className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
+          className="border border-line bg-white px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40"
         />
         <input
           required
@@ -127,7 +127,7 @@ export default function BookingForm({
           placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
+          className="border border-line bg-white px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40"
         />
         <input
           required
@@ -136,7 +136,7 @@ export default function BookingForm({
           placeholder="Telefonní číslo"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30 sm:col-span-2"
+          className="border border-line bg-white px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40 sm:col-span-2"
         />
       </div>
       <textarea
@@ -147,7 +147,7 @@ export default function BookingForm({
         maxLength={MESSAGE_MAX}
         aria-invalid={messageProblem ? true : undefined}
         onChange={(e) => setMessage(e.target.value)}
-        className="mt-2 w-full rounded-xl border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-sea focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/30"
+        className="mt-2 w-full border border-line bg-white px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40"
       />
       <div className="mt-1 flex items-center justify-between text-xs">
         <span className="font-medium text-red-600">{messageProblem ?? ''}</span>
@@ -161,7 +161,7 @@ export default function BookingForm({
       <button
         type="submit"
         disabled={state === 'sending' || messageProblem !== null}
-        className="mt-3 w-full rounded-xl bg-terracotta px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-terracotta/90 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/50"
+        className="mt-3 w-full border border-ink bg-ink px-5 py-3 text-[11px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85 disabled:opacity-60 focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40"
       >
         {state === 'sending' ? 'Odesílám…' : isAdmin ? 'Vytvořit rezervaci' : 'Odeslat poptávku'}
       </button>

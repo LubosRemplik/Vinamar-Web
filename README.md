@@ -67,14 +67,47 @@ Typované doménové chyby (`DomainError`) převádí `ProblemDetailFilter` na R
 Kopíruj `health` slice: port v `domain/`, handler v `application/`, raw-SQL adaptér
 v `infrastructure/`, controller v `interface/`, zapojení v modulu.
 
+## Vizuální identita
+
+Logo **ViñaMar** je verzálkový nápis v Kaushan Script (`web/components/Logo.tsx`).
+Nadpisy sází Cormorant Garamond, běžný text Jost; všechna tři písma se načítají
+přes `next/font/google`.
+
+Paleta (`web/tailwind.config.ts`): `ink` `#1F3A34`, `paper` `#FBF8F3`,
+`sage` `#8A9A93`, `brass` `#C6A87C`, `line` `#E4DCCF`. Tokeny `terracotta`,
+`ochre`, `sand` a `sea` zůstávají už jen kvůli administraci.
+
+Favicon se generuje rasterizací písmene „V“ — po změně loga spusť:
+
+```bash
+cd web && npm run favicon      # zapíše app/icon.png a app/apple-icon.png
+```
+
 ## Fotky a obsah
 
 Obsah je v `web/content/*.md` (frontmatter + markdown tělo).
-Fotky jsou v `web/public/images/{home,apartment,surroundings,trips}/`.
-Nahraď placeholder soubory vlastními se **stejnými názvy** — žádná změna kódu není potřeba.
+
+**Fotky apartmánu** — originály patří do `Assets/` (mimo git). Skript je zmenší
+na 2000 px, uloží jako JPEG do `web/public/images/` a pojmenuje podle mapování
+uvnitř skriptu:
+
+```bash
+web/scripts/prepare-photos.sh
+```
+
+Chceš-li vyměnit konkrétní fotku, uprav v tom skriptu dvojici
+`zdrojový soubor|cílová cesta` a spusť ho znovu.
+
+**Fotky výletů** pocházejí z Wikimedia Commons pod licencemi CC BY / CC BY-SA / CC0.
+Stahuje je `web/scripts/fetch-trip-photos.py`; u každé je v něm uvedený autor
+a licence, které se musí shodovat s polem `imageCredit` v příslušném markdownu.
+Nikdy sem nepřidávej fotku, u které jsi neověřil licenci.
 
 Výletní tipy: každý soubor `web/content/trips/<slug>.md` má frontmatter
-`title`, `category`, `image`, `summary`, `order` (volitelně `externalLink`, `distanceKm`).
+`title`, `category`, `summary`, `order` (volitelně `image`, `imageCredit`,
+`imageCreditUrl`, `externalLink`, `distanceKm`, `driveMinutes`).
+Tip bez `image` se vykreslí jako typografická dlaždice s monogramem — používá se
+tam, kde volně licencovaná fotka místa neexistuje (Aquopolis, pouť v Torrevieji).
 Stránka `/tipy-na-vylety/<slug>` se vygeneruje automaticky (`generateStaticParams`).
 
 ## E-maily
@@ -118,7 +151,7 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] I — Smlouvy v PDF (varianty se zálohou / bez zálohy), generované a odeslané e-mailem; navázat na stavy rezervace; Vsechny smlouvy musi byt na 10 noci, 11 dni, jeste radsi udelej research legislativy
 - [x] J — iCal export (přidání rezervace do Google Calendaru včetně jména, příjmení a tel. čísla hosta)
 - [x] K — E-maily (transakční maily kolem rezervace: poptávka, potvrzení, odmítnutí, zrušení, připomínka 14 dní; HTML šablony, čeština)
-- [ ] L — Logo a design
+- [x] L — Logo a design (identita ViñaMar, nová paleta a písma, reálné fotky, sloučení Apartmán + Okolí, přestavěné tipy na výlety)
 - [ ] M — Instalace na produkci
 - [ ] N — Zkontrolovat loginy a bezpečnost (silný `JWT_SECRET` při bootu, audit admin endpointů)
 - [x] O - Stranka s info "Z letiste" (statická stránka /z-letiste: auto / bus / taxi + odkaz na Google Maps trasu, odkaz v navigaci)
