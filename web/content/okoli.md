@@ -1,6 +1,6 @@
 ---
 title: Playa de La Mata
-intro: Dlouhá písečná pláž s dřevěnými lávkami přes duny, pár minut chůze od domu.
+intro: Dlouhá písečná pláž pár minut chůze od domu.
 gallery:
   - src: /images/surroundings/beach-boardwalk.jpg
     alt: Dřevěná lávka přes duny na pláž La Mata
