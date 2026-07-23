@@ -8,7 +8,7 @@ Alicante-Elche (ALC). Níže najdete tři způsoby, jak cestu zvládnout.
 ## Půjčení auta
 
 Na letišti má pobočku většina velkých autopůjčoven (přízemí příletové haly).
-Cesta po dálnici AP-7 / N-332 trvá zhruba 40 minut. U apartmánu lze zaparkovat.
+Cesta trvá zhruba 40 minut, v okolních silnicích u apartmánu lze zaparkovat.
 Info o ceně a možnostech půjčení auta Vám rádi poradíme — včetně toho, jak to
 bývá se zálohou (blokací na kreditní kartě) a s pojištěním.
 
