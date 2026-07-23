@@ -37,7 +37,7 @@ test('the nav marks the current section, including on a trip detail', async ({ p
 test('the retired /okoli URL redirects into the merged page', async ({ page }) => {
   await page.goto('/okoli');
   await expect(page).toHaveURL(/\/apartman$/);
-  await expect(page.getByRole('heading', { name: 'Pláž a La Mata' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Playa de La Mata' })).toBeVisible();
 });
 
 test('a trip detail page loads from its slug', async ({ page }) => {

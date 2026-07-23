@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const POOL = [
   { src: '/images/pool/pool-day.jpg', alt: 'Bazén rezidence za dne' },
   { src: '/images/pool/residence.jpg', alt: 'Rezidence s bazénem' },
-  { src: '/images/pool/pool-evening.jpg', alt: 'Osvětlený bazén za soumraku' },
+  { src: '/images/pool/pool-day-02.jpg', alt: 'Bazén rezidence za slunečného dne' },
 ];
 
 export default async function Apartman() {
@@ -60,6 +60,12 @@ export default async function Apartman() {
         <p className="mx-auto mt-8 max-w-2xl text-center leading-relaxed text-ink">
           K rezidenci patří společný bazén s dlážděnou terasou a lehátky. Otevřený je přes den
           i večer, kdy se rozsvítí a je u něj nejpříjemněji.
+        </p>
+        <p className="mx-auto mt-6 max-w-2xl text-center">
+          <span className="eyebrow">Otevírací doba</span>
+          <span className="mt-2 block font-display text-xl text-ink">
+            11–15 h &middot; 17–21 h
+          </span>
         </p>
       </Section>
 

@@ -2,14 +2,14 @@
 title: Z letiště
 intro: Jak se dostanete z letiště Alicante (ALC) do apartmánu v La Mata.
 ---
-Apartmán leží v La Mata u Torreviejy, zhruba 40–50 minut jízdy od letiště
+Apartmán leží v La Mata u Torreviejy, zhruba 40 minut jízdy od letiště
 Alicante-Elche (ALC). Níže najdete tři způsoby, jak cestu zvládnout.
 
 ## Půjčení auta
 
 Na letišti má pobočku většina velkých autopůjčoven (přízemí příletové haly).
-Cesta po dálnici AP-7 / N-332 trvá zhruba 40–50 minut. U apartmánu lze
-zaparkovat. Orientační cena půjčení začíná kolem 25–40 € / den mimo sezónu.
+Cesta po dálnici AP-7 / N-332 trvá zhruba 40 minut. U apartmánu lze zaparkovat.
+Info o ceně, možnostech půjčení auta a pojištění Vám poradíme.
 
 ## Veřejná doprava (bus)
 

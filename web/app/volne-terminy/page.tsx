@@ -19,7 +19,7 @@ export default function VolneTerminyPage() {
           <hr className="rule mx-auto my-8" />
           <p className="font-display text-xl leading-relaxed text-ink/90">
             Podívejte se, kdy je apartmán v La Mata volný. Vyberte si termín přímo v kalendáři
-            a pošlete nám nezávaznou poptávku.
+            a pošlete nám nezávaznou poptávku. S letenkami a s cestou z letiště poradíme.
           </p>
           {/* Non-breaking spaces keep each amount glued to its currency sign when
               the line wraps. */}

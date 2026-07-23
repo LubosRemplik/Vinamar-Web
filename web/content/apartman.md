@@ -4,18 +4,12 @@ intro: Apartmán pro dva až čtyři v rezidenci s bazénem, tři sta metrů od 
 gallery:
   - src: /images/apartment/living-01.jpg
     alt: Obývací pokoj s rozkládacím gaučem a televizí
-  - src: /images/apartment/living-02.jpg
-    alt: Obývací pokoj s jídelním koutem a balkonovými dveřmi
   - src: /images/apartment/bedroom.jpg
     alt: Ložnice s manželskou postelí
   - src: /images/apartment/dining.jpg
     alt: Jídelní stůl se sklenicemi vína
-  - src: /images/apartment/kitchen.jpg
-    alt: Kuchyňský kout s lednicí
   - src: /images/apartment/bathroom-01.jpg
     alt: Koupelna s vanou
-  - src: /images/apartment/bathroom-02.jpg
-    alt: Umyvadlo s ručníky
   - src: /images/apartment/balcony.jpg
     alt: Balkon se stolkem a židlemi
   - src: /images/apartment/hallway.jpg

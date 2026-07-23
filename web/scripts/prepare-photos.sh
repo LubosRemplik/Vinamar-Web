@@ -30,6 +30,7 @@ Apartman s bazenem/IMG_1401.JPG|apartment/hallway.jpg
 Apartman s bazenem/IMG_1367.JPG|pool/pool-day.jpg
 Apartman s bazenem/IMG_1310.JPG|pool/pool-evening.jpg
 Apartman s bazenem/IMG_1366.JPG|pool/residence.jpg
+Apartman s bazenem/IMG_1365.JPG|pool/pool-day-02.jpg
 Plaz/IMG_1285.JPG|surroundings/beach-boardwalk.jpg
 Plaz/IMG_1291.JPG|surroundings/beach-parasols.jpg
 Plaz/IMG_1289.JPG|surroundings/sea.jpg

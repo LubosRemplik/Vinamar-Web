@@ -1,5 +1,5 @@
 ---
-title: Pláž a La Mata
+title: Playa de La Mata
 intro: Dlouhá písečná pláž s dřevěnými lávkami přes duny, pár minut chůze od domu.
 gallery:
   - src: /images/surroundings/beach-boardwalk.jpg
@@ -17,9 +17,5 @@ gallery:
 ---
 Playa de La Mata je několik kilometrů dlouhá písečná pláž s pozvolným vstupem do
 vody. Vede k ní dřevěná lávka přes chráněné duny; cesta od domu trvá pár minut
-pěšky. Na pláži se dají půjčit lehátka a slunečníky, podél promenády jsou
-chiringuita, kavárny a obchody.
-
-La Mata je klidnější než sousední Torrevieja — bez hotelových komplexů, spíš
-španělská než turistická. Za nákupy, na trh nebo do přístavu se do Torreviejy
-dojede autem za deset minut.
+pěšky. Na pláži se dají půjčit lehátka se slunečníky a šlapadla, podél promenády jsou
+restaurace, kavárny a obchody.
