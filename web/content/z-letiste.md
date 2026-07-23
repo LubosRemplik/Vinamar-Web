@@ -9,16 +9,18 @@ Alicante-Elche (ALC). Níže najdete tři způsoby, jak cestu zvládnout.
 
 Na letišti má pobočku většina velkých autopůjčoven (přízemí příletové haly).
 Cesta po dálnici AP-7 / N-332 trvá zhruba 40 minut. U apartmánu lze zaparkovat.
-Info o ceně, možnostech půjčení auta a pojištění Vám poradíme.
+Info o ceně a možnostech půjčení auta Vám rádi poradíme — včetně toho, jak to
+bývá se zálohou (blokací na kreditní kartě) a s pojištěním, které se vyplatí
+sjednat, aby vás nepřekvapily náklady při vrácení vozu.
 
 ## Taxi a transfery
 
-Taxi stanoviště je přímo před příletovou halou. Cesta do La Maty vyjde
-orientačně na 50–70 €. Pohodlnou alternativou je předem objednaný soukromý
-transfer (např. Welcome Pickups), který na vás počká s cedulkou.
+Máme dva ověřené kontakty na odvoz z letiště, cesta do La Maty vyjde orientačně
+na 50–70 €; rádi vám je předáme. V oblasti jezdí i Uber a Bolt — ve večerních
+hodinách ale jejich dostupnost nemáme ověřenou.
 
 ## Veřejná doprava (bus)
 
-Společnost ALSA jezdí z letiště do Torrevieja; jízdenku koupíte u řidiče nebo
-online na alsa.es. Cesta trvá přibližně hodinu. Z Torrevieja do La Maty
-navazuje místní autobus, případně krátká jízda taxíkem.
+Z letiště Alicante jede autobus do Torrevieja, jízdné je kolem 7 €. Aktuální
+jízdní řád najdete na [torrevieja.com](https://torrevieja.com/en/torrevieja-alicante-airport-bus-timetable/).
+Z Torrevieja pak do La Maty navazuje městský autobus.
