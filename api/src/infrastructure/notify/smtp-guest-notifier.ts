@@ -25,7 +25,7 @@ export class SmtpGuestNotifier implements GuestNotifier {
   private async send(to: string, content: EmailContent): Promise<void> {
     await this.transport.sendMail({
       from: {
-        name: process.env.MAIL_FROM_NAME ?? 'Vinamar',
+        name: process.env.MAIL_FROM_NAME ?? 'ViñaMar',
         address: process.env.SMTP_FROM ?? 'vinamar@example.com',
       },
       to,

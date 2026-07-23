@@ -9,10 +9,25 @@ export function esc(s: string): string {
     .replace(/'/g, '&#39;');
 }
 
-// Branding placeholders — finální hodnoty přijdou v bodě L.
-const BRAND_NAME = 'Vinamar';
-const BRAND_TAGLINE = 'Vinamar — Apartmán La Mata, Torrevieja';
-const ACCENT = '#2563eb';
+// ViñaMar identity, mirrored from the website (web/tailwind.config.ts).
+const BRAND_NAME = 'ViñaMar';
+const BRAND_SUBTITLE = 'La Mata · Torrevieja';
+const BRAND_TAGLINE = 'ViñaMar · Apartmán u moře, La Mata';
+
+// Palette. Kept as hex literals because email clients need them inline, not as
+// CSS variables.
+const INK = '#1F3A34';
+const PAPER = '#FBF8F3';
+const SAGE = '#61716A';
+const BRASS = '#A9885A';
+const LINE = '#E4DCCF';
+const CARD = '#FFFFFF';
+
+// The website sets the wordmark in Kaushan Script, but a webfont does not load
+// reliably in mail clients (Gmail strips it, Outlook ignores it), so the email
+// wordmark falls back to the same serif the site uses for its headings.
+const SERIF = "Georgia, 'Times New Roman', Cambria, serif";
+const SANS = "-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
 export function publicBaseUrl(): string {
   return process.env.PUBLIC_BASE_URL ?? '#';
@@ -34,6 +49,7 @@ function ctaBlock(cta?: { label: string; url: string }): string {
 }
 
 // Kostra Postmark `basic-full` (MIT) přepsaná do TS; bloky Twigu = parametry.
+// Vzhled sladěný s prezentačním webem (identita ViñaMar).
 export function baseLayout(opts: {
   preheader: string;
   content: string;
@@ -46,31 +62,36 @@ export function baseLayout(opts: {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${BRAND_NAME}</title>
     <style media="all" type="text/css">
-      body { font-family: Helvetica, sans-serif; font-size: 16px; line-height: 1.3; background-color: #f4f5f6; margin: 0; padding: 0; }
+      body { font-family: ${SANS}; font-size: 16px; line-height: 1.5; background-color: ${PAPER}; margin: 0; padding: 0; color: ${INK}; }
       table { border-collapse: separate; width: 100%; }
-      table td { font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; }
-      .body { background-color: #f4f5f6; width: 100%; }
+      table td { font-family: ${SANS}; font-size: 16px; vertical-align: top; }
+      .body { background-color: ${PAPER}; width: 100%; }
       .container { margin: 0 auto !important; max-width: 600px; padding-top: 24px; width: 600px; }
       .content { box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px; }
-      .main { background: #ffffff; border: 1px solid #eaebed; border-radius: 16px; width: 100%; }
-      .wrapper { box-sizing: border-box; padding: 24px; }
-      .header { padding: 24px 0 12px; text-align: center; }
-      .header a { color: ${ACCENT}; font-size: 24px; font-weight: bold; text-decoration: none; }
+      .main { background: ${CARD}; border: 1px solid ${LINE}; border-radius: 4px; width: 100%; }
+      .wrapper { box-sizing: border-box; padding: 32px; color: ${INK}; }
+      .header { padding: 28px 0 20px; text-align: center; }
+      .header .brand { color: ${INK}; font-family: ${SERIF}; font-size: 30px; font-weight: 400; letter-spacing: 1px; text-decoration: none; }
+      .header .subtitle { color: ${SAGE}; font-family: ${SANS}; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; padding-top: 6px; }
       .footer { clear: both; padding-top: 24px; text-align: center; width: 100%; }
-      .footer td, .footer p, .footer span, .footer a { color: #9a9ea6; font-size: 14px; text-align: center; }
-      p { font-family: Helvetica, sans-serif; font-size: 16px; margin: 0 0 16px; }
-      a { color: ${ACCENT}; text-decoration: underline; }
-      .btn { box-sizing: border-box; min-width: 100% !important; width: 100%; }
+      .footer td, .footer p, .footer span, .footer a { color: ${SAGE}; font-size: 13px; text-align: center; }
+      h2 { font-family: ${SERIF}; font-size: 22px; font-weight: 400; color: ${INK}; margin: 0 0 16px; }
+      p { font-family: ${SANS}; font-size: 16px; line-height: 1.6; color: ${INK}; margin: 0 0 16px; }
+      a { color: ${INK}; text-decoration: underline; }
+      .rule { border: 0; border-top: 1px solid ${BRASS}; width: 36px; margin: 20px 0; }
+      .stay { background-color: ${PAPER}; border: 1px solid ${LINE}; border-radius: 4px; padding: 14px 18px; margin: 0 0 16px; }
+      .stay p { margin: 0; }
+      .btn { box-sizing: border-box; min-width: 100% !important; width: 100%; padding-top: 8px; }
       .btn > tbody > tr > td { padding-bottom: 16px; }
       .btn table { width: auto; }
-      .btn table td { background-color: #ffffff; border-radius: 4px; text-align: center; }
-      .btn a { background-color: #ffffff; border: solid 2px ${ACCENT}; border-radius: 4px; box-sizing: border-box; color: ${ACCENT}; cursor: pointer; display: inline-block; font-size: 16px; font-weight: bold; padding: 12px 24px; text-decoration: none; }
-      .btn-primary table td { background-color: ${ACCENT}; }
-      .btn-primary a { background-color: ${ACCENT}; border-color: ${ACCENT}; color: #ffffff; }
+      .btn table td { background-color: ${CARD}; border-radius: 2px; text-align: center; }
+      .btn a { background-color: ${CARD}; border: solid 1px ${INK}; border-radius: 2px; box-sizing: border-box; color: ${INK}; cursor: pointer; display: inline-block; font-size: 12px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; padding: 13px 28px; text-decoration: none; }
+      .btn-primary table td { background-color: ${INK}; }
+      .btn-primary a { background-color: ${INK}; border-color: ${INK}; color: ${PAPER}; }
       .preheader { color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0; }
       @media only screen and (max-width: 640px) {
         .main p, .main td, .main span { font-size: 16px !important; }
-        .wrapper { padding: 8px !important; }
+        .wrapper { padding: 20px !important; }
         .container { padding: 0 !important; padding-top: 8px !important; width: 100% !important; }
         .main { border-left-width: 0 !important; border-radius: 0 !important; border-right-width: 0 !important; }
         .btn table, .btn a { max-width: 100% !important; width: 100% !important; }
@@ -84,7 +105,10 @@ export function baseLayout(opts: {
       <td>&nbsp;</td>
       <td class="container"><div class="content">
         <span class="preheader">${esc(opts.preheader)}</span>
-        <div class="header"><a href="${publicBaseUrl()}">${BRAND_NAME}</a></div>
+        <div class="header">
+          <a href="${publicBaseUrl()}" class="brand">${BRAND_NAME}</a>
+          <div class="subtitle">${esc(BRAND_SUBTITLE)}</div>
+        </div>
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main"><tr>
           <td class="wrapper">${opts.content}${ctaBlock(opts.cta)}</td>
         </tr></table>
