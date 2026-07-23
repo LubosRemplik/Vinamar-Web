@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { createTransport, Transporter } from 'nodemailer';
 import { OwnerNotifier } from '../../domain/inquiry/owner-notifier.port';
 import { Inquiry } from '../../domain/inquiry/inquiry';
-import { bookingCancelledEmail } from './templates/messages';
+import { bookingCancelledEmail, ownerInquiryReceivedEmail } from './templates/messages';
 
 @Injectable()
 export class SmtpOwnerNotifier implements OwnerNotifier {
@@ -13,14 +13,13 @@ export class SmtpOwnerNotifier implements OwnerNotifier {
   });
 
   async inquiryReceived(inquiry: Inquiry): Promise<void> {
+    const content = ownerInquiryReceivedEmail(inquiry);
     await this.transport.sendMail({
       from: process.env.SMTP_FROM ?? 'vinamar@example.com',
       to: process.env.OWNER_EMAIL ?? 'owner@example.com',
-      subject: `Nová poptávka: ${inquiry.guestName}`,
-      text:
-        `${inquiry.guestName} (${inquiry.email.value}${inquiry.phone ? `, tel. ${inquiry.phone}` : ''})\n` +
-        `${inquiry.range.arrival.toISOString().slice(0, 10)} → ` +
-        `${inquiry.range.departure.toISOString().slice(0, 10)}\n\n${inquiry.message}`,
+      subject: content.subject,
+      html: content.html,
+      text: content.text,
     });
   }
 

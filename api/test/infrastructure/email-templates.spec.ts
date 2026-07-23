@@ -8,6 +8,8 @@ import {
   inquiryDeclinedEmail,
   bookingCancelledEmail,
   arrivalReminderEmail,
+  ownerInquiryReceivedEmail,
+  contractEmail,
 } from '../../src/infrastructure/notify/templates/messages';
 
 const inquiry = () =>
@@ -56,6 +58,41 @@ describe('email templates', () => {
 
   it('arrivalReminder is minimal and mentions the upcoming stay', () => {
     expect(arrivalReminderEmail(inquiry()).html).toContain('14. 7. 2025');
+  });
+
+  it('ownerInquiryReceived is HTML with contact, dates and message', () => {
+    const m = ownerInquiryReceivedEmail(inquiry());
+    expect(m.html).toContain('<!doctype html>');
+    expect(m.html).toContain('Jan Novák');
+    expect(m.html).toContain('jan@x.cz');
+    expect(m.html).toContain('+420777111222');
+    expect(m.html).toContain('14. 7. 2025');
+    expect(m.html).toContain('ahoj');
+    expect(m.subject).toContain('Jan Novák');
+  });
+
+  it('contractEmail is HTML addressed to the guest', () => {
+    const m = contractEmail('Jan Novák');
+    expect(m.html).toContain('<!doctype html>');
+    expect(m.html).toContain('Jan Novák');
+    expect(m.subject.toLowerCase()).toContain('smlouva');
+    expect(m.text).toContain('Jan Novák');
+  });
+
+  it('ownerInquiryReceived escapes the guest message and contact', () => {
+    const evil = new Inquiry(
+      'id-y',
+      'Jan',
+      new EmailAddress('e@x.cz'),
+      '',
+      new DateRange(new Date('2025-07-14'), new Date('2025-07-25')),
+      '<img src=x onerror=alert(1)>',
+      'confirmed',
+      new Date('2025-06-01'),
+    );
+    const m = ownerInquiryReceivedEmail(evil);
+    expect(m.html).not.toContain('<img src=x');
+    expect(m.html).toContain('&lt;img');
   });
 
   it('escapes HTML in guest name to prevent injection', () => {

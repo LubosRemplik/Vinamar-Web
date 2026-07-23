@@ -91,6 +91,61 @@ export function bookingCancelledEmail(
   };
 }
 
+// Majiteli — nová poptávka od hosta, s kontaktem a zprávou.
+export function ownerInquiryReceivedEmail(inquiry: Inquiry): EmailContent {
+  const contactLines = [
+    `E-mail: ${inquiry.email.value}`,
+    inquiry.phone ? `Telefon: ${inquiry.phone}` : '',
+  ].filter(Boolean);
+
+  const contactHtml = [
+    `<p><strong>${esc(inquiry.guestName)}</strong><br>` +
+      `${esc(inquiry.email.value)}` +
+      (inquiry.phone ? `<br>${esc(inquiry.phone)}` : '') +
+      `</p>`,
+  ].join('');
+
+  const messageHtml = inquiry.message
+    ? `<p style="white-space: pre-line;">${esc(inquiry.message)}</p>`
+    : '';
+
+  return {
+    subject: `Nová poptávka: ${inquiry.guestName}`,
+    text:
+      `${inquiry.guestName}\n` +
+      `${contactLines.join('\n')}\n` +
+      `Termín: ${stay(inquiry)}\n\n` +
+      `${inquiry.message}`,
+    html: baseLayout({
+      preheader: `Nová poptávka: ${inquiry.guestName}`,
+      content:
+        '<h2>Nová poptávka</h2>' +
+        contactHtml +
+        stayParagraph(inquiry) +
+        messageHtml,
+      cta: { label: 'Otevřít administraci', url: `${publicBaseUrl()}/admin` },
+    }),
+  };
+}
+
+// Hostovi — nájemní smlouva v příloze (samotné PDF řeší notifier).
+export function contractEmail(guestName: string): EmailContent {
+  return {
+    subject: 'Nájemní smlouva — La Mata, Torrevieja',
+    text:
+      `Dobrý den ${guestName},\n\n` +
+      `v příloze zasíláme nájemní smlouvu k vašemu pobytu. ` +
+      `Prosíme o její kontrolu a podpis.\n\nViñaMar`,
+    html: baseLayout({
+      preheader: 'Nájemní smlouva k vašemu pobytu',
+      content:
+        `<p>Dobrý den ${esc(guestName)},</p>` +
+        '<p>v příloze zasíláme nájemní smlouvu k vašemu pobytu. Prosíme o její kontrolu a podpis.</p>' +
+        '<p>Pokud budete mít jakýkoli dotaz, stačí odpovědět na tento e-mail.</p>',
+    }),
+  };
+}
+
 export function arrivalReminderEmail(inquiry: Inquiry): EmailContent {
   return {
     subject: 'Blíží se váš pobyt',
