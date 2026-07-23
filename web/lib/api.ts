@@ -58,16 +58,6 @@ export async function fetchAdminCalendar(token: string): Promise<CalendarEntry[]
 // The subscribable iCal feed URL (with its secret token) for all reservations,
 // fetched on behalf of the authenticated admin. Returns null when the feed is
 // not configured on the server (ICAL_FEED_TOKEN unset).
-export async function fetchCalendarFeedUrl(token: string): Promise<string | null> {
-  const res = await fetch(`${BASE}/admin/calendar/feed-url`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (res.status === 401) throw new Error('unauthorized');
-  if (!res.ok) throw new Error('feed-url failed');
-  const data = (await res.json()) as { url: string | null };
-  return data.url;
-}
-
 export async function cancelCalendarEntry(token: string, id: string): Promise<boolean> {
   const res = await fetch(`${BASE}/admin/calendar/${id}`, {
     method: 'DELETE',

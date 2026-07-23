@@ -3,12 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   fetchAdminCalendar,
   cancelCalendarEntry,
-  fetchCalendarFeedUrl,
   updateInquiryContact,
   type CalendarEntry,
 } from '@/lib/api';
 import { getAdminToken, adminLogout } from '@/lib/admin';
-import { formatCzDate } from '@/lib/date';
+import { formatCzDate, formatNights, nightsBetween } from '@/lib/date';
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
@@ -84,8 +83,6 @@ const BTN_DANGER =
   'rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-700 transition-colors hover:bg-rose-50';
 const BTN_NEUTRAL =
   'rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium text-ink/70 transition-colors hover:bg-ink/5';
-const BTN_GHOST =
-  'inline-flex items-center rounded-lg border border-ink/20 px-3 py-1.5 text-xs font-medium text-ink/70 transition-colors hover:bg-ink/5';
 
 const PAGE_SIZE = 10;
 
@@ -132,6 +129,7 @@ function Term({ from, to }: { from: string; to: string }) {
     <div className="leading-tight">
       <div className="whitespace-nowrap">{formatCzDate(from)}</div>
       <div className="whitespace-nowrap text-ink/50">→ {formatCzDate(to)}</div>
+      <div className="whitespace-nowrap text-xs text-ink/45">{formatNights(nightsBetween(from, to))}</div>
     </div>
   );
 }
@@ -245,67 +243,10 @@ function GuestCell({
 // Calendar to keep an auto-syncing overview of ALL reservations. webcal:// lets
 // Apple Calendar subscribe in one click; Google needs the https URL pasted into
 // "Other calendars → From URL".
-function CalendarFeed({ url }: { url: string | null }) {
-  const [copied, setCopied] = useState(false);
-
-  async function copy() {
-    if (!url) return;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* clipboard blocked — the input is selectable as a fallback */
-    }
-  }
-
-  return (
-    <div className="mb-4 rounded-2xl border border-ink/10 bg-ink/[0.02] p-4">
-      <h3 className="text-sm font-semibold text-ink">Předplatit kalendář</h3>
-      <p className="mt-1 text-sm text-ink/60">
-        Přidejte tento odkaz do Google nebo Apple kalendáře a uvidíte všechny rezervace,
-        které se samy aktualizují.
-      </p>
-      {url ? (
-        <>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <input
-              readOnly
-              value={url}
-              onFocus={(e) => e.currentTarget.select()}
-              className="min-w-0 flex-1 rounded-lg border border-ink/15 bg-white px-3 py-1.5 font-mono text-xs text-ink/70"
-            />
-            <div className="flex gap-2">
-              <button onClick={copy} className={BTN_PRIMARY}>
-                {copied ? 'Zkopírováno' : 'Kopírovat'}
-              </button>
-              <a
-                href={url.replace(/^https?:\/\//, 'webcal://')}
-                className={BTN_GHOST}
-              >
-                Apple Kalendář
-              </a>
-            </div>
-          </div>
-          <p className="mt-2 text-xs text-ink/45">
-            Google: Další kalendáře → Z adresy URL. Synchronizace běží podle Googlu
-            (typicky každých několik hodin), není okamžitá.
-          </p>
-        </>
-      ) : (
-        <p className="mt-3 text-sm text-ink/45">
-          Feed není nakonfigurován — nastavte na serveru proměnnou ICAL_FEED_TOKEN.
-        </p>
-      )}
-    </div>
-  );
-}
-
 export default function AdminDashboard() {
   const [rows, setRows] = useState<Row[]>([]);
   const [entries, setEntries] = useState<CalendarEntry[]>([]);
   const [token, setToken] = useState<string | null>(null);
-  const [feedUrl, setFeedUrl] = useState<string | null>(null);
   // Default to pending so a long history of resolved inquiries doesn't bury the
   // ones that still need a decision.
   const [filter, setFilter] = useState('pending');
@@ -340,20 +281,9 @@ export default function AdminDashboard() {
     }
   }
 
-  // The feed URL never changes per session, so a load failure shouldn't bounce
-  // the admin out — just hide the panel.
-  async function loadFeedUrl(t: string) {
-    try {
-      setFeedUrl(await fetchCalendarFeedUrl(t));
-    } catch {
-      setFeedUrl(null);
-    }
-  }
-
   function reload(t: string) {
     loadInquiries(t);
     loadCalendar(t);
-    loadFeedUrl(t);
   }
 
   useEffect(() => {
@@ -454,7 +384,6 @@ export default function AdminDashboard() {
 
       <section className="mb-10">
         <h2 className="mb-3 text-xl font-semibold text-ink">Rezervace</h2>
-        <CalendarFeed url={feedUrl} />
         <FilterChips
           options={RESERVATION_FILTERS}
           value={reservationFilter}
