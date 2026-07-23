@@ -16,6 +16,24 @@ test('nav reaches all showcase pages', async ({ page }) => {
   await expect(page).toHaveURL(/\/tipy-na-vylety$/);
 });
 
+test('the nav marks the current section, including on a trip detail', async ({ page }) => {
+  await page.goto('/volne-terminy');
+  await expect(page.getByRole('link', { name: 'Volné termíny' }).first()).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+
+  await page.goto('/tipy-na-vylety/tabarca');
+  await expect(page.getByRole('link', { name: 'Tipy na výlety' }).first()).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expect(page.getByRole('link', { name: 'Z letiště' }).first()).not.toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+});
+
 test('the retired /okoli URL redirects into the merged page', async ({ page }) => {
   await page.goto('/okoli');
   await expect(page).toHaveURL(/\/apartman$/);

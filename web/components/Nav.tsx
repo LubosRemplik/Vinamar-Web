@@ -1,21 +1,25 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { getAdminToken } from '@/lib/admin';
+import { NAV_LINKS, isCurrent } from '@/lib/nav';
 import Container from './Container';
 import Logo from './Logo';
 
-const links = [
-  { href: '/volne-terminy', label: 'Volné termíny' },
-  { href: '/apartman', label: 'Apartmán a okolí' },
-  { href: '/tipy-na-vylety', label: 'Tipy na výlety' },
-  { href: '/z-letiste', label: 'Z letiště' },
-];
+const LINK = 'text-[13px] uppercase tracking-[0.12em] transition-colors';
 
-const LINK = 'text-[13px] uppercase tracking-[0.12em] text-ink/90 hover:text-ink transition-colors';
+// The current page is marked twice over — full-strength ink and a brass rule —
+// so it does not rely on colour alone.
+const DESKTOP_REST = 'border-b border-transparent pb-1 text-ink/70 hover:text-ink';
+const DESKTOP_CURRENT = 'border-b border-brass pb-1 text-ink';
+
+const MOBILE_REST = 'border-l-2 border-transparent pl-4 text-ink/70';
+const MOBILE_CURRENT = 'border-l-2 border-brass pl-4 text-ink';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname() ?? '';
   // Admin token lives in localStorage, so this resolves client-side only — the
   // Administrace link appears just for a logged-in owner, never for visitors.
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,13 +35,21 @@ export default function Nav() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className={LINK}>
-              {l.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((l) => {
+            const current = isCurrent(pathname, l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={current ? 'page' : undefined}
+                className={`${LINK} ${current ? DESKTOP_CURRENT : DESKTOP_REST}`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
           {isAdmin && (
-            <Link href="/admin" className={`${LINK} text-brass`}>
+            <Link href="/admin" className={`${LINK} text-brass hover:text-ink`}>
               Administrace
             </Link>
           )}
@@ -76,21 +88,27 @@ export default function Nav() {
 
       {open && (
         <nav id="mobile-menu" className="border-t border-line md:hidden">
-          <Container className="pb-4">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="block border-b border-line/60 py-4 text-sm uppercase tracking-[0.12em] text-ink/80 last:border-0"
-                onClick={() => setOpen(false)}
-              >
-                {l.label}
-              </Link>
-            ))}
+          <Container className="py-2">
+            {NAV_LINKS.map((l) => {
+              const current = isCurrent(pathname, l.href);
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={current ? 'page' : undefined}
+                  className={`block py-4 text-sm uppercase tracking-[0.12em] ${
+                    current ? MOBILE_CURRENT : MOBILE_REST
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
             {isAdmin && (
               <Link
                 href="/admin"
-                className="block border-b border-line/60 py-4 text-sm uppercase tracking-[0.12em] text-brass last:border-0"
+                className={`block py-4 pl-4 text-sm uppercase tracking-[0.12em] text-brass`}
                 onClick={() => setOpen(false)}
               >
                 Administrace

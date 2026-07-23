@@ -1,13 +1,7 @@
 import Link from 'next/link';
+import { NAV_LINKS } from '@/lib/nav';
 import Container from './Container';
 import Logo from './Logo';
-
-const links = [
-  { href: '/volne-terminy', label: 'Volné termíny' },
-  { href: '/apartman', label: 'Apartmán a okolí' },
-  { href: '/tipy-na-vylety', label: 'Tipy na výlety' },
-  { href: '/z-letiste', label: 'Z letiště' },
-];
 
 export default function Footer() {
   return (
@@ -16,7 +10,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-8 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
           <Logo size="lg" subtitle />
           <nav className="flex flex-wrap justify-center gap-x-7 gap-y-3 sm:justify-end">
-            {links.map((l) => (
+            {NAV_LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
