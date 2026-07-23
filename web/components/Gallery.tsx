@@ -5,6 +5,20 @@ import Image from 'next/image';
 export interface Photo {
   src: string;
   alt: string;
+  /** When set, the tile is a video: `src` is the poster, `video` the file. */
+  video?: string;
+}
+
+function PlayBadge() {
+  return (
+    <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-ink/55 ring-1 ring-paper/70 transition-transform duration-300 group-hover:scale-110">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 text-paper" aria-hidden="true">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </span>
+    </span>
+  );
 }
 
 export default function Gallery({ photos }: { photos: Photo[] }) {
@@ -47,7 +61,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
               }}
               onClick={() => setOpenIndex(i)}
               className="group relative block aspect-[4/3] w-full overflow-hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-ink"
-              aria-label={`Zvětšit fotku: ${photo.alt}`}
+              aria-label={photo.video ? `Přehrát video: ${photo.alt}` : `Zvětšit fotku: ${photo.alt}`}
             >
               <Image
                 src={photo.src}
@@ -56,6 +70,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
                 sizes="(min-width: 640px) 33vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
+              {photo.video && <PlayBadge />}
             </button>
           </li>
         ))}
@@ -95,9 +110,21 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
           </button>
 
           <figure className="relative max-h-full w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
-            <div className="relative aspect-[4/3] w-full">
-              <Image src={current.src} alt={current.alt} fill sizes="100vw" className="object-contain" />
-            </div>
+            {current.video ? (
+              <video
+                key={current.video}
+                src={current.video}
+                poster={current.src}
+                controls
+                autoPlay
+                playsInline
+                className="mx-auto max-h-[80vh] w-full bg-black object-contain"
+              />
+            ) : (
+              <div className="relative aspect-[4/3] w-full">
+                <Image src={current.src} alt={current.alt} fill sizes="100vw" className="object-contain" />
+              </div>
+            )}
             <figcaption className="mt-4 text-center text-xs uppercase tracking-[0.18em] text-paper/70">
               {current.alt}
             </figcaption>

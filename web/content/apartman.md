@@ -12,8 +12,9 @@ gallery:
     alt: Koupelna s vanou
   - src: /images/apartment/balcony.jpg
     alt: Balkon se stolkem a židlemi
-  - src: /images/apartment/hallway.jpg
-    alt: Chodba s pohledem do obývacího pokoje
+  - src: /images/apartment/tour-poster.jpg
+    alt: Video prohlídka apartmánu
+    video: /videos/apartment-tour.mp4
 amenities:
   - icon: bed
     label: 2 až 4 osoby
