@@ -4,7 +4,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { AdminAuthController } from './http/admin-auth.controller';
 import { AdminInquiryController } from './http/admin-inquiry.controller';
 import { AdminCalendarController } from './http/admin-calendar.controller';
-import { AdminContractController } from './http/admin-contract.controller';
 import { AdminGuard } from './http/admin.guard';
 
 // NOTE: Do NOT re-register the CQRS handlers or repositories here. They are
@@ -18,7 +17,6 @@ import { AdminGuard } from './http/admin.guard';
     AdminAuthController,
     AdminInquiryController,
     AdminCalendarController,
-    AdminContractController,
   ],
   providers: [AdminGuard],
 })

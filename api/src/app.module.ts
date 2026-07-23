@@ -4,7 +4,6 @@ import { HealthModule } from './interface/health.module';
 import { AvailabilityModule } from './interface/availability.module';
 import { InquiryModule } from './interface/inquiry.module';
 import { AdminModule } from './interface/admin.module';
-import { ContractModule } from './interface/contract.module';
 import { FlightModule } from './interface/flight.module';
 import { OptimizerModule } from './interface/optimizer.module';
 import { CalendarModule } from './interface/calendar.module';
@@ -16,7 +15,6 @@ import { CalendarModule } from './interface/calendar.module';
     AvailabilityModule,
     InquiryModule,
     AdminModule,
-    ContractModule,
     FlightModule,
     OptimizerModule,
     CalendarModule,

@@ -128,24 +128,6 @@ export function ownerInquiryReceivedEmail(inquiry: Inquiry): EmailContent {
   };
 }
 
-// Hostovi — nájemní smlouva v příloze (samotné PDF řeší notifier).
-export function contractEmail(guestName: string): EmailContent {
-  return {
-    subject: 'Nájemní smlouva — La Mata, Torrevieja',
-    text:
-      `Dobrý den ${guestName},\n\n` +
-      `v příloze zasíláme nájemní smlouvu k vašemu pobytu. ` +
-      `Prosíme o její kontrolu a podpis.\n\nViñaMar`,
-    html: baseLayout({
-      preheader: 'Nájemní smlouva k vašemu pobytu',
-      content:
-        `<p>Dobrý den ${esc(guestName)},</p>` +
-        '<p>v příloze zasíláme nájemní smlouvu k vašemu pobytu. Prosíme o její kontrolu a podpis.</p>' +
-        '<p>Pokud budete mít jakýkoli dotaz, stačí odpovědět na tento e-mail.</p>',
-    }),
-  };
-}
-
 export function arrivalReminderEmail(inquiry: Inquiry): EmailContent {
   return {
     subject: 'Blíží se váš pobyt',

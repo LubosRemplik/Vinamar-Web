@@ -3,12 +3,7 @@ import { EmailAddress } from '../shared/email-address';
 import { MinimumStayNotMetError } from './minimum-stay-not-met.error';
 import { ArrivalInPastError } from './arrival-in-past.error';
 
-export type InquiryStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'declined'
-  | 'cancelled'
-  | 'contract_sent';
+export type InquiryStatus = 'pending' | 'confirmed' | 'declined' | 'cancelled';
 
 export const MINIMUM_NIGHTS = 7;
 

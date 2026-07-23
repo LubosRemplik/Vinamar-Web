@@ -9,7 +9,6 @@ import {
   bookingCancelledEmail,
   arrivalReminderEmail,
   ownerInquiryReceivedEmail,
-  contractEmail,
 } from '../../src/infrastructure/notify/templates/messages';
 
 const inquiry = () =>
@@ -69,14 +68,6 @@ describe('email templates', () => {
     expect(m.html).toContain('14. 7. 2025');
     expect(m.html).toContain('ahoj');
     expect(m.subject).toContain('Jan Novák');
-  });
-
-  it('contractEmail is HTML addressed to the guest', () => {
-    const m = contractEmail('Jan Novák');
-    expect(m.html).toContain('<!doctype html>');
-    expect(m.html).toContain('Jan Novák');
-    expect(m.subject.toLowerCase()).toContain('smlouva');
-    expect(m.text).toContain('Jan Novák');
   });
 
   it('ownerInquiryReceived escapes the guest message and contact', () => {
