@@ -15,5 +15,5 @@ barvu jí dávají řasy a bakterie, kterým svědčí vysoká salinita. Nejsyt�
 odstín v létě a k večeru.
 
 Kolem jezer vedou značené cesty pro pěší i na kolo, u laguny hnízdí plameňáci.
-Koupání v soli je povolené jen na vyhrazeném místě u Torreviejy; parkuje se
+Koupání v soli je povolené jen na vyhrazeném místě u Torrevieja; parkuje se
 u vyhlídek podél silnice.

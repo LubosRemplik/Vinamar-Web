@@ -14,4 +14,4 @@ borovicových dun — vysázených na konci 19. století, aby zastavily písek z
 město. Dnes je to stinný park s cestami až k moři.
 
 Nad městem stojí zbytky hradu a archeologické naleziště s maurskou pevností
-La Rábita Califal. Pláže jsou širší a méně zastavěné než v Torrevieji.
+La Rábita Califal. Pláže jsou širší a méně zastavěné než v Torrevieja.

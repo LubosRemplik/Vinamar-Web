@@ -28,7 +28,7 @@ const body = Jost({
 export const metadata: Metadata = {
   title: 'ViñaMar — apartmán u moře, La Mata',
   description:
-    'Apartmán s bazénem 300 m od pláže v La Mata u Torreviejy. Podívejte se, kdy je volno, a rezervujte termín.',
+    'Apartmán s bazénem 300 m od pláže v La Mata u Torrevieja. Podívejte se, kdy je volno, a rezervujte termín.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

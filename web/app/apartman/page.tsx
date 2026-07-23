@@ -9,7 +9,7 @@ import { readPage, renderMarkdown } from '@/lib/content';
 export const metadata: Metadata = {
   title: 'Apartmán a okolí — ViñaMar',
   description:
-    'Apartmán pro dva až čtyři s bazénem v rezidenci, tři sta metrů od písečné pláže La Mata u Torreviejy.',
+    'Apartmán pro dva až čtyři s bazénem v rezidenci, tři sta metrů od písečné pláže La Mata u Torrevieja.',
 };
 
 const POOL = [
