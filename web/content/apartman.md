@@ -9,7 +9,7 @@ gallery:
   - src: /images/apartment/dining.jpg
     alt: Jídelní stůl
   - src: /images/apartment/bathroom-01.jpg
-    alt: Koupelna s vanou
+    alt: Koupelna se sprchovou zástěnou
   - src: /images/apartment/balcony.jpg
     alt: Balkon se stolkem a židlemi
   - src: /images/apartment/tour-poster.jpg
