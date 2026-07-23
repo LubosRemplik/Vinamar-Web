@@ -74,8 +74,7 @@ export default async function Apartman() {
             <div>
               <h3 className="text-lg">K zapůjčení</h3>
               <hr className="rule mt-3" />
-              <p className="mt-5 text-sm text-sage">Na vyžádání vám rádi půjčíme:</p>
-              <ul className="mt-3 space-y-2 text-ink/90">
+              <ul className="mt-5 space-y-2 text-ink/90">
                 {rental.map((item) => (
                   <li key={item}>{item}</li>
                 ))}

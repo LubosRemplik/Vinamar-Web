@@ -31,13 +31,13 @@ amenities:
 equipment:
   - title: Kuchyně
     items:
-      - Lednice
+      - Kombinovaná lednice
       - Indukční varná deska
       - Mikrovlnná trouba
-      - Fritéza
-      - Kávovar
+      - Horkovzdušná fritéza
+      - Nespresso kávovar na kapsle
       - Toustovač
-      - Dřez s odkapávačem a nádobí
+      - Dřez s odkapávačem
       - Pračka
   - title: V ceně pobytu
     items:
@@ -55,6 +55,5 @@ rental:
 Apartmán má oddělenou ložnici s manželskou postelí a prostorný obývací pokoj.
 Pohodlně tu bydlí dva, a když přijedete ve čtyřech, rozkládací gauč v obýváku
 poslouží jako plnohodnotné druhé lůžko a ke stolu se pohodlně sedne taky ve
-čtyřech. Kuchyňský kout má lednici, varnou desku i nádobí na vaření.
-
-Na balkoně je posezení se stolkem a dvěma židlemi a výhled na bazén.
+čtyřech. Kuchyňský kout má lednici, varnou desku i nádobí na vaření. Na balkoně
+je posezení se stolkem a dvěma židlemi a výhled na bazén.
