@@ -35,6 +35,16 @@ const config: Config = {
         eyebrow: '0.34em',
         button: '0.16em',
       },
+      // Jost has a small x-height, so it reads a size smaller than it measures.
+      // Every step up to `xl` gains a pixel; `2xl` and above are headings and
+      // keep the stock scale.
+      fontSize: {
+        xs: ['0.8125rem', { lineHeight: '1.125rem' }],
+        sm: ['0.9375rem', { lineHeight: '1.375rem' }],
+        base: ['1.0625rem', { lineHeight: '1.625rem' }],
+        lg: ['1.1875rem', { lineHeight: '1.8125rem' }],
+        xl: ['1.3125rem', { lineHeight: '1.875rem' }],
+      },
     },
   },
   plugins: [],

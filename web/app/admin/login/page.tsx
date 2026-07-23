@@ -27,7 +27,7 @@ export default function AdminLogin() {
       <form onSubmit={login} className="flex flex-col gap-3">
         <input suppressHydrationWarning placeholder="Uživatel" value={u} onChange={(e) => setU(e.target.value)} className="border p-2 rounded" />
         <input suppressHydrationWarning type="password" placeholder="Heslo" value={p} onChange={(e) => setP(e.target.value)} className="border p-2 rounded" />
-        <button className="border border-ink bg-ink py-3 text-[11px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85">Přihlásit</button>
+        <button className="border border-ink bg-ink py-3 text-[12px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85">Přihlásit</button>
         {err && <p className="text-sm text-red-600">{err}</p>}
       </form>
     </main>

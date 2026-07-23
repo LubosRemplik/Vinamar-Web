@@ -27,11 +27,11 @@ h3 {
 
 @layer components {
   .eyebrow {
-    @apply font-body text-[11px] uppercase tracking-eyebrow text-sage;
+    @apply font-body text-[12px] uppercase tracking-eyebrow text-sage;
   }
 
   .btn {
-    @apply inline-block border px-7 py-3 font-body text-[11px] uppercase tracking-button
+    @apply inline-block border px-7 py-3 font-body text-[12px] uppercase tracking-button
       transition-colors;
   }
 

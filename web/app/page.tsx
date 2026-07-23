@@ -36,8 +36,8 @@ export default function Home() {
           </p>
           <hr className="rule mx-auto my-8" />
           <p className="eyebrow">
-            {SEASON_RATE} € / noc v sezóně · {OFF_SEASON_RATE} € mimo sezónu · úklid {CLEANING_FEE}{' '}
-            € za pobyt
+            {SEASON_RATE}&nbsp;€ / noc v sezóně · {OFF_SEASON_RATE}&nbsp;€ mimo sezónu · úklid{' '}
+            {CLEANING_FEE}&nbsp;€ za pobyt
           </p>
         </div>
 

@@ -77,7 +77,7 @@ export default function BookingForm({
           {isAdmin ? 'Rezervace vytvořena.' : 'Děkujeme, ozveme se vám.'}
         </p>
         <p className="mt-1 text-sm text-ink/60">
-          {isAdmin ? 'Rezervaci' : 'Poptávku'} na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €){' '}
+          {isAdmin ? 'Rezervaci' : 'Poptávku'} na termín {formatCzDate(arrival)} → {formatCzDate(departure)} ({price} €){' '}
           {isAdmin ? 'jsme uložili.' : 'jsme přijali.'}
         </p>
         <button
@@ -97,10 +97,10 @@ export default function BookingForm({
         <p className="text-sm font-semibold text-ink">
           {formatCzDate(arrival)} <span className="text-ink/30">→</span> {formatCzDate(departure)}{' '}
           <span className="font-normal text-ink/50">· {nights} nocí</span>{' '}
-          <span className="font-medium text-ink">· {price} €</span>
+          <span className="font-medium text-ink">· {price} €</span>
         </p>
         <p className="w-full text-xs text-ink/50">
-          Ubytování {accommodation} € + závěrečný úklid {CLEANING_FEE} €
+          Ubytování {accommodation} € + závěrečný úklid {CLEANING_FEE} €
         </p>
         <button
           type="button"
@@ -161,7 +161,7 @@ export default function BookingForm({
       <button
         type="submit"
         disabled={state === 'sending' || messageProblem !== null}
-        className="mt-3 w-full border border-ink bg-ink px-5 py-3 text-[11px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85 disabled:opacity-60 focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40"
+        className="mt-3 w-full border border-ink bg-ink px-5 py-3 text-[12px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85 disabled:opacity-60 focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40"
       >
         {state === 'sending' ? 'Odesílám…' : isAdmin ? 'Vytvořit rezervaci' : 'Odeslat poptávku'}
       </button>

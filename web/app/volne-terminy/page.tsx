@@ -21,9 +21,11 @@ export default function VolneTerminyPage() {
             Podívejte se, kdy je apartmán v La Mata volný. Vyberte si termín přímo v kalendáři
             a pošlete nám nezávaznou poptávku.
           </p>
+          {/* Non-breaking spaces keep each amount glued to its currency sign when
+              the line wraps. */}
           <p className="eyebrow mt-8">
-            {SEASON_RATE} € / noc v sezóně (červen–září) · {OFF_SEASON_RATE} € mimo sezónu · úklid{' '}
-            {CLEANING_FEE} € za pobyt
+            {SEASON_RATE}&nbsp;€ / noc v sezóně (červen–září) · {OFF_SEASON_RATE}&nbsp;€ mimo sezónu
+            · úklid {CLEANING_FEE}&nbsp;€ za pobyt
           </p>
         </header>
 

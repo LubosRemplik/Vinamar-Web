@@ -118,7 +118,7 @@ export default function FlightSchedules({
                 href={ryanairTripUrl(airport.origin, arrival, departure)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-1 border border-ink bg-ink px-3 py-2 text-[10px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85 focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40 sm:w-auto sm:shrink-0"
+                className="inline-flex w-full items-center justify-center gap-1 border border-ink bg-ink px-3 py-2 text-[11px] uppercase tracking-button text-paper transition-colors hover:bg-ink/85 focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/40 sm:w-auto sm:shrink-0"
               >
                 Cena na Ryanair →
               </a>
