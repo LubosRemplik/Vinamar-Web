@@ -28,11 +28,33 @@ amenities:
     label: Bazén v rezidenci
   - icon: beach
     label: 300 m k pláži
+equipment:
+  - title: Kuchyně
+    items:
+      - Lednice
+      - Indukční varná deska
+      - Mikrovlnná trouba
+      - Fritéza
+      - Kávovar
+      - Toustovač
+      - Dřez s odkapávačem a nádobí
+      - Pračka
+  - title: V ceně pobytu
+    items:
+      - Ručníky a osušky k bazénu
+      - Sprchový gel a šampon
+      - Prací prášek
+      - Úklidové prostředky
+rental:
+  - Plážová křesla
+  - Slunečník
+  - Nafukovací mini lehátka
+  - Plavecké brýle
+  - Hračky pro děti
 ---
-Apartmán je dělaný pro dva — oddělená ložnice s manželskou postelí, obývací pokoj
-jen pro vás a nikde se nemusíte tísnit. Když přijedete ve čtyřech, rozkládací gauč
-v obýváku poslouží jako plnohodnotné druhé lůžko a ke stolu se pohodlně sedne taky
-ve čtyřech. Kuchyňský kout má lednici, varnou desku i nádobí na vaření.
+Apartmán má oddělenou ložnici s manželskou postelí a prostorný obývací pokoj.
+Pohodlně tu bydlí dva, a když přijedete ve čtyřech, rozkládací gauč v obýváku
+poslouží jako plnohodnotné druhé lůžko a ke stolu se pohodlně sedne taky ve
+čtyřech. Kuchyňský kout má lednici, varnou desku i nádobí na vaření.
 
-Balkon se stolkem a dvěma židlemi je obrácený do vnitřního bloku rezidence — je
-z něj vidět na bazén a v podvečer sem přestane pálit slunce.
+Na balkoně je posezení se stolkem a dvěma židlemi a výhled na bazén.

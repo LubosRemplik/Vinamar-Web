@@ -26,6 +26,8 @@ export default async function Apartman() {
 
   const gallery = (apartment.data.gallery as Photo[]) ?? [];
   const amenities = (apartment.data.amenities as Amenity[]) ?? [];
+  const equipment = (apartment.data.equipment as { title: string; items: string[] }[]) ?? [];
+  const rental = (apartment.data.rental as string[]) ?? [];
   const beachGallery = (surroundings.data.gallery as Photo[]) ?? [];
 
   return (
@@ -50,6 +52,36 @@ export default async function Apartman() {
 
         <div className="mt-20">
           <Highlights items={amenities} />
+        </div>
+      </Section>
+
+      <Section className="border-t border-line">
+        <SectionHeading eyebrow="Vybavení" title="Co v apartmánu najdete" />
+        <div className="mx-auto mt-14 grid max-w-4xl gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {equipment.map((group) => (
+            <div key={group.title}>
+              <h3 className="text-lg">{group.title}</h3>
+              <hr className="rule mt-3" />
+              <ul className="mt-5 space-y-2 text-ink/90">
+                {group.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          {rental.length > 0 && (
+            <div>
+              <h3 className="text-lg">K zapůjčení</h3>
+              <hr className="rule mt-3" />
+              <p className="mt-5 text-sm text-sage">Na vyžádání vám rádi půjčíme:</p>
+              <ul className="mt-3 space-y-2 text-ink/90">
+                {rental.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </Section>
 
