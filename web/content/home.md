@@ -4,9 +4,8 @@ heroSubtitle: Tři sta metrů od písečné pláže v La Mata, s bazénem v rezi
 heroImage: /images/home/hero.jpg
 heroAlt: Osvětlený bazén rezidence za soumraku
 intro: >
-  Klidná čtvrť La Mata na Costa Blanca, dlouhá písečná pláž na dosah chůze
-  a bazén, do kterého se dá skočit hned po návratu z moře. Apartmán pro čtyři,
-  bez recepce a bez front — jen klíč, balkon a slunce.
+  La Mata na Costa Blanca, dlouhá písečná pláž na dosah chůze a bazén, do kterého
+  se dá skočit hned po návratu z moře. Apartmán pro čtyři, balkon a slunce.
 amenities:
   - icon: beach
     label: 300 m k pláži
