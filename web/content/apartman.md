@@ -7,7 +7,7 @@ gallery:
   - src: /images/apartment/bedroom.jpg
     alt: Ložnice s manželskou postelí
   - src: /images/apartment/dining.jpg
-    alt: Jídelní stůl se sklenicemi vína
+    alt: Jídelní stůl
   - src: /images/apartment/bathroom-01.jpg
     alt: Koupelna s vanou
   - src: /images/apartment/balcony.jpg
