@@ -18,6 +18,4 @@ gallery:
 Playa de La Mata je několik kilometrů dlouhá písečná pláž s pozvolným vstupem do
 vody. Vede k ní dřevěná lávka přes chráněné duny; cesta od domu trvá pár minut
 pěšky. Na pláži se dají půjčit lehátka se slunečníky a šlapadla, podél promenády jsou
-restaurace, kavárny a obchody.
-
-Kousek od domu je také Molino de Aqua Park.
+restaurace, kavárny a obchody. Kousek od domu je také Molino de Aqua Park.
