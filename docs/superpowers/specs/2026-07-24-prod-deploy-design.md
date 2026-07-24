@@ -14,8 +14,11 @@ Rozhodnutí z brainstormu:
 
 - **Deploy:** build image lokálně, přenos přes SSH (`docker save | ssh docker load`).
   Žádný registr, žádný build na serveru.
-- **E-maily:** reálné SMTP; credentials doplní Luboš do `.env` na serveru
-  (do té doby zůstávají placeholdery a maily neodejdou).
+- **E-maily:** reálné SMTP přes AWS SES (endpoint + credentials v lokálním
+  `Assets/smtp-credentials.csv`, git-ignorováno). Odesílatel
+  `noreply@ses.vinamar.cz`, `Reply-To: remplik@gmail.com`. Doména
+  `ses.vinamar.cz` se teprve validuje — odeslání se ověří až po dokončení
+  validace.
 - **Zálohy DB:** noční `pg_dump` do `/opt/vinamar/backups`, který si odnese
   stávající celoserverový restic běžící ve 3:30 (`/opt` je ve zdrojích,
   retence 7 denních / 4 týdenní / 6 měsíčních).
@@ -33,6 +36,22 @@ Rozhodnutí z brainstormu:
   - **web:** `npm ci` → `next build` s build-arg `NEXT_PUBLIC_API_URL=/api` →
     runtime `next start`. `API_PROXY_TARGET=http://api:3001` zůstává runtime env
     pro Next rewrites.
+
+## 1b. SMTP auth + Reply-To v api
+
+Nodemailer transport v `smtp-guest-notifier.ts` a `smtp-owner-notifier.ts`
+dnes neumí autentizaci ani Reply-To. Úprava:
+
+- sdílená factory `createSmtpTransport()` (infrastructure/notify): `SMTP_HOST`,
+  `SMTP_PORT`, a pokud je nastaven `SMTP_USER`/`SMTP_PASS`, přidá `auth` a
+  `requireTLS: true` (STARTTLS na portu 587; bez auth — lokální mailpit —
+  zůstává chování beze změny),
+- oba notifiery přidají `replyTo: process.env.MAIL_REPLY_TO` (pokud je nastaven),
+- nové env proměnné: `SMTP_USER`, `SMTP_PASS`, `MAIL_REPLY_TO`.
+
+Produkční hodnoty: `SMTP_FROM=noreply@ses.vinamar.cz`,
+`MAIL_REPLY_TO=remplik@gmail.com`, `OWNER_EMAIL=remplik@gmail.com`,
+host/port/user/pass z `Assets/smtp-credentials.csv`.
 
 ## 2. Makefile
 
