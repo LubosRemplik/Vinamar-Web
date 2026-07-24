@@ -1,7 +1,8 @@
 import { Injectable, Optional } from '@nestjs/common';
-import { createTransport, Transporter } from 'nodemailer';
+import { Transporter } from 'nodemailer';
 import { GuestNotifier } from '../../domain/inquiry/guest-notifier.port';
 import { Inquiry } from '../../domain/inquiry/inquiry';
+import { createSmtpTransport, mailReplyTo } from './smtp-transport';
 import { EmailContent } from './templates/base';
 import {
   inquiryReceivedEmail,
@@ -15,11 +16,7 @@ import {
 export class SmtpGuestNotifier implements GuestNotifier {
   constructor(
     @Optional()
-    private readonly transport: Transporter = createTransport({
-      host: process.env.SMTP_HOST ?? 'mailpit',
-      port: Number(process.env.SMTP_PORT ?? 1025),
-      secure: false,
-    }),
+    private readonly transport: Transporter = createSmtpTransport(),
   ) {}
 
   private async send(to: string, content: EmailContent): Promise<void> {
@@ -28,6 +25,7 @@ export class SmtpGuestNotifier implements GuestNotifier {
         name: process.env.MAIL_FROM_NAME ?? 'ViñaMar',
         address: process.env.SMTP_FROM ?? 'vinamar@example.com',
       },
+      replyTo: mailReplyTo(),
       to,
       subject: content.subject,
       html: content.html,

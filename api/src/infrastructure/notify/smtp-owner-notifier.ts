@@ -1,21 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { createTransport, Transporter } from 'nodemailer';
+import { Injectable, Optional } from '@nestjs/common';
+import { Transporter } from 'nodemailer';
 import { OwnerNotifier } from '../../domain/inquiry/owner-notifier.port';
 import { Inquiry } from '../../domain/inquiry/inquiry';
+import { createSmtpTransport, mailReplyTo } from './smtp-transport';
+import { EmailContent } from './templates/base';
 import { bookingCancelledEmail, ownerInquiryReceivedEmail } from './templates/messages';
 
 @Injectable()
 export class SmtpOwnerNotifier implements OwnerNotifier {
-  private readonly transport: Transporter = createTransport({
-    host: process.env.SMTP_HOST ?? 'mailpit',
-    port: Number(process.env.SMTP_PORT ?? 1025),
-    secure: false,
-  });
+  constructor(
+    @Optional()
+    private readonly transport: Transporter = createSmtpTransport(),
+  ) {}
 
-  async inquiryReceived(inquiry: Inquiry): Promise<void> {
-    const content = ownerInquiryReceivedEmail(inquiry);
+  private async send(content: EmailContent): Promise<void> {
     await this.transport.sendMail({
       from: process.env.SMTP_FROM ?? 'vinamar@example.com',
+      replyTo: mailReplyTo(),
       to: process.env.OWNER_EMAIL ?? 'owner@example.com',
       subject: content.subject,
       html: content.html,
@@ -23,14 +24,11 @@ export class SmtpOwnerNotifier implements OwnerNotifier {
     });
   }
 
+  async inquiryReceived(inquiry: Inquiry): Promise<void> {
+    await this.send(ownerInquiryReceivedEmail(inquiry));
+  }
+
   async bookingCancelled(inquiry: Inquiry): Promise<void> {
-    const content = bookingCancelledEmail(inquiry, { isOwner: true });
-    await this.transport.sendMail({
-      from: process.env.SMTP_FROM ?? 'vinamar@example.com',
-      to: process.env.OWNER_EMAIL ?? 'owner@example.com',
-      subject: content.subject,
-      html: content.html,
-      text: content.text,
-    });
+    await this.send(bookingCancelledEmail(inquiry, { isOwner: true }));
   }
 }
