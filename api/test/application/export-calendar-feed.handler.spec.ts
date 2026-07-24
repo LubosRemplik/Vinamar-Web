@@ -42,8 +42,8 @@ describe('ExportCalendarFeedHandler', () => {
     expect(ics).toContain('UID:a@vinamar');
     expect(ics).toContain('UID:b@vinamar');
     expect(ics).toContain('DTSTART;VALUE=DATE:20260801');
-    // checkout day stays exclusive (no +1)
-    expect(ics).toContain('DTEND;VALUE=DATE:20260812');
+    // DTEND is exclusive; +1 keeps the checkout day visible as occupied
+    expect(ics).toContain('DTEND;VALUE=DATE:20260813');
   });
 
   it('carries guest name and phone into the event body', async () => {

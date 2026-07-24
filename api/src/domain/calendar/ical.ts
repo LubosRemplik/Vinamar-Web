@@ -1,7 +1,7 @@
 // Minimal, dependency-free iCalendar (RFC 5545) writer. Scope: all-day VEVENTs
 // for reservations, so a stay can be added to Google Calendar / Apple Calendar.
-// DTEND for an all-day event is EXCLUSIVE — a stay's departure day is checkout,
-// not an occupied night, so the range arrival→departure maps verbatim.
+// DTEND for an all-day event is EXCLUSIVE; callers decide which day the range
+// ends on (reservations pass departure +1 so the checkout day stays visible).
 
 export interface IcalEvent {
   uid: string;
