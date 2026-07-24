@@ -40,6 +40,9 @@ Plaz/IMG_1290.JPG|surroundings/beach-bar.jpg
 Aquapolis/IMG_1166.JPG|trips/aquopolis.jpg
 Aquapolis/IMG_1163.JPG|trips/aquopolis-02.jpg
 Aquapolis/IMG_1165.JPG|trips/aquopolis-03.jpg
+Feria de Torrevieja/IMG_1123.JPG|trips/feria.jpg
+Feria de Torrevieja/IMG_1124.JPG|trips/feria-02.jpg
+Feria de Torrevieja/IMG_1130.JPG|trips/feria-03.jpg
 EOF
 )
 

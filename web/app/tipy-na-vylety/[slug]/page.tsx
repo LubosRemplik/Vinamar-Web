@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Container from '@/components/Container';
 import Gallery from '@/components/Gallery';
 import Section from '@/components/Section';
 import { getTrip, getTripSlugs, renderMarkdown } from '@/lib/content';
@@ -36,6 +35,12 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
   const html = await renderMarkdown(trip!.body);
   const { meta } = trip!;
 
+  // The gallery (in the lightbox) includes the hero shot as its first photo.
+  const galleryPhotos = [
+    ...(meta.image ? [{ src: meta.image, alt: meta.title }] : []),
+    ...(meta.gallery ?? []),
+  ];
+
   return (
     <main>
       <Section>
@@ -53,28 +58,34 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
       </Section>
 
       {meta.image && (
-        <figure>
+        // Full-bleed on a normal desktop, but capped so it doesn't turn huge on
+        // very wide (2K/4K) monitors.
+        <figure className="mx-auto w-full max-w-[1920px]">
           <div className="relative aspect-[16/9] w-full sm:aspect-[21/9]">
-            <Image src={meta.image} alt={meta.title} fill sizes="100vw" className="object-cover" />
+            <Image
+              src={meta.image}
+              alt={meta.title}
+              fill
+              sizes="(min-width: 1920px) 1920px, 100vw"
+              className="object-cover"
+            />
           </div>
           {meta.imageCredit && (
-            <Container>
-              <figcaption className="mt-3 text-right text-[11px] text-sage">
-                Foto:{' '}
-                {meta.imageCreditUrl ? (
-                  <a
-                    href={meta.imageCreditUrl}
-                    className="underline decoration-line underline-offset-2"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {meta.imageCredit}
-                  </a>
-                ) : (
-                  meta.imageCredit
-                )}
-              </figcaption>
-            </Container>
+            <figcaption className="mt-3 px-6 text-right text-[11px] text-sage">
+              Foto:{' '}
+              {meta.imageCreditUrl ? (
+                <a
+                  href={meta.imageCreditUrl}
+                  className="underline decoration-line underline-offset-2"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {meta.imageCredit}
+                </a>
+              ) : (
+                meta.imageCredit
+              )}
+            </figcaption>
           )}
         </figure>
       )}
@@ -97,9 +108,9 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
           )}
         </div>
 
-        {meta.gallery && meta.gallery.length > 0 && (
-          <div className="mx-auto mt-16 max-w-4xl">
-            <Gallery photos={meta.gallery} />
+        {galleryPhotos.length > 1 && (
+          <div className="mx-auto mt-16 max-w-5xl">
+            <Gallery photos={galleryPhotos} />
           </div>
         )}
 
