@@ -16,3 +16,6 @@ test-results/
 *.tsbuildinfo
 .claude/settings.local.json
 Assets/
+
+# macOS
+.DS_Store
