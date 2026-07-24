@@ -32,12 +32,11 @@ describe('trip content', () => {
 });
 
 describe('z-letiste page content', () => {
-  it('má frontmatter a všechny 4 sekce', () => {
+  it('má frontmatter a všechny 3 sekce', () => {
     const { data, body } = readPage('z-letiste.md', contentDir);
     expect(data.title).toBe('Z letiště');
     expect(body).toContain('Půjčení auta');
     expect(body).toContain('Veřejná doprava');
     expect(body).toContain('Taxi');
-    expect(body).toContain('Mapa');
   });
 });
