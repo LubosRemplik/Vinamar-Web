@@ -156,7 +156,7 @@ cd web && npm run e2e         # playwright smoke (proti běžící aplikaci)
 - [x] J — iCal export (přidání rezervace do Google Calendaru včetně jména, příjmení a tel. čísla hosta)
 - [x] K — E-maily (transakční maily kolem rezervace: poptávka, potvrzení, odmítnutí, zrušení, připomínka 14 dní; HTML šablony, čeština)
 - [x] L — Logo a design (identita ViñaMar, nová paleta a písma, reálné fotky, sloučení Apartmán + Okolí, přestavěné tipy na výlety)
-- [ ] M — Instalace na produkci
+- [x] M — Instalace na produkci (www.vinamar.cz na vps.hkdev.cz: Caddy + /opt/vinamar, `make deploy-prod`, SES e-maily, noční pg_dump + restic)
 - [ ] N — Zkontrolovat loginy a bezpečnost (silný `JWT_SECRET` při bootu, audit admin endpointů)
 - [x] O - Stranka s info "Z letiste" (statická stránka /z-letiste: auto / bus / taxi + odkaz na Google Maps trasu, odkaz v navigaci)
 - [ ] P - Multi apartman
