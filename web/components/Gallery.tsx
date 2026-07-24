@@ -7,6 +7,9 @@ export interface Photo {
   alt: string;
   /** When set, the tile is a video: `src` is the poster, `video` the file. */
   video?: string;
+  /** Attribution for free-licence photos, shown in the lightbox. */
+  credit?: string;
+  creditUrl?: string;
 }
 
 function PlayBadge() {
@@ -127,6 +130,18 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
             )}
             <figcaption className="mt-4 text-center text-xs uppercase tracking-[0.18em] text-paper/70">
               {current.alt}
+              {current.credit && (
+                <span className="ml-2 normal-case tracking-normal text-paper/45">
+                  · Foto:{' '}
+                  {current.creditUrl ? (
+                    <a href={current.creditUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                      {current.credit}
+                    </a>
+                  ) : (
+                    current.credit
+                  )}
+                </span>
+              )}
             </figcaption>
           </figure>
 

@@ -22,7 +22,7 @@ export interface TripTip {
   imageCredit?: string;
   imageCreditUrl?: string;
   /** Extra photos shown as a gallery on the trip detail page. */
-  gallery?: { src: string; alt: string }[];
+  gallery?: { src: string; alt: string; credit?: string; creditUrl?: string }[];
 }
 
 export interface PageContent {

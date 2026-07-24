@@ -7,7 +7,7 @@ imageCreditUrl: https://commons.wikimedia.org/wiki/File:Tabarca_Island-Alicante_
 summary: Jediný obydlený ostrov v regionu — opevněná vesnice, průzračná voda a mořská rezervace.
 distanceKm: 35
 driveMinutes: 35
-order: 7
+order: 6
 ---
 Na Tabarcu se jezdí lodí ze Santa Poly, plavba trvá zhruba půl hodiny. Ostrov je
 dlouhý necelý kilometr a v jeho hrázděné části stojí opevněná vesnice z 18. století,

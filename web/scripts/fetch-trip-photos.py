@@ -15,10 +15,15 @@ DEST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", 
 UA = "VinamarWeb/1.0 (photo sourcing for a private holiday-let site)"
 
 # slug → (Commons file name, credit line)
+# output basename (without .jpg) → (Commons file, credit)
 PHOTOS = {
     "solna-jezera": (
         "Lagunas de la Mata y Torrevieja 01a.JPG",
         "L-Bit, CC BY-SA 4.0",
+    ),
+    "trhy": (
+        "At the market in Torrevieja.jpg",
+        "Flickr, CC BY 2.0",
     ),
     "tabarca": (
         "Tabarca Island-Alicante (Spain) - 48502403002 (cropped).jpg",
@@ -29,8 +34,20 @@ PHOTOS = {
         "Diego Delso, CC BY-SA 4.0",
     ),
     "alicante": (
-        "Alicante 1978 02.jpg",
-        "LBM1948, CC BY-SA 4.0",
+        "Explanada de España.jpg",
+        "Lance and Erin, CC BY 2.0",
+    ),
+    "alicante-02": (
+        "Playa del Postiguet 4.jpg",
+        "kallerna, CC BY-SA 4.0",
+    ),
+    "alicante-03": (
+        "Alicante Castillo de Santa Bárbara 01.jpg",
+        "H.Helmlechner, CC BY-SA 4.0",
+    ),
+    "alicante-04": (
+        "Pasarela Puerto de Alicante con el castillo Santa Bárbara de fondo.jpg",
+        "Laborinquen, CC0",
     ),
     "cartagena": (
         "Teatro romano de Cartagena, España, 2022-07-16, DD 02.jpg",
@@ -42,22 +59,22 @@ PHOTOS = {
 def main() -> int:
     os.makedirs(DEST, exist_ok=True)
     failures = []
-    for slug, (filename, credit) in PHOTOS.items():
+    for name, (filename, credit) in PHOTOS.items():
         url = "https://commons.wikimedia.org/wiki/Special:FilePath/" + filename.replace(" ", "_")
-        out = os.path.join(DEST, f"{slug}.jpg")
+        out = os.path.join(DEST, f"{name}.jpg")
         result = subprocess.run(
             ["curl", "-sSL", "-A", UA, "--fail", f"{url}?width=1600", "-o", out],
             capture_output=True,
             text=True,
         )
         if result.returncode != 0:
-            failures.append(f"{slug}: {result.stderr.strip()}")
+            failures.append(f"{name}: {result.stderr.strip()}")
             continue
         size = os.path.getsize(out)
         if size < 20_000:
-            failures.append(f"{slug}: suspiciously small download ({size} B)")
+            failures.append(f"{name}: suspiciously small download ({size} B)")
             continue
-        print(f"{slug:<16} {size // 1024:>5} kB   {credit}")
+        print(f"{name:<16} {size // 1024:>5} kB   {credit}")
 
     for f in failures:
         print(f"FAILED {f}", file=sys.stderr)

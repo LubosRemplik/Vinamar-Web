@@ -37,7 +37,9 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
 
   // The gallery (in the lightbox) includes the hero shot as its first photo.
   const galleryPhotos = [
-    ...(meta.image ? [{ src: meta.image, alt: meta.title }] : []),
+    ...(meta.image
+      ? [{ src: meta.image, alt: meta.title, credit: meta.imageCredit, creditUrl: meta.imageCreditUrl }]
+      : []),
     ...(meta.gallery ?? []),
   ];
 
@@ -45,12 +47,7 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
     <main>
       <Section>
         <div className="mx-auto max-w-2xl text-center">
-          {meta.distanceKm != null && (
-            <p className="eyebrow mb-4">
-              {meta.distanceKm} km z La Maty
-              {meta.driveMinutes != null && ` · ${meta.driveMinutes} min autem`}
-            </p>
-          )}
+          <p className="eyebrow mb-4">Costa Blanca</p>
           <h1>{meta.title}</h1>
           <hr className="rule mx-auto my-8" />
           <p className="font-display text-xl leading-relaxed text-ink/90">{meta.summary}</p>

@@ -2,15 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { TripTip } from '@/lib/content';
 
-function Distance({ trip }: { trip: TripTip }) {
-  if (trip.distanceKm == null) return null;
-  return (
-    <p className="eyebrow mb-2">
-      {trip.distanceKm} km{trip.driveMinutes != null && ` · ${trip.driveMinutes} min autem`}
-    </p>
-  );
-}
-
 export default function TripCard({ trip }: { trip: TripTip }) {
   return (
     <Link href={`/tipy-na-vylety/${trip.slug}`} className="group block">
@@ -32,7 +23,6 @@ export default function TripCard({ trip }: { trip: TripTip }) {
         )}
       </div>
       <div className="mt-5">
-        <Distance trip={trip} />
         <h3 className="transition-colors group-hover:text-ink/70">{trip.title}</h3>
         <p className="mt-2 text-sm leading-relaxed text-ink/90">{trip.summary}</p>
       </div>

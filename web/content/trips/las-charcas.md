@@ -5,7 +5,7 @@ image: /images/trips/las-charcas.jpg
 summary: Přírodní bahenní lázně v Lo Pagán u laguny Mar Menor. Léčivé slané bahno si natřete na kůži, necháte zaschnout a opláchnete se v teplé laguně.
 distanceKm: 40
 driveMinutes: 40
-order: 8
+order: 7
 externalLink: https://www.tripadvisor.com/Attraction_Review-g644340-d8539929-Reviews-Las_Charcas_Mud_Baths-Lo_Pagan.html
 ---
 V Lo Pagán na břehu laguny Mar Menor se dá zdarma dopřát koupel v přírodním

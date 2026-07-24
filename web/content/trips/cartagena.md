@@ -7,7 +7,7 @@ imageCreditUrl: https://commons.wikimedia.org/wiki/File:Teatro_romano_de_Cartage
 summary: Přístavní město s římským divadlem pro pět tisíc diváků, objeveným teprve v roce 1988.
 distanceKm: 90
 driveMinutes: 70
-order: 12
+order: 9
 ---
 Římské divadlo v Cartageně se našlo náhodou při stavebních pracích v roce 1988,
 schované pod čtvrtí postavenou přes jeho ruiny. Dnes se do něj vchází podzemní

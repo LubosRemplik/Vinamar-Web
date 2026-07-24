@@ -7,7 +7,7 @@ imageCreditUrl: https://commons.wikimedia.org/wiki/File:Palmeral,_Elche,_Espa%C3
 summary: Největší palmový háj v Evropě — dvě stě tisíc palem uprostřed města, památka UNESCO.
 distanceKm: 45
 driveMinutes: 40
-order: 9
+order: 8
 ---
 Palmeral de Elche založili Maurové na systému zavlažovacích kanálů a dodnes tvoří
 zelený pás skrz celé město. Od roku 2000 je na seznamu UNESCO. Nejhezčí částí je

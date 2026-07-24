@@ -5,7 +5,7 @@ image: /images/trips/feria.jpg
 summary: Pouťové atrakce, ruské kolo a stánky — večerní program, který děti nikdy neomrzí.
 distanceKm: 8
 driveMinutes: 12
-order: 4
+order: 5
 gallery:
   - src: /images/trips/feria-02.jpg
     alt: Houpačka Pirata nasvícená v noci

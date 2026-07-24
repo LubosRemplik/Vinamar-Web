@@ -7,7 +7,7 @@ imageCreditUrl: https://commons.wikimedia.org/wiki/File:Lagunas_de_la_Mata_y_Tor
 summary: Přírodní park se dvěma lagunami — jedna růžová, druhá zelená. Začíná hned za La Mata.
 distanceKm: 3
 driveMinutes: 5
-order: 1
+order: 4
 ---
 Parque Natural de las Lagunas de La Mata y Torrevieja tvoří dvě solná jezera hned
 za městem. Menší laguna u La Mata bývá zelenkavá, větší torreviejská svítí růžově —

@@ -20,8 +20,8 @@ export default function TripsList() {
           <h1>Tipy na výlety</h1>
           <hr className="rule mx-auto my-8" />
           <p className="font-display text-xl leading-relaxed text-ink/90">
-            Od solných jezer za rohem po římskou Cartagenu. Seřazeno podle vzdálenosti z La Maty,
-            časy jsou orientační.
+            Od solných jezer a trhů za rohem po římskou Cartagenu — kam se vydat na výlet z La
+            Maty.
           </p>
         </div>
 
