@@ -16,7 +16,9 @@ services:
       retries: 10
 
   api:
-    build: ./api
+    build:
+      context: ./api
+      target: dev
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://vinamar:vinamar@db:5432/vinamar}
       API_PORT: 3001
@@ -60,7 +62,9 @@ services:
       retries: 10
 
   web:
-    build: ./web
+    build:
+      context: ./web
+      target: dev
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
       API_PROXY_TARGET: http://api:3001
