@@ -37,6 +37,9 @@ Plaz/IMG_1289.JPG|surroundings/sea.jpg
 Plaz/IMG_1292.JPG|surroundings/promenade.jpg
 Plaz/IMG_1286.JPG|surroundings/beach-dunes.jpg
 Plaz/IMG_1290.JPG|surroundings/beach-bar.jpg
+Aquapolis/IMG_1166.JPG|trips/aquopolis.jpg
+Aquapolis/IMG_1163.JPG|trips/aquopolis-02.jpg
+Aquapolis/IMG_1165.JPG|trips/aquopolis-03.jpg
 EOF
 )
 

@@ -21,6 +21,8 @@ export interface TripTip {
   /** Author and licence of a photo taken from a free-licence source. */
   imageCredit?: string;
   imageCreditUrl?: string;
+  /** Extra photos shown as a gallery on the trip detail page. */
+  gallery?: { src: string; alt: string }[];
 }
 
 export interface PageContent {

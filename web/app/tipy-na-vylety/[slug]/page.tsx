@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Container from '@/components/Container';
+import Gallery from '@/components/Gallery';
 import Section from '@/components/Section';
 import { getTrip, getTripSlugs, renderMarkdown } from '@/lib/content';
 
@@ -95,6 +96,12 @@ export default async function TripDetail({ params }: { params: Promise<{ slug: s
             </p>
           )}
         </div>
+
+        {meta.gallery && meta.gallery.length > 0 && (
+          <div className="mx-auto mt-16 max-w-4xl">
+            <Gallery photos={meta.gallery} />
+          </div>
+        )}
 
         <div className="mt-16 text-center">
           <Link href="/tipy-na-vylety" className="eyebrow hover:text-ink">
