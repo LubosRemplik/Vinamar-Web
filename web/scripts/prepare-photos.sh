@@ -16,6 +16,8 @@ APARTMENT="$SRC/Apartman s bazenem"
 BEACH="$SRC/Plaz"
 
 # source file → destination path, one pair per line
+# trips/banos-de-lodo.jpg (hero) is NOT here: it's IMG_9724.jpeg with the
+# child's face blurred manually before resizing — do not overwrite it.
 MAP=$(cat <<'EOF'
 Apartman s bazenem/IMG_1309.JPG|home/hero.jpg
 Apartman s bazenem/IMG_1379.JPG|apartment/living-01.jpg
@@ -43,6 +45,10 @@ Aquapolis/IMG_1165.JPG|trips/aquopolis-03.jpg
 Feria de Torrevieja/IMG_1123.JPG|trips/feria.jpg
 Feria de Torrevieja/IMG_1124.JPG|trips/feria-02.jpg
 Feria de Torrevieja/IMG_1130.JPG|trips/feria-03.jpg
+Banos De Lodo/IMG_2642.jpeg|trips/banos-de-lodo-02.jpg
+Banos De Lodo/IMG_2640.jpeg|trips/banos-de-lodo-03.jpg
+Banos De Lodo/IMG_2641.jpeg|trips/banos-de-lodo-04.jpg
+Banos De Lodo/IMG_2638.jpeg|trips/banos-de-lodo-05.jpg
 EOF
 )
 

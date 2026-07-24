@@ -7,7 +7,15 @@ const nextConfig = {
   },
   async redirects() {
     // /okoli was folded into /apartman — keep old links and bookmarks working.
-    return [{ source: '/okoli', destination: '/apartman', permanent: true }];
+    return [
+      { source: '/okoli', destination: '/apartman', permanent: true },
+      // las-charcas trip was renamed to banos-de-lodo
+      {
+        source: '/tipy-na-vylety/las-charcas',
+        destination: '/tipy-na-vylety/banos-de-lodo',
+        permanent: true,
+      },
+    ];
   },
 };
 export default nextConfig;
