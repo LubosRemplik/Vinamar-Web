@@ -26,7 +26,7 @@ const body = Jost({
 });
 
 export const metadata: Metadata = {
-  title: 'ViñaMar — apartmán u moře, La Mata',
+  title: 'Apartmán na pobřeží Costa Blanca, La Mata, Torrevieja',
   description:
     'Apartmán s bazénem 300 m od pláže v La Mata u Torrevieja. Podívejte se, kdy je volno, a rezervujte termín.',
 };
