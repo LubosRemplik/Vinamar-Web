@@ -16,8 +16,9 @@ export default function Hero({
 }) {
   return (
     // The photo is sized to the block of type it carries, not to the viewport —
-    // a full-height hero pushed everything else below the fold.
-    <section className="relative flex items-center justify-center">
+    // a full-height hero pushed everything else below the fold. Capped at 1920px
+    // so it stays full-bleed on a normal desktop but not on very wide monitors.
+    <section className="relative mx-auto flex max-w-[1920px] items-center justify-center">
       {/* On wide screens the crop is a narrow band; centring it would spend half
           the frame on the empty terrace in the foreground. */}
       <Image

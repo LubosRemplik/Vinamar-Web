@@ -1,6 +1,7 @@
 ---
 title: Las Charcas — bahenní lázně
 category: priroda
+image: /images/trips/las-charcas.jpg
 summary: Přírodní bahenní lázně v Lo Pagán u laguny Mar Menor. Léčivé slané bahno si natřete na kůži, necháte zaschnout a opláchnete se v teplé laguně.
 distanceKm: 40
 driveMinutes: 40
