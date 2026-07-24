@@ -20,18 +20,6 @@ PHOTOS = {
         "Lagunas de la Mata y Torrevieja 01a.JPG",
         "L-Bit, CC BY-SA 4.0",
     ),
-    "torrevieja": (
-        "Torrevieja - Puerto 07.jpg",
-        "Zarateman, CC0",
-    ),
-    "guardamar": (
-        "Guardamar del Segura panorama from hotel Poseidon.jpg",
-        "Klapi, CC BY-SA 4.0",
-    ),
-    "santa-pola": (
-        "Santa Pola. Cabo de Santa Pola.JPG",
-        "Enrique Íñiguez Rodríguez (Qoan), CC BY-SA 3.0",
-    ),
     "tabarca": (
         "Tabarca Island-Alicante (Spain) - 48502403002 (cropped).jpg",
         "Jose A., CC BY 2.0",
@@ -43,14 +31,6 @@ PHOTOS = {
     "alicante": (
         "Alicante 1978 02.jpg",
         "LBM1948, CC BY-SA 4.0",
-    ),
-    "mar-menor": (
-        "La Manga cityscape from Mirador de Monte Blanco, Cartagena, Murcia, Spain, 2022 January.jpg",
-        "Ximonic (Simo Räsänen), CC BY-SA 4.0",
-    ),
-    "murcia": (
-        "Catedral de Murcia plaza de Belluga.jpg",
-        "Ncs10, CC BY-SA 4.0",
     ),
     "cartagena": (
         "Teatro romano de Cartagena, España, 2022-07-16, DD 02.jpg",
