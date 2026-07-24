@@ -8,7 +8,7 @@ GIT_SHA := $(shell git rev-parse --short HEAD)
 .PHONY: help up down build restart logs ps db test test-api test-web e2e-api e2e-web lint migrate seed deploy-prod ssh-prod
 
 help: ## Vypíše dostupné targety
-	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 up: ## Spustí lokální stack (docker compose up -d --build)
 	docker compose up -d --build
