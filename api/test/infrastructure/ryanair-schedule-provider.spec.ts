@@ -52,4 +52,16 @@ describe('RyanairScheduleProvider', () => {
     );
     expect(schedules).toHaveLength(0);
   });
+
+  it('sends an abort signal so a hanging API cannot stall the refresh forever', async () => {
+    const seenSignals: (AbortSignal | undefined)[] = [];
+    const fetchStub = async (_url: string, init?: { signal?: AbortSignal }) => {
+      seenSignals.push(init?.signal);
+      return { ok: true, json: async () => outboundJuly };
+    };
+    const provider = new RyanairScheduleProvider(fetchStub);
+    await provider.schedulesForOrigin(Origin.fromCode('PED'), '2026-07-01', '2026-07-13');
+    expect(seenSignals.length).toBeGreaterThan(0);
+    expect(seenSignals.every((s) => s instanceof AbortSignal)).toBe(true);
+  });
 });

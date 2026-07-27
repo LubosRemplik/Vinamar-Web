@@ -10,9 +10,13 @@ export class FlightPriceCron implements OnApplicationBootstrap {
 
   constructor(private readonly commandBus: CommandBus) {}
 
-  async onApplicationBootstrap(): Promise<void> {
+  onApplicationBootstrap(): void {
     this.logger.log('initial flight price refresh');
-    await this.commandBus.execute(new RefreshFlightPricesCommand(this.horizon));
+    // Fire-and-forget: awaiting here would keep app.listen() from running
+    // until every external price request finishes (or hangs).
+    void this.commandBus
+      .execute(new RefreshFlightPricesCommand(this.horizon))
+      .catch((err) => this.logger.warn(`initial refresh failed: ${String(err)}`));
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_4AM)
