@@ -35,4 +35,16 @@ describe('TravelpayoutsFlightPriceProvider', () => {
     expect(quotes[0].deepLink).toContain('marker=marker123');
     expect(quotes[0].origin.code).toBe('WRO');
   });
+
+  it('sends an abort signal so a hanging API cannot stall the refresh forever', async () => {
+    const seenSignals: (AbortSignal | undefined)[] = [];
+    const fetchStub = async (_url: string, init?: { signal?: AbortSignal }) => {
+      seenSignals.push(init?.signal);
+      return { ok: true, json: async () => fixture };
+    };
+    const provider = new TravelpayoutsFlightPriceProvider('token123', 'marker123', fetchStub);
+    await provider.cheapestForOrigin(Origin.fromCode('WRO'), 1);
+    expect(seenSignals.length).toBeGreaterThan(0);
+    expect(seenSignals.every((s) => s instanceof AbortSignal)).toBe(true);
+  });
 });

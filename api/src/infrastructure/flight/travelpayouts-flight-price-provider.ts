@@ -17,10 +17,17 @@ interface TravelpayoutsResponse {
   data?: TravelpayoutsRow[];
 }
 
-type FetchLike = (url: string) => Promise<{
+type FetchLike = (
+  url: string,
+  init?: { signal?: AbortSignal },
+) => Promise<{
   ok: boolean;
   json: () => Promise<TravelpayoutsResponse>;
 }>;
+
+// A request that exceeds this is aborted; the origin fails and keeps its
+// previously stored quotes instead of blocking the whole refresh.
+const REQUEST_TIMEOUT_MS = 15_000;
 
 @Injectable()
 export class TravelpayoutsFlightPriceProvider implements FlightPriceProvider {
@@ -39,7 +46,7 @@ export class TravelpayoutsFlightPriceProvider implements FlightPriceProvider {
         `?origin=${origin.code}&destination=${DESTINATION}` +
         `&departure_at=${month}&currency=eur&sorting=price&direct=false` +
         `&limit=100&token=${this.token}`;
-      const res = await this.fetchImpl(url);
+      const res = await this.fetchImpl(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
       if (!res.ok) {
         continue;
       }

@@ -18,7 +18,14 @@ interface RyanairTimetable {
   days?: RyanairDay[];
 }
 
-type FetchLike = (url: string) => Promise<{ ok: boolean; json: () => Promise<RyanairTimetable> }>;
+type FetchLike = (
+  url: string,
+  init?: { signal?: AbortSignal },
+) => Promise<{ ok: boolean; json: () => Promise<RyanairTimetable> }>;
+
+// A hanging request is aborted and the month skipped (route treated as not
+// operated), so one stuck call cannot stall the whole refresh.
+const REQUEST_TIMEOUT_MS = 15_000;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -64,7 +71,7 @@ export class RyanairScheduleProvider implements FlightScheduleProvider {
         `/years/${year}/months/${month}`;
       let payload: RyanairTimetable;
       try {
-        const res = await this.fetchImpl(url);
+        const res = await this.fetchImpl(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
         if (!res.ok) continue; // route not operated that month
         payload = await res.json();
       } catch {

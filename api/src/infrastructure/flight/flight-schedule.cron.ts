@@ -10,13 +10,17 @@ export class FlightScheduleCron implements OnApplicationBootstrap {
 
   constructor(private readonly commandBus: CommandBus) {}
 
-  async onApplicationBootstrap(): Promise<void> {
+  onApplicationBootstrap(): void {
     // Skip the network-heavy refresh when running the test suite.
     if (process.env.NODE_ENV === 'test') {
       return;
     }
     this.logger.log('initial flight schedule refresh');
-    await this.commandBus.execute(new RefreshFlightSchedulesCommand(this.horizon));
+    // Fire-and-forget: awaiting here would keep app.listen() from running
+    // until every external timetable request finishes (or hangs).
+    void this.commandBus
+      .execute(new RefreshFlightSchedulesCommand(this.horizon))
+      .catch((err) => this.logger.warn(`initial refresh failed: ${String(err)}`));
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_4AM)
