@@ -14,11 +14,12 @@ RUN npm run build
 FROM node:22-alpine AS production
 ENV NODE_ENV=production
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci --omit=dev
-COPY --from=build /app/.next ./.next
+# Standalone output carries its own traced node_modules and next.config.mjs.
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/public ./public
+# content/ is read via process.cwd() at request time, so tracing can't see it.
 COPY --from=build /app/content ./content
-COPY next.config.mjs ./
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+# node as PID 1 (no npm wrapper) so SIGTERM stops the container immediately.
+CMD ["node", "server.js"]
