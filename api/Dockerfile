@@ -17,4 +17,6 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY migrations ./migrations
 EXPOSE 3001
-CMD ["sh", "-c", "npm run migrate up && node dist/main"]
+# Call the migrate binary directly and exec node so it runs as PID 1 and
+# receives SIGTERM from docker stop without waiting for the kill timeout.
+CMD ["sh", "-c", "node_modules/.bin/node-pg-migrate --migrations-dir migrations up && exec node dist/main"]

@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Self-contained production server (.next/standalone) — the Docker image
+  // ships only traced files instead of the whole node_modules tree.
+  output: 'standalone',
   reactStrictMode: true,
   async rewrites() {
     const apiTarget = process.env.API_PROXY_TARGET ?? 'http://localhost:3001';
