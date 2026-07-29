@@ -49,7 +49,7 @@ equipment:
 rental:
   - Plážová křesla
   - Slunečník
-  - Nafukovací mini lehátka
+  - Dětský nafukovací bodyboard
   - Plavecké brýle
   - Hračky pro děti
 ---

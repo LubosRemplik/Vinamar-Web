@@ -72,7 +72,7 @@ export default async function Apartman() {
 
           {rental.length > 0 && (
             <div>
-              <h3 className="text-lg">K zapůjčení</h3>
+              <h3 className="text-lg">K dispozici</h3>
               <hr className="rule mt-3" />
               <ul className="mt-5 space-y-2 text-ink/90">
                 {rental.map((item) => (
@@ -89,8 +89,8 @@ export default async function Apartman() {
       <Section>
         <SectionHeading eyebrow="Rezidence" title="Bazén za domem" />
         <p className="mx-auto mt-8 max-w-2xl text-center leading-relaxed text-ink">
-          K rezidenci patří společný bazén. V provozu je jen během sezóny, kdy u něj
-          dohlíží plavčík; mimo sezónu je uzavřený.
+          K rezidenci patří společný bazén. V provozu je od června do září a po celou
+          sezónu u něj dohlíží plavčík.
         </p>
         <p className="mx-auto mt-6 max-w-2xl text-center">
           <span className="eyebrow">Otevírací doba v sezóně</span>

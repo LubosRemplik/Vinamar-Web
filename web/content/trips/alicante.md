@@ -22,9 +22,12 @@ gallery:
     credit: Laborinquen, CC0
     creditUrl: https://commons.wikimedia.org/wiki/File:Pasarela_Puerto_de_Alicante_con_el_castillo_Santa_B%C3%A1rbara_de_fondo.jpg
 ---
-Hrad Santa Bárbara stojí na skále Benacantil sto šedesát metrů nad mořem. Nahoru
-vede výtah vyražený přímo ve skále — nástup je z promenády u pláže Postiguet.
-Z hradeb je vidět celý záliv.
+Hrad Santa Bárbara stojí na skále Benacantil sto šedesát metrů nad mořem a patří
+k největším středověkým pevnostem ve Španělsku. Vstup do areálu je zdarma. Nahoru
+vede výtah vyražený přímo ve skále — nástup je naproti pláži Postiguet, jízda
+stojí pár eur. Vyjít se dá i pěšky parkem La Ereta. V létě má hrad otevřeno až
+do 23 hodin, takže stihnete i západ slunce nad zálivem; z hradeb je vidět celé
+město i přístav.
 
 Dole na Explanada de España vede promenáda vydlážděná šesti a půl milionem
 mramorových kostek do vlnovky. Nad ní se zvedá barevná čtvrť Santa Cruz s úzkými

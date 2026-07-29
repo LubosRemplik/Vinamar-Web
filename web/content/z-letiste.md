@@ -15,8 +15,8 @@ bývá se zálohou (blokací na kreditní kartě) a s pojištěním.
 ## Taxi a transfery
 
 Máme dva ověřené kontakty na odvoz z letiště, cesta do La Maty vyjde orientačně
-na 50–70 €; rádi vám je předáme. V oblasti jezdí i Uber a Bolt — ve večerních
-hodinách ale jejich dostupnost nemáme ověřenou.
+na 50–70 €; rádi vám je předáme. V oblasti jezdí i Uber a Bolt, ale ve večerních
+hodinách jejich dostupnost nemáme ověřenou.
 
 ## Veřejná doprava (bus)
 

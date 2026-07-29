@@ -15,5 +15,9 @@ barvu jí dávají řasy a bakterie, kterým svědčí vysoká salinita. Nejsyt�
 odstín v létě a k večeru.
 
 Kolem jezer vedou značené cesty pro pěší i na kolo, u laguny hnízdí plameňáci.
-Koupání v soli je povolené jen na vyhrazeném místě u Torrevieja; parkuje se
-u vyhlídek podél silnice.
+Jezera jsou chráněná přírodní rezervace — koupání je v nich zakázané, k vodě se
+nechodí kvůli hnízdícím ptákům. Parkuje se u vyhlídek podél silnice.
+
+Kdo nechce chodit pěšky, může z centra Torrevieja vyrazit turistickým vláčkem
+[Trainvision](https://trainvision.es) — trasa „Salinas" vede kolem solných lagun
+s komentářem, vyjíždí z Paseo de la Libertad u přístavu.
