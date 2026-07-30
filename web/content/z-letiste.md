@@ -9,11 +9,11 @@ Alicante-Elche (ALC). Níže najdete tři způsoby, jak cestu zvládnout.
 
 Na letišti má pobočku většina velkých autopůjčoven (přízemí příletové haly).
 Cesta trvá zhruba 40 minut, v okolních silnicích u apartmánu lze auto zaparkovat.
-Nabídky půjčoven pohodlně porovnáte na
-[Discover Cars](https://www.discovercars.com/cz/spain/alicante/alc) — odkaz má
-předvyplněné vyzvednutí přímo na letišti Alicante, stačí doplnit termín.
-Info o ceně a možnostech půjčení auta Vám rádi poradíme — včetně toho, jak to
-bývá se zálohou (blokací na kreditní kartě) a s pojištěním.
+Ceny a nabídku půjčoven nejsnáz porovnáte na
+[Discover Cars](https://www.discovercars.com/cz/spain/alicante/alc) —
+vyzvednutí na letišti Alicante je v odkazu předvyplněné, stačí doplnit termín.
+A rádi vám dopředu poradíme, jak to u půjčoven na místě chodí: záloha blokací
+na kreditní kartě, připojištění nebo přebírání a vracení auta.
 
 ## Taxi a transfery
 
