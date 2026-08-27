@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { Pool } from 'pg';
 import { AppModule } from '../src/app.module';
+import { futureBlock, seedFlightQuotes } from './support/flight-seed';
 
 const url = process.env.DATABASE_URL ?? 'postgres://vinamar:vinamar@localhost:5432/vinamar';
 
@@ -12,6 +13,10 @@ interface MonthDto {
   freeRanges: { start: string; end: string }[];
   cheapest: { arrival: string; flightDeepLink: string } | null;
 }
+
+// The calendar covers 12 months from the current one, so the seeded block must
+// move with time — three months ahead keeps it safely inside the window.
+const block = futureBlock();
 
 describe('Calendar (e2e)', () => {
   let app: INestApplication;
@@ -25,8 +30,11 @@ describe('Calendar (e2e)', () => {
     await app.init();
     await pool.query('DELETE FROM calendar_blocks');
     await pool.query(
-      `INSERT INTO calendar_blocks (start_date, end_date, reason) VALUES ('2026-07-01','2026-07-15','booked')`,
+      `INSERT INTO calendar_blocks (start_date, end_date, reason) VALUES ($1, $2, 'booked')`,
+      [block.start, block.end],
     );
+    // Priced months must not depend on the app's async bootstrap refresh.
+    await seedFlightQuotes(pool, 'WRO');
   });
 
   afterAll(async () => {
@@ -50,9 +58,10 @@ describe('Calendar (e2e)', () => {
     expect(priced.length).toBeGreaterThan(0);
     expect(priced[0].cheapest!.flightDeepLink).toContain('aviasales.com/search/WRO');
 
-    const blockedMonth = months.find((m) => m.year === 2026 && m.month === 7)!;
-    for (const r of blockedMonth.freeRanges) {
-      expect(r.start >= '2026-07-15' || r.end <= '2026-07-01').toBe(true);
+    const blockedMonth = months.find((m) => m.year === block.year && m.month === block.month);
+    expect(blockedMonth).toBeDefined();
+    for (const r of blockedMonth!.freeRanges) {
+      expect(r.start >= block.end || r.end <= block.start).toBe(true);
     }
   });
 });

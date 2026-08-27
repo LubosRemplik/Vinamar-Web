@@ -9,7 +9,11 @@ export class MockFlightPriceProvider implements FlightPriceProvider {
   async cheapestForOrigin(origin: Origin, horizonMonths: number): Promise<FlightQuote[]> {
     const base = ({ PED: 95, WRO: 58 } as Partial<Record<string, number>>)[origin.code] ?? 80;
     const quotes: FlightQuote[] = [];
-    const start = new Date('2026-07-01');
+    // Anchor to the current date — a fixed start would drift into the past
+    // and the mock would stop producing bookable (future) quotes.
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+    start.setUTCDate(start.getUTCDate() + 7);
     const weeks = horizonMonths * 4;
     for (let w = 0; w < weeks; w++) {
       const departure = new Date(start);

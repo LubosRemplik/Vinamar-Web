@@ -3,8 +3,11 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { Pool } from 'pg';
 import { AppModule } from '../src/app.module';
+import { futureBlock, seedFlightQuotes } from './support/flight-seed';
 
 const url = process.env.DATABASE_URL ?? 'postgres://vinamar:vinamar@localhost:5432/vinamar';
+
+const block = futureBlock();
 
 interface WindowDto {
   arrival: string;
@@ -24,8 +27,11 @@ describe('Optimizer (e2e)', () => {
     await app.init();
     await pool.query('DELETE FROM calendar_blocks');
     await pool.query(
-      `INSERT INTO calendar_blocks (start_date, end_date, reason) VALUES ('2026-07-01','2026-07-15','booked')`,
+      `INSERT INTO calendar_blocks (start_date, end_date, reason) VALUES ($1, $2, 'booked')`,
+      [block.start, block.end],
     );
+    // Windows must not depend on the app's async bootstrap refresh.
+    await seedFlightQuotes(pool, 'WRO');
   });
 
   afterAll(async () => {
@@ -44,7 +50,7 @@ describe('Optimizer (e2e)', () => {
     const prices = (res.body as WindowDto[]).map((w) => w.indicativePrice);
     expect(prices).toEqual([...prices].sort((a, b) => a - b));
     for (const w of res.body as WindowDto[]) {
-      expect(w.arrival >= '2026-07-15' || w.departure <= '2026-07-01').toBe(true);
+      expect(w.arrival >= block.end || w.departure <= block.start).toBe(true);
     }
   });
 
