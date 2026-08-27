@@ -15,7 +15,7 @@ describe('Flights (e2e, mock provider)', () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
     app.setGlobalPrefix('api');
-    await app.init(); // bootstrap triggers the initial refresh
+    await app.init(); // bootstrap triggers the initial refresh (fire-and-forget)
   });
 
   afterAll(async () => {
@@ -25,7 +25,12 @@ describe('Flights (e2e, mock provider)', () => {
   });
 
   it('returns one cheapest quote per origin in EUR', async () => {
-    const res = await request(app.getHttpServer()).get('/api/flights/cheapest');
+    // The initial refresh runs in the background — poll until it lands.
+    let res = await request(app.getHttpServer()).get('/api/flights/cheapest');
+    for (let attempt = 0; attempt < 20 && res.body.length < 2; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      res = await request(app.getHttpServer()).get('/api/flights/cheapest');
+    }
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(2);
     expect(res.body.map((r: { origin: string }) => r.origin).sort()).toEqual(['PED', 'WRO']);
