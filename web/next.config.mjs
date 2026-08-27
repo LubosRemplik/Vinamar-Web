@@ -3,6 +3,8 @@ const nextConfig = {
   // Self-contained production server (.next/standalone) — the Docker image
   // ships only traced files instead of the whole node_modules tree.
   output: 'standalone',
+  // Keep pdfkit out of the server bundle so it loads its font data from disk.
+  serverExternalPackages: ['pdfkit'],
   reactStrictMode: true,
   async rewrites() {
     const apiTarget = process.env.API_PROXY_TARGET ?? 'http://localhost:3001';
