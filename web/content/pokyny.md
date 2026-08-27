@@ -49,6 +49,8 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
 
 - umyjte nádobí, utřete ho a ukliďte do skříněk,
 - vyneste odpadky do kontejnerů,
+- svlékněte povlečení a nechte ho na posteli,
+- špinavé ručníky a utěrky nechte uprostřed koupelny,
 - lednici nechte odmrazit a vytřete ji — při odchodu ji vypněte a nechte
   pootevřenou,
 - zavřete všechna okna, mříže i okenice,
