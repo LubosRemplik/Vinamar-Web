@@ -4,7 +4,7 @@ intro: Vše důležité k příjezdu, pobytu i odjezdu na jednom místě. Uložt
 ---
 ## Adresa
 
-Residencial ViñaMar, Fase 6, Blok 5, přízemí — byt č. 16, La Mata,
+Rezidence ViñaMar Fase 6, Blok 5, přízemí — byt č. 16, La Mata,
 03188 Torrevieja (Alicante), Španělsko.
 
 Po příchodu bránou z ulice Av. de Soria je to dům po levé straně. Po vstupu
@@ -21,6 +21,9 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
   na místě máme domluvený key-holding s náhradními klíči (výjezd 30 €).
 - Po příchodu otevřete hlavní uzávěr vody (v koupelně vpravo nahoře, první
   kohout) a nahoďte hlavní jistič (u vchodových dveří do bytu).
+- Zkontrolujte si prosím, že základní vybavení bytu funguje — televize, varná
+  deska, klimatizace, větráky i lednice. Kdyby cokoli nefungovalo, dejte nám
+  hned vědět, ať to můžeme co nejdřív vyřešit.
 - Parkuje se zdarma v ulicích kolem rezidence.
 
 ## Wi-Fi
@@ -44,12 +47,11 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
 
 Čas odjezdu si domluvíme individuálně. Před odchodem prosíme:
 
-- umyjte nádobí, utřete ho a ukliďte do skříněk (myčku v bytě nemáme),
+- umyjte nádobí, utřete ho a ukliďte do skříněk,
 - vyneste odpadky do kontejnerů,
 - lednici nechte odmrazit a vytřete ji — při odchodu ji vypněte a nechte
   pootevřenou,
 - zavřete všechna okna, mříže i okenice,
-- vypněte klimatizaci a světla,
 - zavřete hlavní uzávěr vody (v koupelně vpravo nahoře, první kohout)
   a shoďte hlavní jistič (u vchodových dveří do bytu).
 
