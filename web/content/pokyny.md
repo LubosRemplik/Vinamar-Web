@@ -52,11 +52,10 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
   pootevřenou,
 - zavřete všechna okna, mříže i okenice,
 - zavřete hlavní uzávěr vody (v koupelně vpravo nahoře, první kohout)
-  a shoďte hlavní jistič (u vchodových dveří do bytu).
-
-Po vašem odjezdu přijde uklízečka připravit apartmán pro další hosty — vypere
-povlečení, vysaje a vytře. Uklízí jen to nezbytné, nezanechávejte proto prosím
-velký nepořádek. 70 € za úklid nechte prosím na stole.
+  a shoďte hlavní jistič (u vchodových dveří do bytu),
+- 70 € za úklid nechte prosím na stole — po vašem odjezdu přijde uklízečka
+  připravit apartmán pro další hosty (vypere povlečení, vysaje a vytře).
+  Uklízí jen to nezbytné, nezanechávejte proto prosím velký nepořádek.
 
 Klíče si předáme zpátky v Česku. Pokud se během pobytu něco rozbilo nebo
 nefungovalo, nic se neděje — jen nám o tom prosím dejte vědět.
