@@ -67,4 +67,6 @@ nefungovalo, nic se neděje — jen nám o tom prosím dejte vědět.
 - Luboš — telefon i WhatsApp: **+420 749 648 555**
 - Ráďa — telefon i WhatsApp: **+420 724 794 070**
 - Tísňová linka (v celé EU): **112**
-- Zdravotní středisko: Centro de Salud La Mata
+- Zdravotní středisko:
+  [Centro de Salud La Mata](https://www.google.com/maps/search/?api=1&query=Centro+de+Salud+La+Mata,+Av.+de+Holanda+51,+Torrevieja)
+  — Av. de Holanda 51, otevřeno po–pá 8–21 h
