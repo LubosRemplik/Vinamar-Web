@@ -26,16 +26,13 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
   nám hned vědět, ať to můžeme co nejdřív vyřešit.
 - Parkuje se zdarma v ulicích kolem rezidence.
 
-## Wi-Fi
-
-- Název sítě a heslo najdete v bytě na routeru.
-
 ## Během pobytu
 
 - Bazén je v provozu od června do září, denně 11–15 a 17–21 h. Po celou
   sezónu u něj dohlíží plavčík.
 - Klimatizace: při zapnuté klimatizaci prosím zavírejte okna a při odchodu
   z apartmánu ji vypínejte.
+- Wi-Fi: název sítě a heslo najdete v bytě na routeru.
 - Plážové vybavení (slunečník, lehátka, bodyboard) je vám k dispozici —
   po návratu z pláže ho prosím opláchněte od písku.
 - Odpad patří do kontejnerů před hlavním vchodem do rezidence v ulici
