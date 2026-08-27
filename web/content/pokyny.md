@@ -1,6 +1,6 @@
 ---
 title: Pokyny k pobytu
-intro: Vše důležité k příjezdu, pobytu i odjezdu na jednom místě. Uložte si tuto stránku nebo si stáhněte PDF — hodí se i offline na cestě.
+intro: Vše důležité k příjezdu, pobytu i odjezdu na jednom místě. Uložte si tuto stránku nebo si stáhněte PDF.
 ---
 ## Adresa
 
@@ -21,9 +21,9 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
   na místě máme domluvený key-holding s náhradními klíči (výjezd 30 €).
 - Po příchodu otevřete hlavní uzávěr vody (v koupelně vpravo nahoře, první
   kohout) a nahoďte hlavní jistič (u vchodových dveří do bytu).
-- Zkontrolujte si prosím, že základní vybavení bytu funguje — televize, varná
-  deska, klimatizace, větráky i lednice. Kdyby cokoli nefungovalo, dejte nám
-  hned vědět, ať to můžeme co nejdřív vyřešit.
+- Zkontrolujte si prosím, že základní vybavení bytu funguje — klimatizace,
+  větráky, televize, varná deska i lednice. Kdyby cokoli nefungovalo, dejte
+  nám hned vědět, ať to můžeme co nejdřív vyřešit.
 - Parkuje se zdarma v ulicích kolem rezidence.
 
 ## Wi-Fi
@@ -32,16 +32,16 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
 
 ## Během pobytu
 
-- **Bazén** je v provozu od června do září, denně 11–15 a 17–21 h. Po celou
+- Bazén je v provozu od června do září, denně 11–15 a 17–21 h. Po celou
   sezónu u něj dohlíží plavčík.
-- **Klimatizace**: při zapnuté klimatizaci prosím zavírejte okna a při odchodu
+- Klimatizace: při zapnuté klimatizaci prosím zavírejte okna a při odchodu
   z apartmánu ji vypínejte.
-- **Plážové vybavení** (slunečník, lehátka, bodyboard) je vám k dispozici —
+- Plážové vybavení (slunečník, lehátka, bodyboard) je vám k dispozici —
   po návratu z pláže ho prosím opláchněte od písku.
-- **Odpad** patří do kontejnerů před hlavním vchodem do rezidence v ulici
+- Odpad patří do kontejnerů před hlavním vchodem do rezidence v ulici
   Av. de Soria. Tříděný odpad má samostatné kontejnery (sklo, papír, plast).
-- **Noční klid** platí v rezidenci od 23:00 do 8:00.
-- Apartmán je **nekuřácký**, kouřit je možné venku.
+- Noční klid platí v rezidenci od 23:00 do 8:00.
+- Apartmán je nekuřácký, kouřit je možné venku.
 
 ## Check-out
 
@@ -57,16 +57,16 @@ do domu (venkovní chodba) jsou to třetí dveře po pravé straně.
 
 Po vašem odjezdu přijde uklízečka připravit apartmán pro další hosty — vypere
 povlečení, vysaje a vytře. Uklízí jen to nezbytné, nezanechávejte proto prosím
-velký nepořádek. **70 € za úklid** nechte prosím na stole.
+velký nepořádek. 70 € za úklid nechte prosím na stole.
 
 Klíče si předáme zpátky v Česku. Pokud se během pobytu něco rozbilo nebo
 nefungovalo, nic se neděje — jen nám o tom prosím dejte vědět.
 
 ## Kontakty
 
-- Luboš **+420 749 648 555** (můžete i WhatsApp)
-- Ráďa **+420 724 794 070** (můžete i WhatsApp)
-- Tísňová linka (v celé EU): **112**
+- Luboš +420 749 648 555 (můžete i WhatsApp)
+- Ráďa +420 724 794 070 (můžete i WhatsApp)
+- Tísňová linka (v celé EU): 112
 - Zdravotní středisko:
   [Centro de Salud La Mata](https://www.google.com/maps/search/?api=1&query=Centro+de+Salud+La+Mata,+Av.+de+Holanda+51,+Torrevieja)
   — Av. de Holanda 51, otevřeno po–pá 8–21 h
