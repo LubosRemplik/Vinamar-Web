@@ -1,6 +1,6 @@
 ---
 title: Apartmán a okolí
-intro: Apartmán pro dva až čtyři v rezidenci s bazénem, tři sta metrů od pláže La Mata.
+intro: Apartmán pro dva až čtyři v přízemí rezidence s bazénem, tři sta metrů od pláže La Mata.
 gallery:
   - src: /images/apartment/living-01.jpg
     alt: Obývací pokoj s rozkládacím gaučem a televizí

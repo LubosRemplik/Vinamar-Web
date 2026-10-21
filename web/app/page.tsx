@@ -53,8 +53,8 @@ export default function Home() {
           <div>
             <SectionHeading eyebrow="Apartmán a okolí" title="Kde budete bydlet" align="left" />
             <p className="mt-6 leading-relaxed text-ink">
-              Obývací pokoj s rozkládacím gaučem, oddělená ložnice, kuchyňský kout a balkon se
-              stolkem. Za rohem bazén, o pár set metrů dál pláž La Mata.
+              Apartmán v přízemí: obývací pokoj s rozkládacím gaučem, oddělená ložnice, kuchyňský
+              kout a balkon se stolkem. Za rohem bazén, o pár set metrů dál pláž La Mata.
             </p>
             <Link href="/apartman" className="btn btn-outline mt-8">
               Prohlédnout apartmán
